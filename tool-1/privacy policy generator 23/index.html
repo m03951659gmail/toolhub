@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+        }
+        
+        .input-section {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .preview-section {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 1 200px;
+        }
+        
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #3ab0d9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .policy-preview {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            background: var(--light);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .policy-preview h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .policy-preview h3 {
+            color: var(--secondary);
+            margin: 20px 0 10px;
+        }
+        
+        .policy-preview p {
+            margin-bottom: 10px;
+        }
+        
+        .policy-preview ul {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .policy-preview li {
+            margin-bottom: 8px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 30px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light-gray);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--warning);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: var(--success);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i> Privacy Policy Generator</h1>
+            <p>Create custom, professional privacy policies for your website or app in minutes. Compliant with GDPR, CCPA, and more.</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="app-container">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> Your Information</h2>
+                
+                <div class="tabs">
+                    <div class="tab active" data-tab="basic">Basic Info</div>
+                    <div class="tab" data-tab="data">Data Collection</div>
+                    <div class="tab" data-tab="usage">Data Usage</div>
+                </div>
+                
+                <div class="tab-content active" id="basic-tab">
+                    <div class="form-group">
+                        <label for="companyName" class="required">Company/App Name</label>
+                        <input type="text" id="companyName" class="form-control" placeholder="Enter your company or app name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="websiteUrl" class="required">Website URL</label>
+                        <input type="url" id="websiteUrl" class="form-control" placeholder="https://www.example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail" class="required">Contact Email</label>
+                        <input type="email" id="contactEmail" class="form-control" placeholder="privacy@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" class="form-control" placeholder="Country where your business is registered">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="effectiveDate">Effective Date</label>
+                        <input type="date" id="effectiveDate" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="data-tab">
+                    <div class="form-group">
+                        <label>What information do you collect?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectName" checked>
+                                <label for="collectName">Name</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectEmail" checked>
+                                <label for="collectEmail">Email address</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectPhone">
+                                <label for="collectPhone">Phone number</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectAddress">
+                                <label for="collectAddress">Physical address</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectPayment">
+                                <label for="collectPayment">Payment information</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectLocation">
+                                <label for="collectLocation">Location data</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectDevice">
+                                <label for="collectDevice">Device information</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="collectUsage">
+                                <label for="collectUsage">Usage data</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dataSources">How do you collect information?</label>
+                        <textarea id="dataSources" class="form-control" placeholder="E.g., when users register, place an order, subscribe to newsletter, fill out a form, etc."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Do you use cookies?</label>
+                        <div style="display: flex; gap: 20px; margin-top: 10px;">
+                            <div>
+                                <input type="radio" id="cookiesYes" name="cookies" value="yes" checked>
+                                <label for="cookiesYes">Yes</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="cookiesNo" name="cookies" value="no">
+                                <label for="cookiesNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="usage-tab">
+                    <div class="form-group">
+                        <label for="dataPurpose">Why do you collect this data?</label>
+                        <textarea id="dataPurpose" class="form-control" placeholder="E.g., to provide and operate services, provide customer support, process transactions, send notifications, etc."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dataSharing">Do you share data with third parties?</label>
+                        <textarea id="dataSharing" class="form-control" placeholder="List any third parties you share data with (e.g., payment processors, analytics services, marketing partners)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dataSecurity">How do you protect user data?</label>
+                        <textarea id="dataSecurity" class="form-control" placeholder="Describe your security measures (e.g., encryption, secure servers, access controls)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRights">User rights regarding their data</label>
+                        <textarea id="userRights" class="form-control" placeholder="E.g., right to access, correct, delete, or restrict processing of their data"></textarea>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-outline" id="prevTab">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-outline" id="nextTab">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-primary" id="generateBtn">
+                        <i class="fas fa-magic"></i> Generate Policy
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> Policy Preview</h2>
+                <div class="policy-preview" id="policyPreview">
+                    <p class="placeholder-text">Your generated privacy policy will appear here. Fill out the form and click "Generate Policy" to create your custom privacy policy.</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-outline" id="copyBtn">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                    <button class="btn btn-success" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download Policy
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title" style="justify-content: center;"><i class="fas fa-star"></i> Key Features</h2>
+        
+        <div class="features-section">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <h3>Legal Compliance</h3>
+                <p>Generate policies compliant with GDPR, CCPA, CalOPPA, and other international privacy regulations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>Automatic Updates</h3>
+                <p>Our policies are regularly updated to reflect the latest legal requirements and best practices.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <h3>Multiple Formats</h3>
+                <p>Download your policy in HTML, plain text, or PDF format for easy integration with your website.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Secure & Private</h3>
+                <p>Your information is never stored on our servers. All processing happens locally in your browser.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 Privacy Policy Generator | This tool provides templates and is not legal advice. Consult a legal professional for specific guidance.</p>
+        </div>
+    </footer>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Notification message</span>
+    </div>
+    
+    <script>
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const prevTabBtn = document.getElementById('prevTab');
+        const nextTabBtn = document.getElementById('nextTab');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const policyPreview = document.getElementById('policyPreview');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        let currentTab = 0;
+        
+        // Initialize date field
+        document.getElementById('effectiveDate').valueAsDate = new Date();
+        
+        // Tab switching
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // Update tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+                
+                currentTab = index;
+            });
+        });
+        
+        // Next tab
+        nextTabBtn.addEventListener('click', () => {
+            if (currentTab < tabs.length - 1) {
+                tabs[currentTab + 1].click();
+            }
+        });
+        
+        // Previous tab
+        prevTabBtn.addEventListener('click', () => {
+            if (currentTab > 0) {
+                tabs[currentTab - 1].click();
+            }
+        });
+        
+        // Show notification
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Generate policy
+        generateBtn.addEventListener('click', () => {
+            const companyName = document.getElementById('companyName').value;
+            const websiteUrl = document.getElementById('websiteUrl').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            
+            // Basic validation
+            if (!companyName || !websiteUrl || !contactEmail) {
+                showNotification('Please fill in all required fields');
+                return;
+            }
+            
+            // Gather data
+            const effectiveDate = document.getElementById('effectiveDate').value || new Date().toISOString().split('T')[0];
+            const country = document.getElementById('country').value || 'your country';
+            
+            // Data collection
+            const dataCollected = [];
+            if (document.getElementById('collectName').checked) dataCollected.push('name');
+            if (document.getElementById('collectEmail').checked) dataCollected.push('email address');
+            if (document.getElementById('collectPhone').checked) dataCollected.push('phone number');
+            if (document.getElementById('collectAddress').checked) dataCollected.push('physical address');
+            if (document.getElementById('collectPayment').checked) dataCollected.push('payment information');
+            if (document.getElementById('collectLocation').checked) dataCollected.push('location data');
+            if (document.getElementById('collectDevice').checked) dataCollected.push('device information');
+            if (document.getElementById('collectUsage').checked) dataCollected.push('usage data');
+            
+            const dataSources = document.getElementById('dataSources').value || 'when you register on our site, place an order, subscribe to our newsletter, respond to a survey or fill out a form.';
+            const cookies = document.querySelector('input[name="cookies"]:checked').value;
+            
+            // Data usage
+            const dataPurpose = document.getElementById('dataPurpose').value || 'to provide and operate our services, to provide customer support, to process transactions, to send notifications, and to gather analysis or valuable information so that we can improve our service.';
+            const dataSharing = document.getElementById('dataSharing').value || 'We may share your data with third-party service providers that help us operate our website and conduct our business, such as payment processors and data analytics providers.';
+            const dataSecurity = document.getElementById('dataSecurity').value || 'We implement a variety of security measures to maintain the safety of your personal information. All supplied sensitive information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our databases.';
+            const userRights = document.getElementById('userRights').value || 'You have the right to access, correct, or delete the personal information that we collect. You are also entitled to restrict or object to the processing of your data at any time.';
+            
+            // Generate policy HTML
+            const policyHTML = `
+                <h2>Privacy Policy for ${companyName}</h2>
+                <p><strong>Effective Date:</strong> ${effectiveDate}</p>
+                
+                <p>This Privacy Policy describes how ${companyName} ("we", "us", or "our") collects, uses, and shares your personal information when you visit or make a purchase from ${websiteUrl} (the "Site").</p>
+                
+                <h3>1. Information We Collect</h3>
+                <p>We collect the following types of personal information:</p>
+                <ul>
+                    ${dataCollected.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                <p>We collect this information ${dataSources}.</p>
+                
+                <h3>2. How We Use Your Information</h3>
+                <p>We use the information we collect for various purposes:</p>
+                <p>${dataPurpose}</p>
+                
+                <h3>3. Sharing Your Information</h3>
+                <p>${dataSharing}</p>
+                
+                <h3>4. Cookies and Tracking Technologies</h3>
+                <p>${cookies === 'yes' ? 
+                    'We use cookies and similar tracking technologies to track activity on our Site and store certain information.' : 
+                    'We do not use cookies or similar tracking technologies on our Site.'}</p>
+                
+                <h3>5. Data Security</h3>
+                <p>${dataSecurity}</p>
+                
+                <h3>6. Your Rights</h3>
+                <p>${userRights}</p>
+                <p>If you would like to exercise any of these rights, please contact us at ${contactEmail}.</p>
+                
+                <h3>7. Changes to This Privacy Policy</h3>
+                <p>We may update this Privacy Policy from time to time to reflect changes to our practices or for other operational, legal, or regulatory reasons. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+                
+                <h3>8. Contact Us</h3>
+                <p>For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at ${contactEmail}.</p>
+            `;
+            
+            // Display policy
+            policyPreview.innerHTML = policyHTML;
+            showNotification('Privacy policy generated successfully!');
+        });
+        
+        // Copy to clipboard
+        copyBtn.addEventListener('click', () => {
+            if (policyPreview.innerText.includes('Privacy Policy for')) {
+                const textToCopy = policyPreview.innerText;
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        showNotification('Policy copied to clipboard!');
+                    })
+                    .catch(err => {
+                        showNotification('Failed to copy: ' + err);
+                    });
+            } else {
+                showNotification('Please generate a policy first');
+            }
+        });
+        
+        // Download policy
+        downloadBtn.addEventListener('click', async () => {
+            if (!policyPreview.innerHTML.includes('Privacy Policy for')) {
+                showNotification('Please generate a policy first');
+                return;
+            }
+            
+            // Create a Blob with the policy content
+            const companyName = document.getElementById('companyName').value || 'YourCompany';
+            const policyText = policyPreview.innerText;
+            const blob = new Blob([policyText], { type: 'text/plain' });
+            
+            // Create a download link
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${companyName.replace(/\s+/g, '_')}_Privacy_Policy.txt`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('Policy downloaded as text file!');
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Filter Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .app-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .image-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .controls-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .image-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        #image-preview {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        
+        .placeholder {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .upload-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .filter-controls {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .filter-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-title i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        label {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+        
+        .slider-value {
+            width: 50px;
+            text-align: right;
+            margin-left: 15px;
+        }
+        
+        input[type="range"] {
+            flex: 3;
+            height: 8px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .filter-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .preset-btn {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn i {
+            margin-right: 8px;
+        }
+        
+        #reset-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #download-btn {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 75, 43, 0.4);
+        }
+        
+        #download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 75, 43, 0.6);
+        }
+        
+        .filter-info {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+        
+        .info-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .info-content {
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Filter Tool</h1>
+            <p class="subtitle">Upload your image and apply beautiful filters in real-time. Adjust parameters to create the perfect look.</p>
+        </header>
+        
+        <div class="app-container">
+            <div class="main-content">
+                <div class="image-section">
+                    <div class="image-container">
+                        <div class="placeholder">
+                            <h3>Upload Your Image</h3>
+                            <p>Click the button below to get started</p>
+                        </div>
+                        <img id="image-preview" alt="Preview">
+                    </div>
+                    <button class="upload-btn" id="upload-btn">
+                        <i class="upload-icon">📁</i> Choose Image
+                    </button>
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="controls-section">
+                    <div class="filter-controls">
+                        <h2 class="filter-title"><i>🎚️</i> Filter Controls</h2>
+                        
+                        <div class="control-group">
+                            <div class="slider-container">
+                                <label for="brightness">Brightness</label>
+                                <input type="range" id="brightness" min="0" max="200" value="100">
+                                <span class="slider-value" id="brightness-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="slider-container">
+                                <label for="contrast">Contrast</label>
+                                <input type="range" id="contrast" min="0" max="200" value="100">
+                                <span class="slider-value" id="contrast-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="slider-container">
+                                <label for="saturation">Saturation</label>
+                                <input type="range" id="saturation" min="0" max="200" value="100">
+                                <span class="slider-value" id="saturation-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="slider-container">
+                                <label for="hue">Hue Rotate</label>
+                                <input type="range" id="hue" min="0" max="360" value="0">
+                                <span class="slider-value" id="hue-value">0°</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="slider-container">
+                                <label for="blur">Blur</label>
+                                <input type="range" id="blur" min="0" max="20" value="0">
+                                <span class="slider-value" id="blur-value">0px</span>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin-top: 25px;">Filter Presets</h3>
+                        <div class="filter-presets">
+                            <button class="preset-btn" data-filter="normal">Normal</button>
+                            <button class="preset-btn" data-filter="vintage">Vintage</button>
+                            <button class="preset-btn" data-filter="blackWhite">B&W</button>
+                            <button class="preset-btn" data-filter="warm">Warm</button>
+                            <button class="preset-btn" data-filter="cool">Cool</button>
+                            <button class="preset-btn" data-filter="invert">Invert</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn" id="reset-btn">
+                            <i>🔄</i> Reset Filters
+                        </button>
+                        <button class="action-btn" id="download-btn">
+                            <i>💾</i> Download Image
+                        </button>
+                    </div>
+                    
+                    <div class="filter-info">
+                        <h3 class="info-title">About Image Filters</h3>
+                        <div class="info-content">
+                            <p>Image filters transform the appearance of your photos by applying various visual effects. Adjust the parameters to achieve different moods and styles:</p>
+                            <ul style="padding-left: 20px; margin-top: 10px;">
+                                <li><strong>Brightness</strong>: Controls overall lightness</li>
+                                <li><strong>Contrast</strong>: Adjusts difference between light and dark areas</li>
+                                <li><strong>Saturation</strong>: Changes color intensity</li>
+                                <li><strong>Hue Rotate</strong>: Shifts all colors in the image</li>
+                                <li><strong>Blur</strong>: Softens the image details</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Created by: Sabbir | Image Filter Tool © 2023</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const imageUpload = document.getElementById('image-upload');
+        const uploadBtn = document.getElementById('upload-btn');
+        const imagePreview = document.getElementById('image-preview');
+        const placeholder = document.querySelector('.placeholder');
+        
+        // Filter Controls
+        const brightness = document.getElementById('brightness');
+        const contrast = document.getElementById('contrast');
+        const saturation = document.getElementById('saturation');
+        const hue = document.getElementById('hue');
+        const blur = document.getElementById('blur');
+        
+        // Filter Value Displays
+        const brightnessValue = document.getElementById('brightness-value');
+        const contrastValue = document.getElementById('contrast-value');
+        const saturationValue = document.getElementById('saturation-value');
+        const hueValue = document.getElementById('hue-value');
+        const blurValue = document.getElementById('blur-value');
+        
+        // Buttons
+        const resetBtn = document.getElementById('reset-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        
+        // Event Listeners
+        uploadBtn.addEventListener('click', () => imageUpload.click());
+        imageUpload.addEventListener('change', loadImage);
+        
+        // Add input event listeners to all sliders
+        brightness.addEventListener('input', updateFilter);
+        contrast.addEventListener('input', updateFilter);
+        saturation.addEventListener('input', updateFilter);
+        hue.addEventListener('input', updateFilter);
+        blur.addEventListener('input', updateFilter);
+        
+        resetBtn.addEventListener('click', resetFilters);
+        downloadBtn.addEventListener('click', downloadImage);
+        
+        // Add click event listeners to preset buttons
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => applyPreset(btn.dataset.filter));
+        });
+        
+        // Functions
+        function loadImage() {
+            const file = imageUpload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function updateFilter() {
+            // Update display values
+            brightnessValue.textContent = `${brightness.value}%`;
+            contrastValue.textContent = `${contrast.value}%`;
+            saturationValue.textContent = `${saturation.value}%`;
+            hueValue.textContent = `${hue.value}°`;
+            blurValue.textContent = `${blur.value}px`;
+            
+            // Apply filters to image
+            imagePreview.style.filter = `
+                brightness(${brightness.value}%)
+                contrast(${contrast.value}%)
+                saturate(${saturation.value}%)
+                hue-rotate(${hue.value}deg)
+                blur(${blur.value}px)
+            `;
+        }
+        
+        function resetFilters() {
+            // Reset sliders to default values
+            brightness.value = 100;
+            contrast.value = 100;
+            saturation.value = 100;
+            hue.value = 0;
+            blur.value = 0;
+            
+            // Update the display and image
+            updateFilter();
+        }
+        
+        function applyPreset(preset) {
+            switch(preset) {
+                case 'normal':
+                    brightness.value = 100;
+                    contrast.value = 100;
+                    saturation.value = 100;
+                    hue.value = 0;
+                    blur.value = 0;
+                    break;
+                case 'vintage':
+                    brightness.value = 110;
+                    contrast.value = 90;
+                    saturation.value = 85;
+                    hue.value = 30;
+                    blur.value = 1;
+                    break;
+                case 'blackWhite':
+                    brightness.value = 105;
+                    contrast.value = 120;
+                    saturation.value = 0;
+                    hue.value = 0;
+                    blur.value = 0;
+                    break;
+                case 'warm':
+                    brightness.value = 105;
+                    contrast.value = 100;
+                    saturation.value = 140;
+                    hue.value = 20;
+                    blur.value = 0;
+                    break;
+                case 'cool':
+                    brightness.value = 95;
+                    contrast.value = 110;
+                    saturation.value = 80;
+                    hue.value = 200;
+                    blur.value = 0;
+                    break;
+                case 'invert':
+                    brightness.value = 100;
+                    contrast.value = 100;
+                    saturation.value = 100;
+                    hue.value = 0;
+                    blur.value = 0;
+                    // Invert is applied separately
+                    imagePreview.style.filter += 'invert(100%)';
+                    break;
+            }
+            
+            updateFilter();
+        }
+        
+        function downloadImage() {
+            if (!imagePreview.src) {
+                alert('Please upload an image first');
+                return;
+            }
+            
+            // Create a canvas to draw the filtered image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions to match the image
+            canvas.width = imagePreview.naturalWidth;
+            canvas.height = imagePreview.naturalHeight;
+            
+            // Apply the current filter to the canvas
+            ctx.filter = imagePreview.style.filter;
+            
+            // Draw the image on the canvas
+            ctx.drawImage(imagePreview, 0, 0, canvas.width, canvas.height);
+            
+            // Create a download link
+            const link = document.createElement('a');
+            link.download = 'filtered-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Initialize the app
+        resetFilters();
+    </script>
+</body>
+</html>

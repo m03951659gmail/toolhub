@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary to Text Converter | Multi-Format Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        dark: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hex-pattern {
+            background: 
+                linear-gradient(135deg, #0f172a 25%, transparent 25%) -10px 0/ 20px 20px,
+                linear-gradient(225deg, #0f172a 25%, transparent 25%) -10px 0/ 20px 20px,
+                linear-gradient(315deg, #0f172a 25%, transparent 25%) 0px 0/ 20px 20px,
+                linear-gradient(45deg, #0f172a 25%, #1e293b 25%) 0px 0/ 20px 20px;
+        }
+        .conversion-card {
+            transition: all 0.3s ease;
+        }
+        .conversion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .binary-digit {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen hex-pattern">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                <i class="fas fa-exchange-alt mr-3"></i>Universal Data Converter
+            </h1>
+            <p class="text-gray-300 max-w-2xl mx-auto">
+                Convert between Binary, Text, Decimal, Octal, and Hexadecimal formats with support for multiple encodings and delimiters.
+            </p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="bg-gray-800 rounded-xl shadow-xl p-6 conversion-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-blue-300">
+                        <i class="fas fa-keyboard mr-2"></i>Input
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button id="sampleBtn" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                            <i class="fas fa-lightbulb mr-1"></i>Sample
+                        </button>
+                        <button id="clearBtn" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded-md text-sm">
+                            <i class="fas fa-trash mr-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">Input Format</label>
+                        <select id="inputFormat" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2">
+                            <option value="binary">Binary</option>
+                            <option value="text" selected>Text</option>
+                            <option value="decimal">Decimal</option>
+                            <option value="octal">Octal</option>
+                            <option value="hex">Hexadecimal</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Character Encoding</label>
+                        <select id="inputEncoding" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2">
+                            <option value="utf8">UTF-8</option>
+                            <option value="utf16">UTF-16</option>
+                            <option value="ascii">ASCII</option>
+                            <option value="latin1">Latin-1</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">Input Data</label>
+                    <textarea id="inputData" rows="6" class="w-full bg-gray-700 border border-gray-600 rounded-md p-3 font-mono" placeholder="Enter your data here...">Hello Binary World! 😊</textarea>
+                </div>
+            </div>
+            
+            <!-- Output Section -->
+            <div class="bg-gray-800 rounded-xl shadow-xl p-6 conversion-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-green-300">
+                        <i class="fas fa-file-code mr-2"></i>Output
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button id="copyBtn" class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded-md text-sm">
+                            <i class="fas fa-copy mr-1"></i>Copy
+                        </button>
+                        <button id="swapBtn" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded-md text-sm">
+                            <i class="fas fa-sync mr-1"></i>Swap
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-300 mb-2">Output Format</label>
+                        <select id="outputFormat" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2">
+                            <option value="binary" selected>Binary</option>
+                            <option value="text">Text</option>
+                            <option value="decimal">Decimal</option>
+                            <option value="octal">Octal</option>
+                            <option value="hex">Hexadecimal</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Output Delimiter</label>
+                        <select id="outputDelimiter" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2">
+                            <option value="none">None</option>
+                            <option value="space" selected>Space</option>
+                            <option value="comma">Comma</option>
+                            <option value="semicolon">Semicolon</option>
+                            <option value="pipe">Pipe (|)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input id="customDelimiter" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 mt-2 hidden" placeholder="Enter custom delimiter">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">Converted Output</label>
+                    <textarea id="outputData" rows="6" class="w-full bg-gray-700 border border-gray-600 rounded-md p-3 font-mono" readonly></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conversion Matrix -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold mb-6 text-center">
+                <i class="fas fa-table mr-2"></i>Conversion Matrix
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Binary Card -->
+                <div class="bg-blue-900/40 rounded-xl p-4 text-center conversion-card">
+                    <div class="text-blue-300 text-4xl mb-3">
+                        <i class="fas fa-digital-tachograph"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Binary</h3>
+                    <p class="text-sm text-gray-300 mb-3">Base-2 (0,1)</p>
+                    <div class="text-xs bg-blue-800/50 p-2 rounded-lg">
+                        <span class="binary-digit">01001000</span> = 'H'
+                    </div>
+                </div>
+                
+                <!-- Text Card -->
+                <div class="bg-green-900/40 rounded-xl p-4 text-center conversion-card">
+                    <div class="text-green-300 text-4xl mb-3">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Text</h3>
+                    <p class="text-sm text-gray-300 mb-3">Human-readable</p>
+                    <div class="text-xs bg-green-800/50 p-2 rounded-lg">
+                        'A' = 65 (dec)
+                    </div>
+                </div>
+                
+                <!-- Decimal Card -->
+                <div class="bg-amber-900/40 rounded-xl p-4 text-center conversion-card">
+                    <div class="text-amber-300 text-4xl mb-3">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Decimal</h3>
+                    <p class="text-sm text-gray-300 mb-3">Base-10 (0-9)</p>
+                    <div class="text-xs bg-amber-800/50 p-2 rounded-lg">
+                        72 = 48 (hex)
+                    </div>
+                </div>
+                
+                <!-- Octal Card -->
+                <div class="bg-purple-900/40 rounded-xl p-4 text-center conversion-card">
+                    <div class="text-purple-300 text-4xl mb-3">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Octal</h3>
+                    <p class="text-sm text-gray-300 mb-3">Base-8 (0-7)</p>
+                    <div class="text-xs bg-purple-800/50 p-2 rounded-lg">
+                        110 = 72 (dec)
+                    </div>
+                </div>
+                
+                <!-- Hex Card -->
+                <div class="bg-red-900/40 rounded-xl p-4 text-center conversion-card">
+                    <div class="text-red-300 text-4xl mb-3">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Hexadecimal</h3>
+                    <p class="text-sm text-gray-300 mb-3">Base-16 (0-9,A-F)</p>
+                    <div class="text-xs bg-red-800/50 p-2 rounded-lg">
+                        4A = 74 (dec)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How to Use Section -->
+        <div class="mt-12 max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-center">
+                <i class="fas fa-question-circle mr-2"></i>How to Use This Converter
+            </h2>
+            <div class="bg-gray-800/50 rounded-xl p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-blue-400 text-2xl mb-3">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">1. Enter Input</h3>
+                        <p class="text-sm text-gray-300">Type or paste your data in the input field</p>
+                    </div>
+                    
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-green-400 text-2xl mb-3">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">2. Configure Settings</h3>
+                        <p class="text-sm text-gray-300">Select input/output formats and options</p>
+                    </div>
+                    
+                    <div class="bg-gray-700/50 p-4 rounded-lg">
+                        <div class="text-yellow-400 text-2xl mb-3">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">3. View Results</h3>
+                        <p class="text-sm text-gray-300">Instantly see converted output in real-time</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="font-bold text-lg mb-3">Supported Features:</h3>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Multiple input/output formats</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Character encoding support</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Customizable delimiters</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Real-time conversion</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Sample data sets</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-400 mr-2"></i> Input/output swapping</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const inputFormat = document.getElementById('inputFormat');
+        const outputFormat = document.getElementById('outputFormat');
+        const inputEncoding = document.getElementById('inputEncoding');
+        const outputDelimiter = document.getElementById('outputDelimiter');
+        const customDelimiter = document.getElementById('customDelimiter');
+        const inputData = document.getElementById('inputData');
+        const outputData = document.getElementById('outputData');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const swapBtn = document.getElementById('swapBtn');
+        const sampleBtn = document.getElementById('sampleBtn');
+
+        // Delimiter options
+        const delimiters = {
+            'none': '',
+            'space': ' ',
+            'comma': ',',
+            'semicolon': ';',
+            'pipe': '|',
+            'custom': ''
+        };
+
+        // Show/hide custom delimiter field
+        outputDelimiter.addEventListener('change', function() {
+            customDelimiter.style.display = this.value === 'custom' ? 'block' : 'none';
+            convert();
+        });
+
+        // Convert on any input or option change
+        [inputFormat, outputFormat, inputEncoding, outputDelimiter, inputData].forEach(element => {
+            element.addEventListener('input', convert);
+            element.addEventListener('change', convert);
+        });
+
+        customDelimiter.addEventListener('input', convert);
+
+        // Clear button
+        clearBtn.addEventListener('click', () => {
+            inputData.value = '';
+            outputData.value = '';
+        });
+
+        // Copy button
+        copyBtn.addEventListener('click', () => {
+            outputData.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        });
+
+        // Swap button
+        swapBtn.addEventListener('click', () => {
+            const tempFormat = inputFormat.value;
+            inputFormat.value = outputFormat.value;
+            outputFormat.value = tempFormat;
+            
+            const tempData = inputData.value;
+            inputData.value = outputData.value;
+            outputData.value = tempData;
+        });
+
+        // Sample button
+        sampleBtn.addEventListener('click', () => {
+            inputData.value = "Hello World! 😊\nThis is a sample text for conversion.\nTry changing formats!";
+            convert();
+        });
+
+        // Main conversion function
+        function convert() {
+            const input = inputData.value;
+            const inFormat = inputFormat.value;
+            const outFormat = outputFormat.value;
+            const encoding = inputEncoding.value;
+            
+            // Get delimiter
+            let delimiter = delimiters[outputDelimiter.value];
+            if (outputDelimiter.value === 'custom') {
+                delimiter = customDelimiter.value;
+            }
+            
+            // Convert based on formats
+            try {
+                let result;
+                
+                if (inFormat === outFormat) {
+                    result = input; // No conversion needed
+                } 
+                // Text to other formats
+                else if (inFormat === 'text') {
+                    result = textToFormat(input, outFormat, encoding);
+                } 
+                // Other formats to text
+                else if (outFormat === 'text') {
+                    result = formatToText(input, inFormat, encoding);
+                } 
+                // Other conversions (binary to hex, decimal to octal, etc.)
+                else {
+                    // First convert to text (as intermediate format)
+                    const textResult = formatToText(input, inFormat, encoding);
+                    // Then convert to the target format
+                    result = textToFormat(textResult, outFormat, encoding);
+                }
+                
+                // Apply delimiter for non-text outputs
+                if (outFormat !== 'text' && delimiter) {
+                    if (outFormat === 'binary') {
+                        // For binary, we might want to group in bytes
+                        result = result.match(/.{1,8}/g).join(delimiter);
+                    } else {
+                        // For others, we can split by space and rejoin with delimiter
+                        result = result.split(' ').join(delimiter);
+                    }
+                }
+                
+                outputData.value = result;
+            } catch (error) {
+                outputData.value = `Error: ${error.message}`;
+            }
+        }
+
+        // Convert text to specified format
+        function textToFormat(text, format, encoding) {
+            let result = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const code = char.charCodeAt(0);
+                
+                switch(format) {
+                    case 'binary':
+                        // Convert to 8-bit binary
+                        result += code.toString(2).padStart(8, '0') + ' ';
+                        break;
+                    case 'decimal':
+                        result += code + ' ';
+                        break;
+                    case 'octal':
+                        result += code.toString(8).padStart(3, '0') + ' ';
+                        break;
+                    case 'hex':
+                        result += code.toString(16).padStart(2, '0').toUpperCase() + ' ';
+                        break;
+                    default:
+                        result += char;
+                }
+            }
+            
+            return result.trim();
+        }
+
+        // Convert from specified format to text
+        function formatToText(data, format, encoding) {
+            let text = '';
+            let values = [];
+            
+            // Parse input based on format
+            switch(format) {
+                case 'binary':
+                    // Remove all non-binary characters and split into 8-bit chunks
+                    const binaryString = data.replace(/[^01]/g, '');
+                    for (let i = 0; i < binaryString.length; i += 8) {
+                        const byte = binaryString.substr(i, 8);
+                        if (byte.length === 8) {
+                            values.push(parseInt(byte, 2));
+                        }
+                    }
+                    break;
+                    
+                case 'decimal':
+                    // Extract numbers from string
+                    const decimalNumbers = data.match(/\d+/g) || [];
+                    values = decimalNumbers.map(num => parseInt(num, 10));
+                    break;
+                    
+                case 'octal':
+                    // Extract octal numbers
+                    const octalNumbers = data.match(/[0-7]+/g) || [];
+                    values = octalNumbers.map(num => parseInt(num, 8));
+                    break;
+                    
+                case 'hex':
+                    // Extract hex pairs
+                    const hexPairs = data.match(/[0-9A-Fa-f]{2}/g) || [];
+                    values = hexPairs.map(hex => parseInt(hex, 16));
+                    break;
+            }
+            
+            // Convert character codes to text
+            for (const code of values) {
+                // Handle different encodings
+                if (encoding === 'ascii' && code > 127) {
+                    text += '�'; // Replacement character for non-ASCII
+                } else if (encoding === 'latin1' && code > 255) {
+                    text += '�'; // Replacement character for non-Latin1
+                } else {
+                    text += String.fromCharCode(code);
+                }
+            }
+            
+            return text;
+        }
+
+        // Initial conversion
+        convert();
+    </script>
+</body>
+</html>

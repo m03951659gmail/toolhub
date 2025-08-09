@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Tag Generator Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .tag-box {
+            background-color: #1e293b;
+            color: #f8fafc;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .checkbox:checked {
+            background-color: var(--primary);
+        }
+        
+        .checkbox:focus {
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: var(--light);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="gradient-bg text-white shadow-lg">
+            <div class="container mx-auto px-4 py-8">
+                <div class="flex flex-col items-center justify-center text-center">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-4">Meta Tag Generator</h1>
+                    <p class="text-lg md:text-xl max-w-3xl">
+                        Generate comprehensive meta tags for your website to improve SEO and social media sharing
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8 -mt-10">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Tabs Navigation -->
+                <div class="flex flex-wrap border-b border-gray-200">
+                    <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-indigo-600 transition-colors border-b-2 border-transparent hover:border-indigo-300 active" data-tab="basic">
+                        Basic Meta Tags
+                    </button>
+                    <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-indigo-600 transition-colors border-b-2 border-transparent hover:border-indigo-300" data-tab="og">
+                        Open Graph
+                    </button>
+                    <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-indigo-600 transition-colors border-b-2 border-transparent hover:border-indigo-300" data-tab="twitter">
+                        Twitter Card
+                    </button>
+                    <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-indigo-600 transition-colors border-b-2 border-transparent hover:border-indigo-300" data-tab="advanced">
+                        Advanced
+                    </button>
+                </div>
+
+                <!-- Form Section -->
+                <div class="p-6">
+                    <!-- Basic Meta Tags Tab -->
+                    <div id="basic" class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
+                                <input type="text" id="title" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="My Awesome Website">
+                            </div>
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea id="description" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="A brief description of your page" rows="2"></textarea>
+                            </div>
+                            <div>
+                                <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Keywords (comma separated)</label>
+                                <input type="text" id="keywords" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="website, awesome, cool">
+                            </div>
+                            <div>
+                                <label for="author" class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                                <input type="text" id="author" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label for="viewport" class="block text-sm font-medium text-gray-700 mb-1">Viewport</label>
+                                <select id="viewport" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="width=device-width, initial-scale=1.0">Default (responsive)</option>
+                                    <option value="width=device-width">Device width only</option>
+                                    <option value="width=1200">Fixed width (1200px)</option>
+                                    <option value="user-scalable=no">Disable zoom</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="charset" class="block text-sm font-medium text-gray-700 mb-1">Charset</label>
+                                <select id="charset" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="UTF-8">UTF-8 (recommended)</option>
+                                    <option value="ISO-8859-1">ISO-8859-1</option>
+                                    <option value="UTF-16">UTF-16</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Open Graph Tab -->
+                    <div id="og" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="og-title" class="block text-sm font-medium text-gray-700 mb-1">OG Title</label>
+                                <input type="text" id="og-title" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="My Awesome Website">
+                            </div>
+                            <div>
+                                <label for="og-description" class="block text-sm font-medium text-gray-700 mb-1">OG Description</label>
+                                <textarea id="og-description" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="A brief description of your page" rows="2"></textarea>
+                            </div>
+                            <div>
+                                <label for="og-url" class="block text-sm font-medium text-gray-700 mb-1">OG URL</label>
+                                <input type="url" id="og-url" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com">
+                            </div>
+                            <div>
+                                <label for="og-image" class="block text-sm font-medium text-gray-700 mb-1">OG Image URL</label>
+                                <input type="url" id="og-image" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div>
+                                <label for="og-type" class="block text-sm font-medium text-gray-700 mb-1">OG Type</label>
+                                <select id="og-type" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="website">Website</option>
+                                    <option value="article">Article</option>
+                                    <option value="book">Book</option>
+                                    <option value="profile">Profile</option>
+                                    <option value="music.song">Music Song</option>
+                                    <option value="video.movie">Video Movie</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="og-site_name" class="block text-sm font-medium text-gray-700 mb-1">OG Site Name</label>
+                                <input type="text" id="og-site_name" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="My Site">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Twitter Card Tab -->
+                    <div id="twitter" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="twitter-card" class="block text-sm font-medium text-gray-700 mb-1">Twitter Card Type</label>
+                                <select id="twitter-card" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="summary">Summary</option>
+                                    <option value="summary_large_image">Summary Large Image</option>
+                                    <option value="app">App</option>
+                                    <option value="player">Player</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="twitter-site" class="block text-sm font-medium text-gray-700 mb-1">Twitter Site (@username)</label>
+                                <input type="text" id="twitter-site" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="@example">
+                            </div>
+                            <div>
+                                <label for="twitter-creator" class="block text-sm font-medium text-gray-700 mb-1">Twitter Creator (@username)</label>
+                                <input type="text" id="twitter-creator" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="@author">
+                            </div>
+                            <div>
+                                <label for="twitter-title" class="block text-sm font-medium text-gray-700 mb-1">Twitter Title</label>
+                                <input type="text" id="twitter-title" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="My Awesome Website">
+                            </div>
+                            <div>
+                                <label for="twitter-description" class="block text-sm font-medium text-gray-700 mb-1">Twitter Description</label>
+                                <textarea id="twitter-description" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="A brief description of your page" rows="2"></textarea>
+                            </div>
+                            <div>
+                                <label for="twitter-image" class="block text-sm font-medium text-gray-700 mb-1">Twitter Image URL</label>
+                                <input type="url" id="twitter-image" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/image.jpg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Tab -->
+                    <div id="advanced" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="canonical" class="block text-sm font-medium text-gray-700 mb-1">Canonical URL</label>
+                                <input type="url" id="canonical" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/page">
+                            </div>
+                            <div>
+                                <label for="theme-color" class="block text-sm font-medium text-gray-700 mb-1">Theme Color</label>
+                                <input type="color" id="theme-color" class="w-full h-10 border border-gray-300 rounded-md input-field" value="#4f46e5">
+                            </div>
+                            <div>
+                                <label for="robots" class="block text-sm font-medium text-gray-700 mb-1">Robots Meta</label>
+                                <select id="robots" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="index, follow">Index, Follow</option>
+                                    <option value="index, nofollow">Index, No Follow</option>
+                                    <option value="noindex, follow">No Index, Follow</option>
+                                    <option value="noindex, nofollow">No Index, No Follow</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="language" class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                                <select id="language" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="zh">Chinese</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" id="favicon" class="checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                    <label for="favicon" class="ml-2 block text-sm text-gray-700">Include Favicon Meta</label>
+                                </div>
+                                <div id="favicon-fields" class="grid grid-cols-1 md:grid-cols-3 gap-4 hidden">
+                                    <div>
+                                        <label for="favicon-16" class="block text-sm font-medium text-gray-700 mb-1">16x16 Favicon</label>
+                                        <input type="url" id="favicon-16" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/favicon-16x16.png">
+                                    </div>
+                                    <div>
+                                        <label for="favicon-32" class="block text-sm font-medium text-gray-700 mb-1">32x32 Favicon</label>
+                                        <input type="url" id="favicon-32" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/favicon-32x32.png">
+                                    </div>
+                                    <div>
+                                        <label for="favicon-apple" class="block text-sm font-medium text-gray-700 mb-1">Apple Touch Icon</label>
+                                        <input type="url" id="favicon-apple" class="w-full px-4 py-2 border border-gray-300 rounded-md input-field" placeholder="https://example.com/apple-touch-icon.png">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-8 flex justify-center space-x-4">
+                        <button id="clear-btn" class="px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 transition-colors shadow">
+                            Clear All
+                        </button>
+                        <button id="generate-btn" class="px-8 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition-colors shadow-lg">
+                            Generate Meta Tags
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results" class="hidden p-6 border-t border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Generated Meta Tags</h2>
+                        <div class="flex space-x-2">
+                            <button id="copy-all-btn" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition-colors copy-btn">
+                                Copy All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tag-box p-4 mb-4 overflow-x-auto">
+                        <code id="generated-tags"></code>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Basic Meta Preview</h3>
+                            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                <div id="basic-preview" class="space-y-2">
+                                    <div class="text-gray-500 text-sm">No preview available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Open Graph Preview</h3>
+                            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                <div id="og-preview" class="space-y-2">
+                                    <div class="text-gray-500 text-sm">No preview available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Twitter Card Preview</h3>
+                            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                <div id="twitter-preview" class="space-y-2">
+                                    <div class="text-gray-500 text-sm">No preview available</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4 text-center">
+                <p class="mb-2">Meta Tag Generator Tool</p>
+                <p class="text-gray-400 text-sm">Generate comprehensive meta tags for better SEO and social media sharing</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Toggle favicon fields
+            const faviconCheckbox = document.getElementById('favicon');
+            const faviconFields = document.getElementById('favicon-fields');
+            
+            faviconCheckbox.addEventListener('change', () => {
+                if (faviconCheckbox.checked) {
+                    faviconFields.classList.remove('hidden');
+                } else {
+                    faviconFields.classList.add('hidden');
+                }
+            });
+            
+            // Generate meta tags
+            const generateBtn = document.getElementById('generate-btn');
+            const resultsSection = document.getElementById('results');
+            const generatedTags = document.getElementById('generated-tags');
+            const copyAllBtn = document.getElementById('copy-all-btn');
+            
+            generateBtn.addEventListener('click', () => {
+                // Basic meta tags
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const keywords = document.getElementById('keywords').value;
+                const author = document.getElementById('author').value;
+                const viewport = document.getElementById('viewport').value;
+                const charset = document.getElementById('charset').value;
+                
+                // Open Graph meta tags
+                const ogTitle = document.getElementById('og-title').value || title;
+                const ogDescription = document.getElementById('og-description').value || description;
+                const ogUrl = document.getElementById('og-url').value;
+                const ogImage = document.getElementById('og-image').value;
+                const ogType = document.getElementById('og-type').value;
+                const ogSiteName = document.getElementById('og-site_name').value;
+                
+                // Twitter Card meta tags
+                const twitterCard = document.getElementById('twitter-card').value;
+                const twitterSite = document.getElementById('twitter-site').value;
+                const twitterCreator = document.getElementById('twitter-creator').value;
+                const twitterTitle = document.getElementById('twitter-title').value || title;
+                const twitterDescription = document.getElementById('twitter-description').value || description;
+                const twitterImage = document.getElementById('twitter-image').value || ogImage;
+                
+                // Advanced meta tags
+                const canonical = document.getElementById('canonical').value;
+                const themeColor = document.getElementById('theme-color').value;
+                const robots = document.getElementById('robots').value;
+                const language = document.getElementById('language').value;
+                const includeFavicon = document.getElementById('favicon').checked;
+                const favicon16 = document.getElementById('favicon-16').value;
+                const favicon32 = document.getElementById('favicon-32').value;
+                const faviconApple = document.getElementById('favicon-apple').value;
+                
+                // Generate the meta tags HTML
+                let metaTags = '';
+                
+                // Basic meta tags
+                metaTags += `<!-- Basic Meta Tags -->\n`;
+                metaTags += `<meta charset="${charset}">\n`;
+                metaTags += `<meta name="viewport" content="${viewport}">\n`;
+                if (title) metaTags += `<title>${title}</title>\n`;
+                if (description) metaTags += `<meta name="description" content="${description}">\n`;
+                if (keywords) metaTags += `<meta name="keywords" content="${keywords}">\n`;
+                if (author) metaTags += `<meta name="author" content="${author}">\n`;
+                if (robots) metaTags += `<meta name="robots" content="${robots}">\n`;
+                
+                // Open Graph meta tags
+                metaTags += `\n<!-- Open Graph / Facebook -->\n`;
+                metaTags += `<meta property="og:type" content="${ogType}">\n`;
+                if (ogTitle) metaTags += `<meta property="og:title" content="${ogTitle}">\n`;
+                if (ogDescription) metaTags += `<meta property="og:description" content="${ogDescription}">\n`;
+                if (ogUrl) metaTags += `<meta property="og:url" content="${ogUrl}">\n`;
+                if (ogImage) metaTags += `<meta property="og:image" content="${ogImage}">\n`;
+                if (ogSiteName) metaTags += `<meta property="og:site_name" content="${ogSiteName}">\n`;
+                
+                // Twitter Card meta tags
+                metaTags += `\n<!-- Twitter -->\n`;
+                metaTags += `<meta name="twitter:card" content="${twitterCard}">\n`;
+                if (twitterSite) metaTags += `<meta name="twitter:site" content="${twitterSite}">\n`;
+                if (twitterCreator) metaTags += `<meta name="twitter:creator" content="${twitterCreator}">\n`;
+                if (twitterTitle) metaTags += `<meta name="twitter:title" content="${twitterTitle}">\n`;
+                if (twitterDescription) metaTags += `<meta name="twitter:description" content="${twitterDescription}">\n`;
+                if (twitterImage) metaTags += `<meta name="twitter:image" content="${twitterImage}">\n`;
+                
+                // Advanced meta tags
+                metaTags += `\n<!-- Advanced Meta Tags -->\n`;
+                if (canonical) metaTags += `<link rel="canonical" href="${canonical}">\n`;
+                metaTags += `<meta name="theme-color" content="${themeColor}">\n`;
+                metaTags += `<meta http-equiv="Content-Language" content="${language}">\n`;
+                
+                // Favicon meta tags
+                if (includeFavicon) {
+                    metaTags += `\n<!-- Favicon -->\n`;
+                    if (favicon16) metaTags += `<link rel="icon" type="image/png" sizes="16x16" href="${favicon16}">\n`;
+                    if (favicon32) metaTags += `<link rel="icon" type="image/png" sizes="32x32" href="${favicon32}">\n`;
+                    if (faviconApple) metaTags += `<link rel="apple-touch-icon" href="${faviconApple}">\n`;
+                }
+                
+                // Display the generated tags
+                generatedTags.textContent = metaTags;
+                resultsSection.classList.remove('hidden');
+                
+                // Update previews
+                updateBasicPreview(title, description);
+                updateOgPreview(ogTitle, ogDescription, ogImage, ogUrl);
+                updateTwitterPreview(twitterTitle, twitterDescription, twitterImage, twitterCard);
+            });
+            
+            // Copy all meta tags to clipboard
+            copyAllBtn.addEventListener('click', () => {
+                const tags = generatedTags.textContent;
+                navigator.clipboard.writeText(tags).then(() => {
+                    copyAllBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyAllBtn.textContent = 'Copy All';
+                    }, 2000);
+                });
+            });
+            
+            // Clear all form fields
+            const clearBtn = document.getElementById('clear-btn');
+            clearBtn.addEventListener('click', () => {
+                // Clear all input fields
+                document.querySelectorAll('input[type="text"], input[type="url"], textarea').forEach(field => {
+                    field.value = '';
+                });
+                
+                // Reset select fields to default values
+                document.getElementById('viewport').value = 'width=device-width, initial-scale=1.0';
+                document.getElementById('charset').value = 'UTF-8';
+                document.getElementById('og-type').value = 'website';
+                document.getElementById('twitter-card').value = 'summary';
+                document.getElementById('robots').value = 'index, follow';
+                document.getElementById('language').value = 'en';
+                document.getElementById('theme-color').value = '#4f46e5';
+                
+                // Uncheck checkbox and hide favicon fields
+                document.getElementById('favicon').checked = false;
+                document.getElementById('favicon-fields').classList.add('hidden');
+                
+                // Hide results section
+                document.getElementById('results').classList.add('hidden');
+                
+                // Reset previews
+                document.getElementById('basic-preview').innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+                document.getElementById('og-preview').innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+                document.getElementById('twitter-preview').innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+            });
+            
+            // Update preview functions
+            function updateBasicPreview(title, description) {
+                const preview = document.getElementById('basic-preview');
+                preview.innerHTML = '';
+                
+                if (title) {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'font-bold text-lg truncate';
+                    titleEl.textContent = title;
+                    preview.appendChild(titleEl);
+                }
+                
+                if (description) {
+                    const descEl = document.createElement('div');
+                    descEl.className = 'text-gray-600 text-sm';
+                    descEl.textContent = description;
+                    preview.appendChild(descEl);
+                }
+                
+                if (!title && !description) {
+                    preview.innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+                }
+            }
+            
+            function updateOgPreview(title, description, image, url) {
+                const preview = document.getElementById('og-preview');
+                preview.innerHTML = '';
+                
+                if (image) {
+                    const imgEl = document.createElement('img');
+                    imgEl.className = 'w-full h-32 object-cover rounded';
+                    imgEl.src = image;
+                    imgEl.alt = 'OG Image Preview';
+                    preview.appendChild(imgEl);
+                }
+                
+                if (url) {
+                    const urlEl = document.createElement('div');
+                    urlEl.className = 'text-gray-500 text-xs truncate';
+                    urlEl.textContent = url;
+                    preview.appendChild(urlEl);
+                }
+                
+                if (title) {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'font-semibold text-sm mt-1 truncate';
+                    titleEl.textContent = title;
+                    preview.appendChild(titleEl);
+                }
+                
+                if (description) {
+                    const descEl = document.createElement('div');
+                    descEl.className = 'text-gray-600 text-xs line-clamp-2';
+                    descEl.textContent = description;
+                    preview.appendChild(descEl);
+                }
+                
+                if (!title && !description && !image && !url) {
+                    preview.innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+                }
+            }
+            
+            function updateTwitterPreview(title, description, image, cardType) {
+                const preview = document.getElementById('twitter-preview');
+                preview.innerHTML = '';
+                
+                if (cardType === 'summary_large_image' && image) {
+                    const imgEl = document.createElement('img');
+                    imgEl.className = 'w-full h-40 object-cover rounded';
+                    imgEl.src = image;
+                    imgEl.alt = 'Twitter Image Preview';
+                    preview.appendChild(imgEl);
+                } else if (image) {
+                    const imgEl = document.createElement('img');
+                    imgEl.className = 'w-16 h-16 object-cover rounded-full float-left mr-2';
+                    imgEl.src = image;
+                    imgEl.alt = 'Twitter Image Preview';
+                    preview.appendChild(imgEl);
+                }
+                
+                if (title) {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'font-semibold text-sm mt-1 truncate';
+                    titleEl.textContent = title;
+                    preview.appendChild(titleEl);
+                }
+                
+                if (description) {
+                    const descEl = document.createElement('div');
+                    descEl.className = 'text-gray-600 text-xs line-clamp-2';
+                    descEl.textContent = description;
+                    preview.appendChild(descEl);
+                }
+                
+                if (!title && !description && !image) {
+                    preview.innerHTML = '<div class="text-gray-500 text-sm">No preview available</div>';
+                }
+            }
+            
+            // Auto-fill some fields when others are filled
+            const titleField = document.getElementById('title');
+            const ogTitleField = document.getElementById('og-title');
+            const twitterTitleField = document.getElementById('twitter-title');
+            
+            titleField.addEventListener('input', () => {
+                if (!ogTitleField.value) {
+                    ogTitleField.value = titleField.value;
+                }
+                if (!twitterTitleField.value) {
+                    twitterTitleField.value = titleField.value;
+                }
+            });
+            
+            const descriptionField = document.getElementById('description');
+            const ogDescriptionField = document.getElementById('og-description');
+            const twitterDescriptionField = document.getElementById('twitter-description');
+            
+            descriptionField.addEventListener('input', () => {
+                if (!ogDescriptionField.value) {
+                    ogDescriptionField.value = descriptionField.value;
+                }
+                if (!twitterDescriptionField.value) {
+                    twitterDescriptionField.value = descriptionField.value;
+                }
+            });
+            
+            const ogImageField = document.getElementById('og-image');
+            const twitterImageField = document.getElementById('twitter-image');
+            
+            ogImageField.addEventListener('input', () => {
+                if (!twitterImageField.value) {
+                    twitterImageField.value = ogImageField.value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

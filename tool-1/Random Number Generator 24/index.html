@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .range-controls {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .range-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .range-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .range-input input:focus {
+            border-color: #3498db;
+        }
+        
+        .result-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .result-label {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #3498db;
+            transition: all 0.5s ease;
+            text-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .history {
+            margin-top: 30px;
+        }
+        
+        .history h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .history-list {
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-number {
+            font-weight: 600;
+            color: #3498db;
+        }
+        
+        .history-range {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .result-value {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-dice"></i> Random Number Generator</h1>
+            <p>Generate random numbers within your specified range</p>
+        </div>
+        
+        <div class="range-controls">
+            <div class="control-group">
+                <label for="min-value"><i class="fas fa-arrow-down"></i> Minimum Value</label>
+                <div class="range-input">
+                    <input type="number" id="min-value" value="1" min="-1000" max="1000">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="max-value"><i class="fas fa-arrow-up"></i> Maximum Value</label>
+                <div class="range-input">
+                    <input type="number" id="max-value" value="100" min="-1000" max="1000">
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-container">
+            <div class="result-label">Your Random Number</div>
+            <div class="result-value" id="result">?</div>
+        </div>
+        
+        <button class="generate-btn" id="generate-btn">
+            <i class="fas fa-random"></i> Generate Random Number
+        </button>
+        
+        <div class="history">
+            <h2><i class="fas fa-history"></i> Generation History</h2>
+            <div class="history-list" id="history-list">
+                <!-- History items will be added here -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>created by: Sabbir | Refresh page to clear history</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const minInput = document.getElementById('min-value');
+            const maxInput = document.getElementById('max-value');
+            const resultDisplay = document.getElementById('result');
+            const generateBtn = document.getElementById('generate-btn');
+            const historyList = document.getElementById('history-list');
+            
+            // Initialize history array
+            let history = [];
+            
+            // Generate random number
+            function generateRandomNumber() {
+                const min = parseInt(minInput.value);
+                const max = parseInt(maxInput.value);
+                
+                // Validate inputs
+                if (isNaN(min) || isNaN(max)) {
+                    alert('Please enter valid numbers for both fields');
+                    return;
+                }
+                
+                if (min >= max) {
+                    alert('Minimum value must be less than maximum value');
+                    return;
+                }
+                
+                // Generate random number between min and max (inclusive)
+                const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+                
+                // Display with animation
+                resultDisplay.textContent = randomNum;
+                resultDisplay.classList.remove('pulse');
+                void resultDisplay.offsetWidth; // Trigger reflow
+                resultDisplay.classList.add('pulse');
+                
+                // Add to history
+                history.unshift({
+                    value: randomNum,
+                    min: min,
+                    max: max,
+                    timestamp: new Date()
+                });
+                
+                // Keep only last 5 items
+                if (history.length > 5) {
+                    history.pop();
+                }
+                
+                // Update history display
+                updateHistory();
+            }
+            
+            // Update history display
+            function updateHistory() {
+                historyList.innerHTML = '';
+                
+                history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    
+                    const formattedTime = item.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    historyItem.innerHTML = `
+                        <span class="history-number">${item.value}</span>
+                        <span class="history-range">[${item.min}-${item.max}]</span>
+                        <span class="history-time">${formattedTime}</span>
+                    `;
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateRandomNumber);
+            
+            // Also generate when Enter is pressed in input fields
+            minInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') generateRandomNumber();
+            });
+            
+            maxInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') generateRandomNumber();
+            });
+            
+            // Initial history update
+            updateHistory();
+        });
+    </script>
+</body>
+</html>
