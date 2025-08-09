@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image & Color Picker App - Premium</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    /* Reset & base */
+    *, *::before, *::after {box-sizing: border-box;}
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr auto;
+      --color-primary: #6366f1; /* indigo-500 */
+      --color-secondary: #06b6d4; /* cyan-500 */
+      --bg: #f9fafb;
+      --bg-alt: #ffffff;
+      --text-primary: #1e293b; /* zinc-800 */
+      --text-secondary: #475569; /* zinc-600 */
+      --shadow: rgba(0, 0, 0, 0.12);
+      --border-radius: 12px;
+      --transition: 0.3s ease;
+      --glass-bg: rgba(255 255 255 / 0.55);
+      --glass-shadow: rgba(0 0 0 / 0.08);
+      --scrollbar-bg: #e2e8f0;
+      --scrollbar-thumb: #a5b4fc;
+    }
+    body.dark {
+      --color-primary: #818cf8; /* indigo-400 */
+      --color-secondary: #67e8f9; /* cyan-400 */
+      --bg: #0f172a;
+      --bg-alt: #1e293b;
+      --text-primary: #e0e7ff; /* indigo-100 */
+      --text-secondary: #94a3b8; /* zinc-400 */
+      --shadow: rgba(0, 0, 0, 0.6);
+      --glass-bg: rgba(30 41 59 / 0.65);
+      --glass-shadow: rgba(0 0 0 / 0.2);
+      --scrollbar-bg: #374151;
+      --scrollbar-thumb: #6366f1;
+    }
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    a:hover,
+    a:focus {
+      color: var(--color-secondary);
+      outline-offset: 3px;
+      outline-color: var(--color-secondary);
+    }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 0.75em 1.5em;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color var(--transition), transform var(--transition);
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+    }
+    button:focus-visible {
+      outline: 3px solid var(--color-secondary);
+      outline-offset: 2px;
+    }
+    button:hover:not(:disabled) {
+      background-color: var(--color-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px var(--shadow);
+    }
+    button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    h1, h2, h3, h4 {
+      margin: 0 0 0.5em 0;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: clamp(1.8rem, 4vw + 1rem, 2.8rem);
+      line-height: 1.1;
+      color: var(--color-primary);
+    }
+    h2 {
+      font-size: clamp(1.4rem, 3vw + 1rem, 2rem);
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    h3 {
+      font-size: clamp(1.1rem, 2vw + 1rem, 1.5rem);
+      color: var(--text-primary);
+    }
+    p {
+      color: var(--text-secondary);
+      margin-top: 0;
+      font-size: 1rem;
+    }
+    .material-icons {
+      font-variation-settings: 'wght' 700;
+      font-size: 1.85rem;
+      color: var(--color-primary);
+      vertical-align: middle;
+      user-select: none;
+    }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 8px;
+    }
+    /* Container Queries and Layout */
+    #app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 64px);
+      position: relative;
+      transition: grid-template-columns 0.3s ease;
+    }
+    main {
+      padding: 24px 32px;
+      background: var(--bg-alt);
+      overflow-y: auto;
+      box-shadow:
+        inset 0 0 20px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    footer {
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(12px);
+      box-shadow: 0 -1px 12px var(--glass-shadow);
+      height: auto;
+      padding: 12px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      user-select: none;
+    }
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      height: 64px;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 2px 12px var(--glass-shadow);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      user-select: none;
+      line-height: 1;
+      letter-spacing: 0.06em;
+    }
+    nav.desktop-nav {
+      display: flex;
+      gap: 24px;
+    }
+    nav.desktop-nav a {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 4px 0;
+      position: relative;
+    }
+    nav.desktop-nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--color-primary);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    nav.desktop-nav a:hover::after,
+    nav.desktop-nav a:focus-visible::after,
+    nav.desktop-nav a.active::after {
+      width: 100%;
+    }
+    /* Sidebar */
+    aside#sidebar {
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: inset -1px 0 8px var(--glass-shadow);
+      padding: 24px 16px 32px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: 100%;
+      overflow-y: auto;
+      user-select: none;
+      position: sticky;
+      top: 64px;
+      z-index: 50;
+    }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .sidebar-nav button {
+      background: transparent;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background-color var(--transition);
+      width: 100%;
+      cursor: pointer;
+      border: none;
+    }
+    .sidebar-nav button:focus-visible,
+    .sidebar-nav button:hover {
+      background-color: var(--color-primary);
+      color: white;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    /* Notification badge */
+    .badge {
+      margin-left: auto;
+      background-color: var(--color-secondary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.75rem;
+      min-width: 20px;
+      text-align: center;
+      padding: 0 6px;
+      border-radius: 12px;
+      user-select: none;
+    }
+    /* Responsive sidebar for mobile */
+    .sidebar-collapsed #sidebar {
+      transform: translateX(-280px);
+      transition: transform 0.3s ease;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      height: calc(100vh - 64px);
+      z-index: 120;
+      box-shadow: 8px 0 24px rgba(0,0,0,0.3);
+      border-top-right-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
+      background: var(--glass-bg);
+    }
+    .sidebar-expanded #sidebar {
+      transform: translateX(0);
+    }
+    /* Overlay behind sidebar */
+    #sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      z-index: 110;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-expanded #sidebar-overlay {
+      opacity: 1;
+      pointer-events: all;
+    }
+    /* Hamburger toggle button */
+    button#sidebar-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color var(--transition);
+    }
+    button#sidebar-toggle:focus-visible {
+      outline: 3px solid var(--color-secondary);
+      outline-offset: 3px;
+    }
+    button#sidebar-toggle:hover {
+      color: var(--color-secondary);
+    }
+    /* Bottom navigation (mobile) */
+    nav#bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--glass-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 -2px 12px var(--glass-shadow);
+      z-index: 100;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    nav#bottom-nav button {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 0;
+      user-select: none;
+      transition: color var(--transition);
+      min-width: 56px;
+    }
+    nav#bottom-nav button:focus-visible {
+      outline: 3px solid var(--color-secondary);
+      outline-offset: 3px;
+    }
+    nav#bottom-nav button.active,
+    nav#bottom-nav button:hover {
+      color: var(--color-secondary);
+    }
+    nav#bottom-nav button span {
+      font-size: 0.625rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+    /* Responsive Utilities */
+    @media (max-width: 767px) {
+      #app {
+        grid-template-columns: 1fr;
+      }
+      button#sidebar-toggle {
+        display: block;
+      }
+      #sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        height: calc(100vh - 64px);
+        background: var(--glass-bg);
+        backdrop-filter: saturate(180%) blur(20px);
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.3);
+        border-top-right-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        transform: translateX(-280px);
+        transition: transform 0.3s ease;
+        z-index: 120;
+        padding: 24px 8px 32px 8px;
+      }
+      .sidebar-expanded #sidebar {
+        transform: translateX(0);
+      }
+      #sidebar-overlay {
+        display: block;
+      }
+      main {
+        padding: 24px 16px 80px 16px;
+      }
+      nav.desktop-nav {
+        display: none;
+      }
+      nav#bottom-nav {
+        display: flex;
+      }
+      footer {
+        display: none;
+      }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      #app {
+        grid-template-columns: 280px 1fr;
+      }
+      button#sidebar-toggle {
+        display: none;
+      }
+      nav.desktop-nav {
+        display: flex;
+      }
+      main {
+        padding: 32px 24px;
+      }
+      nav#bottom-nav {
+        display: none;
+      }
+      footer {
+        display: flex;
+      }
+    }
+    @media (min-width: 1024px) {
+      button#sidebar-toggle {
+        display: none;
+      }
+      nav.desktop-nav {
+        display: flex;
+      }
+      nav#bottom-nav {
+        display: none;
+      }
+      footer {
+        display: flex;
+      }
+    }
+    /* Cards */
+    .card {
+      background: var(--bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 16px var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: box-shadow 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .card:hover,
+    .card:focus-within {
+      box-shadow: 0 8px 32px var(--shadow);
+      border-color: var(--color-primary);
+      outline: none;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      user-select: none;
+    }
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      user-select: none;
+    }
+    /* Form */
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+      user-select: none;
+    }
+    input[type="file"] {
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid #cbd5e1;
+      background-color: var(--bg-alt);
+      color: var(--text-primary);
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+    input[type="file"]:focus-visible {
+      outline: 3px solid var(--color-secondary);
+      outline-offset: 2px;
+    }
+    input[type="color"] {
+      width: 64px;
+      height: 44px;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: var(--border-radius);
+      background: transparent;
+      box-shadow: 0 0 6px var(--shadow);
+      transition: box-shadow 0.3s ease;
+    }
+    input[type="color"]:focus-visible {
+      outline: 3px solid var(--color-secondary);
+      outline-offset: 2px;
+    }
+    .color-picker-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      box-shadow: 0 2px 6px var(--shadow);
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+      flex: none;
+      position: relative;
+    }
+    .color-swatch.selected,
+    .color-swatch:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 15px var(--shadow);
+      z-index: 1;
+    }
+    .color-swatch::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+    }
+    .color-swatch-label {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      user-select: none;
+    }
+    /* Image Display & Picker */
+    .image-picker {
+      border: 1px solid #cbd5e1;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 4px 12px var(--shadow);
+      background: var(--bg-alt);
+      max-width: 100%;
+      position: relative;
+      cursor: crosshair;
+    }
+    .image-picker img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+      border-radius: var(--border-radius);
+    }
+    .cursor-crosshair {
+      cursor: crosshair;
+    }
+    /* Picked Colors Panel */
+    .picked-colors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .picked-color-item {
+      background: var(--bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 5px var(--shadow);
+      padding: 12px 16px;
+      min-width: 80px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .picked-color-swatch {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      box-shadow: 0 0 6px var(--shadow);
+    }
+    .picked-color-code {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .btn-clear {
+      background: transparent;
+      border: 1.5px solid var(--color-primary);
+      color: var(--color-primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-clear:hover {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: 0 5px 20px var(--shadow);
+    }
+    /* Tooltip */
+    #tooltip {
+      position: fixed;
+      padding: 6px 12px;
+      background-color: var(--color-primary);
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 8px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+      z-index: 9999;
+      user-select: none;
+    }
+    /* Toast Notifications */
+    #toasts {
+      position: fixed;
+      top: 80px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 12000;
+      max-width: 320px;
+      user-select: none;
+    }
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      box-shadow: 0 4px 12px var(--glass-shadow);
+      backdrop-filter: saturate(180%) blur(14px);
+      padding: 16px 20px;
+      border-radius: 16px;
+      color: var(--text-primary);
+      animation: slideInRight 0.4s ease forwards;
+      cursor: default;
+    }
+    .toast .material-icons {
+      font-size: 24px;
+      color: var(--color-secondary);
+      flex-shrink: 0;
+    }
+    .toast strong {
+      flex-grow: 1;
+      font-weight: 700;
+    }
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(120%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--bg-alt) 25%,
+        var(--color-primary) 37%,
+        var(--bg-alt) 63%
+      );
+      background-size: 400% 100%;
+      animation: shine 1.4s ease infinite;
+      border-radius: var(--border-radius);
+      min-height: 100px;
+      width: 100%;
+    }
+    @keyframes shine {
+      0% {
+        background-position: 100% 0;
+      }
+      100% {
+        background-position: -100% 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header role="banner" aria-label="Main header">
+    <div class="header-left">
+      <button id="sidebar-toggle" aria-label="Toggle sidebar navigation" aria-expanded="false" aria-controls="sidebar" title="Toggle menu">
+        <span class="material-icons" aria-hidden="true">menu</span>
+      </button>
+      <div class="logo" aria-live="polite" aria-atomic="true" tabindex="0">ColorPickerPro</div>
+    </div>
+    <nav class="desktop-nav" role="navigation" aria-label="Primary navigation">
+      <a href="#" class="active" tabindex="0">Home</a>
+      <a href="#" tabindex="0">Features</a>
+      <a href="#" tabindex="0">About</a>
+      <a href="#" tabindex="0">Contact</a>
+    </nav>
+    <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode" type="button">
+      <span class="material-icons" aria-hidden="true">dark_mode</span>
+    </button>
+  </header>
+
+  <div id="sidebar-overlay" tabindex="-1"></div>
+
+  <div id="app" class="sidebar-collapsed">
+    <aside id="sidebar" role="navigation" aria-label="Sidebar navigation" tabindex="0">
+      <nav class="sidebar-nav">
+        <button type="button" aria-label="Open Image Picker" aria-pressed="true" id="nav-image-picker" class="active"><span class="material-icons" aria-hidden="true">image</span>Image Picker<span class="badge" aria-label="New feature available">New</span></button>
+        <button type="button" aria-label="Open Manual Color Picker" aria-pressed="false" id="nav-color-picker"><span class="material-icons" aria-hidden="true">format_color_fill</span>Color Picker</button>
+        <button type="button" aria-label="Open More Color Options" aria-pressed="false" id="nav-more-picker"><span class="material-icons" aria-hidden="true">color_lens</span>More Colors</button>
+      </nav>
+    </aside>
+
+    <main id="main-content" tabindex="-1" aria-live="polite" aria-atomic="true" role="main">
+      <section id="image-picker-section" class="section active" aria-label="Image color picking tool">
+        <div class="card" tabindex="0">
+          <div class="card-header">
+            <h2 class="card-title">Image to Color Picker</h2>
+            <button id="clear-picked-colors" class="btn-clear" aria-label="Clear all picked colors" title="Clear all picked colors">Clear All</button>
+          </div>
+          <p>Upload an image or use the sample image, then click on the image to pick colors precisely. The picked colors will be saved below.</p>
+          <label for="image-upload" aria-label="Upload image file">Upload Image</label>
+          <input type="file" id="image-upload" accept="image/*" aria-describedby="image-upload-desc" />
+          <div id="image-upload-desc" style="display:none;">Choose an image file to upload and pick colors from it.</div>
+          <div style="margin: 16px 0; max-width: 100%; overflow: auto;">
+            <div class="image-picker" id="image-container" aria-label="Color picking image container" role="region" tabindex="0" aria-describedby="instructions">
+              <!-- Image will be loaded here -->
+              <canvas id="image-canvas" style="display:none;"></canvas>
+              <img id="image-display" alt="Sample colorful abstract artwork for color picker" width="720" height="480" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1c1ce62b-be5f-4a89-816e-4e51d414c3c6.png" />
+              <span id="instructions" style="position:absolute; left:-9999px;">Use mouse or keyboard to pick colors on the image</span>
+            </div>
+          </div>
+          <h3>Picked Colors</h3>
+          <div class="picked-colors" id="picked-colors" aria-live="polite" aria-relevant="additions removals"></div>
+        </div>
+      </section>
+
+      <section id="color-picker-section" class="section" aria-label="Manual color picker">
+        <div class="card" tabindex="0">
+          <h2 class="card-title">Manual Color Picker</h2>
+          <p>Select or input colors manually with this intuitive color picker.</p>
+          <div class="color-picker-container" role="form" aria-label="Manual color selection">
+            <input type="color" id="manual-color-input" aria-label="Pick color manually" value="#6366f1" />
+            <input type="text" id="manual-color-text" aria-label="Manual color hex input" maxlength="7" placeholder="#6366f1" pattern="^#([a-fA-F0-9]{6})$" />
+            <button id="add-manual-color" aria-label="Add manual color to palette" title="Add manual color">Add</button>
+          </div>
+          <h3>Selected Colors</h3>
+          <div class="picked-colors" id="manual-picked-colors" aria-live="polite" aria-relevant="additions removals"></div>
+          <button id="clear-manual-colors" class="btn-clear" aria-label="Clear manual color palette" title="Clear manual colors">Clear Palette</button>
+        </div>
+      </section>
+
+      <section id="more-picker-section" class="section" aria-label="Additional color tools and options">
+        <div class="card" tabindex="0">
+          <h2 class="card-title">More Color Tools</h2>
+          <p>This premium section can include advanced color harmonies, palette generators, import/export tools, and more advanced features.</p>
+          <p>Features coming soon...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav id="bottom-nav" role="navigation" aria-label="Bottom navigation menu for mobile">
+    <button type="button" aria-label="Open Image Picker" aria-pressed="true" id="mobile-nav-image-picker" class="active" tabindex="0">
+      <span class="material-icons" aria-hidden="true">image</span><span>Image</span>
+    </button>
+    <button type="button" aria-label="Open Manual Color Picker" aria-pressed="false" id="mobile-nav-color-picker" tabindex="-1">
+      <span class="material-icons" aria-hidden="true">format_color_fill</span><span>Pick</span>
+    </button>
+    <button type="button" aria-label="Open More Color Options" aria-pressed="false" id="mobile-nav-more-picker" tabindex="-1">
+      <span class="material-icons" aria-hidden="true">color_lens</span><span>More</span>
+    </button>
+  </nav>
+
+  <!-- Tooltip -->
+  <div id="tooltip" role="tooltip" aria-hidden="true" aria-live="polite"></div>
+
+  <!-- Toast notifications -->
+  <div id="toasts" aria-live="assertive" aria-atomic="true" aria-relevant="additions"></div>
+
+  <script>
+    (() => {
+      // Theme toggle
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      const body = document.body;
+
+      function setThemeMode(dark) {
+        if(dark) {
+          body.classList.add('dark');
+          themeToggleBtn.innerHTML = '<span class="material-icons" aria-hidden="true">light_mode</span>';
+          themeToggleBtn.setAttribute('aria-label', 'Toggle light mode');
+        } else {
+          body.classList.remove('dark');
+          themeToggleBtn.innerHTML = '<span class="material-icons" aria-hidden="true">dark_mode</span>';
+          themeToggleBtn.setAttribute('aria-label', 'Toggle dark mode');
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      }
+      function loadTheme() {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+          setThemeMode(true);
+        } else if (storedTheme === 'light') {
+          setThemeMode(false);
+        } else {
+          setThemeMode(prefersDarkScheme.matches);
+        }
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        setThemeMode(!body.classList.contains('dark'));
+      });
+      loadTheme();
+
+      // Sidebar toggle and mobile interactions
+      const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+      const appDiv = document.getElementById('app');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+      function openSidebar() {
+        appDiv.classList.remove('sidebar-collapsed');
+        appDiv.classList.add('sidebar-expanded');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+      }
+      function closeSidebar() {
+        appDiv.classList.remove('sidebar-expanded');
+        appDiv.classList.add('sidebar-collapsed');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+      }
+      sidebarToggleBtn.addEventListener('click', () => {
+        if(appDiv.classList.contains('sidebar-expanded')){
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      });
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      // Close sidebar on Escape
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && appDiv.classList.contains('sidebar-expanded')){
+          closeSidebar();
+          sidebarToggleBtn.focus();
+        }
+      });
+
+      // Navigation and tab management
+      const navButtons = document.querySelectorAll('.sidebar-nav button');
+      const sections = document.querySelectorAll('.section');
+      const bottomNavBtns = document.querySelectorAll('#bottom-nav button');
+
+      function activateSection(id) {
+        sections.forEach(section => {
+          if(section.id === id + '-section'){
+            section.classList.add('active');
+            section.setAttribute('aria-hidden', 'false');
+          } else {
+            section.classList.remove('active');
+            section.setAttribute('aria-hidden', 'true');
+          }
+        });
+        navButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.id === 'nav-' + id);
+          btn.setAttribute('aria-pressed', btn.id === 'nav-' + id ? 'true' : 'false');
+        });
+        bottomNavBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.id === 'mobile-nav-' + id);
+          btn.setAttribute('aria-pressed', btn.id === 'mobile-nav-' + id ? 'true' : 'false');
+          btn.tabIndex = btn.classList.contains('active') ? 0 : -1;
+        });
+        if(window.innerWidth < 768){
+          // close sidebar on mobile nav change
+          closeSidebar();
+          // focus main content for screen readers
+          document.getElementById('main-content').focus();
+        }
+      }
+      navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          activateSection(btn.id.replace('nav-', ''));
+        });
+        btn.addEventListener('keydown', e => {
+          // navigate buttons with arrow keys
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            let current = Array.from(navButtons).indexOf(e.target);
+            if(e.key === 'ArrowDown'){
+              current = (current + 1) % navButtons.length;
+            } else {
+              current = (current - 1 + navButtons.length) % navButtons.length;
+            }
+            navButtons[current].focus();
+          }
+        });
+      });
+      bottomNavBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          activateSection(btn.id.replace('mobile-nav-', ''));
+        });
+      });
+      // Initial activation
+      activateSection('image-picker');
+
+      // Image Picker functionality
+      const imageUploadInput = document.getElementById('image-upload');
+      const imageDisplay = document.getElementById('image-display');
+      const imageCanvas = document.getElementById('image-canvas');
+      const pickedColorsContainer = document.getElementById('picked-colors');
+      let imageCtx = imageCanvas.getContext('2d');
+
+      // Picked colors store
+      let pickedColors = [];
+
+      function rgbToHex(r, g, b) {
+        return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+      }
+      function isValidHex(hex) {
+        return /^#([0-9A-Fa-f]{6})$/.test(hex);
+      }
+      function addPickedColor(hex) {
+        if(!pickedColors.includes(hex)){
+          pickedColors.push(hex);
+          renderPickedColors();
+          showToast(`Color ${hex.toUpperCase()} added`);
+        }
+      }
+      function renderPickedColors(){
+        pickedColorsContainer.innerHTML = '';
+        if(pickedColors.length === 0){
+          pickedColorsContainer.textContent = 'No colors picked yet.';
+          return;
+        }
+        pickedColors.forEach(color => {
+          const div = document.createElement('div');
+          div.className = 'picked-color-item';
+          div.innerHTML = `
+          <div class="picked-color-swatch" style="background:${color}" aria-label="Color swatch for ${color}" role="img"></div>
+          <div class="picked-color-code">${color.toUpperCase()}</div>
+          `;
+          pickedColorsContainer.appendChild(div);
+        });
+      }
+      function clearPickedColors(){
+        pickedColors = [];
+        renderPickedColors();
+        showToast('Cleared all picked colors');
+      }
+      document.getElementById('clear-picked-colors').addEventListener('click', clearPickedColors);
+
+      // Load image to canvas for pixel reading
+      function loadImageToCanvas(){
+        if(!imageDisplay.complete || imageDisplay.naturalWidth === 0){
+          return;
+        }
+        imageCanvas.width = imageDisplay.naturalWidth;
+        imageCanvas.height = imageDisplay.naturalHeight;
+        imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+        imageCtx.drawImage(imageDisplay, 0, 0);
+        imageCanvas.style.width = imageDisplay.clientWidth + 'px';
+        imageCanvas.style.height = imageDisplay.clientHeight + 'px';
+      }
+      imageDisplay.addEventListener('load', () => {
+        loadImageToCanvas();
+      });
+      // Initial load
+      if(imageDisplay.complete){
+        loadImageToCanvas();
+      }
+
+      // Image upload handler
+      imageUploadInput.addEventListener('change', event => {
+        const file = event.target.files[0];
+        if(!file) return;
+        const url = URL.createObjectURL(file);
+        imageDisplay.src = url;
+        imageDisplay.alt = 'User uploaded image for color picking';
+      });
+
+      // Picking color on image click
+      const imageContainer = document.getElementById('image-container');
+      const tooltip = document.getElementById('tooltip');
+
+      function showTooltip(text, x, y){
+        tooltip.textContent = text;
+        tooltip.style.left = x + 15 + "px";
+        tooltip.style.top = y + 15 + "px";
+        tooltip.style.opacity = 1;
+        tooltip.setAttribute('aria-hidden', 'false');
+      }
+      function hideTooltip(){
+        tooltip.style.opacity = 0;
+        tooltip.setAttribute('aria-hidden', 'true');
+      }
+      imageContainer.addEventListener('mousemove', (e) => {
+        if(imageCanvas.width === 0 || imageCanvas.height === 0) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const scaleX = imageCanvas.width / rect.width;
+        const scaleY = imageCanvas.height / rect.height;
+        const x = Math.floor((e.clientX - rect.left) * scaleX);
+        const y = Math.floor((e.clientY - rect.top) * scaleY);
+        if(x < 0 || y < 0 || x >= imageCanvas.width || y >= imageCanvas.height) {
+          hideTooltip();
+          return;
+        }
+        const pixel = imageCtx.getImageData(x, y, 1, 1).data;
+        const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        showTooltip(hex.toUpperCase(), e.clientX, e.clientY);
+      });
+      imageContainer.addEventListener('mouseleave', () => {
+        hideTooltip();
+      });
+      imageContainer.addEventListener('click', (e) => {
+        if(imageCanvas.width === 0 || imageCanvas.height === 0) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const scaleX = imageCanvas.width / rect.width;
+        const scaleY = imageCanvas.height / rect.height;
+        const x = Math.floor((e.clientX - rect.left) * scaleX);
+        const y = Math.floor((e.clientY - rect.top) * scaleY);
+        if(x < 0 || y < 0 || x >= imageCanvas.width || y >= imageCanvas.height) return;
+        const pixel = imageCtx.getImageData(x, y, 1, 1).data;
+        const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        addPickedColor(hex);
+      });
+
+      // Manual Color Picker
+      const manualColorInput = document.getElementById('manual-color-input');
+      const manualColorText = document.getElementById('manual-color-text');
+      const manualPickedColorsDiv = document.getElementById('manual-picked-colors');
+      const addManualColorBtn = document.getElementById('add-manual-color');
+      const clearManualColorsBtn = document.getElementById('clear-manual-colors');
+
+      let manualPickedColors = [];
+
+      function addManualColor(hex) {
+        hex = hex.toLowerCase();
+        if(!isValidHex(hex)) return false;
+        if(!manualPickedColors.includes(hex)){
+          manualPickedColors.push(hex);
+          renderManualPickedColors();
+          showToast(`Manual color ${hex.toUpperCase()} added`);
+          return true;
+        }
+        return false;
+      }
+      function renderManualPickedColors(){
+        manualPickedColorsDiv.innerHTML = '';
+        if(manualPickedColors.length === 0) {
+          manualPickedColorsDiv.textContent = 'No manual colors selected.';
+          return;
+        }
+        manualPickedColors.forEach(color => {
+          const div = document.createElement('div');
+          div.className = 'picked-color-item';
+          div.innerHTML = `
+            <div class="picked-color-swatch" style="background:${color}" aria-label="Manual color swatch for ${color}" role="img"></div>
+            <div class="picked-color-code">${color.toUpperCase()}</div>
+          `;
+          manualPickedColorsDiv.appendChild(div);
+        });
+      }
+      addManualColorBtn.addEventListener('click', () => {
+        let hex = manualColorText.value.trim() || manualColorInput.value;
+        if (!hex.startsWith('#')){
+          hex = '#' + hex;
+        }
+        if(!isValidHex(hex)){
+          alert('Invalid hex color format (Example: #FF00AA)');
+          manualColorText.focus();
+          return;
+        }
+        if(addManualColor(hex)){
+          manualColorText.value = '';
+        } else {
+          alert('Color already picked.');
+        }
+      });
+      manualColorInput.addEventListener('input', () => {
+        manualColorText.value = manualColorInput.value.toUpperCase();
+      });
+      manualColorText.addEventListener('input', () => {
+        const val = manualColorText.value.trim();
+        if(isValidHex(val)){
+          manualColorInput.value = val;
+        }
+      });
+      clearManualColorsBtn.addEventListener('click', () => {
+        manualPickedColors = [];
+        renderManualPickedColors();
+        showToast('Manual colors cleared');
+      });
+      renderManualPickedColors();
+
+      // Toast notification system
+      const toastsContainer = document.getElementById('toasts');
+      function showToast(message, options = {}) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+        toast.textContent = message;
+        toastsContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => {
+            toastsContainer.removeChild(toast);
+          }, 400);
+        }, options.duration || 3500);
+        return toast;
+      }
+
+      // Accessibility keyboard navigation for image container
+      imageContainer.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          // Pick center pixel color on Enter or Space
+          if(imageCanvas.width === 0 || imageCanvas.height === 0) return;
+          const x = Math.floor(imageCanvas.width / 2);
+          const y = Math.floor(imageCanvas.height / 2);
+          const pixel = imageCtx.getImageData(x, y, 1, 1).data;
+          const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+          addPickedColor(hex);
+          showToast(`Color ${hex.toUpperCase()} picked from center of image`);
+        }
+      });
+
+      // Keyboard shortcuts for power users
+      document.addEventListener('keydown', (e) => {
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        if(e.key === '1'){
+          activateSection('image-picker');
+        } else if(e.key === '2'){
+          activateSection('color-picker');
+        } else if(e.key === '3'){
+          activateSection('more-picker');
+        } else if(e.key.toLowerCase() === 'd'){
+          // Toggle dark mode
+          themeToggleBtn.click();
+        } else if(e.key.toLowerCase() === 'm'){
+          // Toggle sidebar on desktop
+          if(window.innerWidth >= 768){
+            if(appDiv.classList.contains('sidebar-collapsed')){
+              openSidebar();
+            } else {
+              closeSidebar();
+            }
+          }
+        }
+      });
+
+      // Optimized resize handler for canvas scaling & layout fixes
+      window.addEventListener('resize', () => {
+        loadImageToCanvas();
+      });
+
+    })();
+  </script>
+</body>
+</html>

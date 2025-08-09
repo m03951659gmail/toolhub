@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Between Dates Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #4a00e0;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .calculator {
+            padding: 40px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .date-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .date-input label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .date-field {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .date-field:hover {
+            border-color: #4a00e0;
+        }
+
+        .date-field i {
+            color: #4a00e0;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .date-field input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.2rem;
+            width: 100%;
+            padding: 10px 0;
+            color: #333;
+        }
+
+        .calculate-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #4a00e0;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+        }
+
+        .calculate-btn:hover {
+            background: #3500a8;
+            transform: translateY(-3px);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(1px);
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-container.active {
+            display: block;
+        }
+
+        .result-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .days-result {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .days-label {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .date-display {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator {
+                padding: 20px;
+            }
+            
+            .days-result {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> Days Between Dates Calculator</h1>
+            <p>Calculate the number of days between two dates instantly</p>
+        </div>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <div class="date-input">
+                    <label for="start-date">Start Date</label>
+                    <div class="date-field">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="start-date" value="2023-01-01">
+                    </div>
+                </div>
+                
+                <div class="date-input">
+                    <label for="end-date">End Date</label>
+                    <div class="date-field">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="end-date" value="2023-12-31">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="calculate-btn" id="calculate-btn">
+                <i class="fas fa-calculator"></i> Calculate Days Between
+            </button>
+            
+            <div class="result-container" id="result-container">
+                <h2>Days Between Dates</h2>
+                <div class="days-result" id="days-result">365</div>
+                <div class="days-label">days</div>
+                <div class="date-display">
+                    <div>Start: <span id="display-start">Jan 1, 2023</span></div>
+                    <div>End: <span id="display-end">Dec 31, 2023</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with <i class="fas fa-heart" style="color: #ff4757;"></i> | Days Between Dates Calculator</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultContainer = document.getElementById('result-container');
+            const daysResult = document.getElementById('days-result');
+            const displayStart = document.getElementById('display-start');
+            const displayEnd = document.getElementById('display-end');
+            
+            // Set min/max values for date inputs (100 years range)
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setFullYear(today.getFullYear() + 10);
+            
+            const minDate = new Date();
+            minDate.setFullYear(today.getFullYear() - 100);
+            
+            startDateInput.min = formatDate(minDate);
+            startDateInput.max = formatDate(maxDate);
+            endDateInput.min = formatDate(minDate);
+            endDateInput.max = formatDate(maxDate);
+            
+            // Format date for display
+            function formatDisplayDate(date) {
+                return new Date(date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+            
+            // Format date for input value
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            // Calculate days between two dates
+            function calculateDaysBetween() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                
+                // Validate dates
+                if (isNaN(startDate) || isNaN(endDate)) {
+                    alert('Please select valid dates');
+                    return;
+                }
+                
+                // Ensure end date is after start date
+                if (endDate < startDate) {
+                    alert('End date must be after start date');
+                    return;
+                }
+                
+                // Calculate difference in days
+                const diffTime = Math.abs(endDate - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                // Update display
+                displayStart.textContent = formatDisplayDate(startDate);
+                displayEnd.textContent = formatDisplayDate(endDate);
+                daysResult.textContent = diffDays;
+                
+                // Show result container
+                resultContainer.classList.add('active');
+            }
+            
+            // Set initial display dates
+            displayStart.textContent = formatDisplayDate(startDateInput.value);
+            displayEnd.textContent = formatDisplayDate(endDateInput.value);
+            
+            // Event listeners
+            calculateBtn.addEventListener('click', calculateDaysBetween);
+            
+            // Also recalculate when dates change
+            startDateInput.addEventListener('change', calculateDaysBetween);
+            endDateInput.addEventListener('change', calculateDaysBetween);
+            
+            // Calculate on initial load
+            calculateDaysBetween();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizable Speed Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: titleGlow 2s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px rgba(255, 94, 98, 0.7); }
+            to { text-shadow: 0 0 20px rgba(255, 153, 102, 0.9), 0 0 30px rgba(255, 94, 98, 0.6); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .customization {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .test-area {
+            flex: 2;
+            min-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #ff9966;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 10px;
+            border-radius: 5px;
+            background: #444;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #ff5e62;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 94, 98, 0.8);
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #333;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .test-button {
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 94, 98, 0.4);
+        }
+
+        .test-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 94, 98, 0.6);
+        }
+
+        .test-button:active {
+            transform: translateY(1px);
+        }
+
+        .test-visualization {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            height: 200px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .speed-gauge {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .gauge-background {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#00b09b, #96c93d, #ff9966, #ff5e62);
+            position: absolute;
+            top: 0;
+            left: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+
+        .gauge-inner {
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            background: #1a1a2e;
+            border-radius: 50%;
+            top: 7.5%;
+            left: 7.5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .speed-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .speed-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .test-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #ff9966;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .network-info {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .data-particle {
+            position: absolute;
+            background: rgba(0, 200, 255, 0.7);
+            border-radius: 50%;
+            animation: float 3s linear forwards;
+        }
+
+        @keyframes float {
+            to {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        .test-in-progress {
+            display: none;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .customization, .test-area {
+                min-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Custom Speed Test</h1>
+            <p class="subtitle">Create your own internet speed test results! Customize every parameter and run a realistic-looking test.</p>
+        </header>
+        
+        <div class="content">
+            <div class="panel customization">
+                <h2><i class="fas fa-sliders-h"></i> Customization Panel</h2>
+                
+                <div class="form-group">
+                    <label>Download Speed (Mbps)</label>
+                    <div class="slider-container">
+                        <input type="range" id="download" min="1" max="1000" value="350">
+                        <input type="number" id="downloadValue" min="1" max="1000" value="350">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload Speed (Mbps)</label>
+                    <div class="slider-container">
+                        <input type="range" id="upload" min="1" max="500" value="75">
+                        <input type="number" id="uploadValue" min="1" max="500" value="75">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Latency (ms)</label>
+                    <div class="slider-container">
+                        <input type="range" id="latency" min="1" max="200" value="24">
+                        <input type="number" id="latencyValue" min="1" max="200" value="24">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Jitter (ms)</label>
+                    <div class="slider-container">
+                        <input type="range" id="jitter" min="0" max="50" value="3">
+                        <input type="number" id="jitterValue" min="0" max="50" value="3">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Packet Loss (%)</label>
+                    <div class="slider-container">
+                        <input type="range" id="packetLoss" min="0" max="10" step="0.1" value="0.2">
+                        <input type="number" id="packetLossValue" min="0" max="10" step="0.1" value="0.2">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Server Location</label>
+                    <input type="text" id="serverLocation" value="New York, USA">
+                </div>
+                
+                <div class="form-group">
+                    <label>Network Name</label>
+                    <input type="text" id="networkName" value="Sixty Four Networks Limited">
+                </div>
+                
+                <div class="form-group">
+                    <label>Your IP Address</label>
+                    <input type="text" id="ipAddress" value="192.168.100.64">
+                </div>
+                
+                <button id="runTest" class="test-button">
+                    <i class="fas fa-play"></i> RUN SPEED TEST
+                </button>
+            </div>
+            
+            <div class="panel test-area">
+                <h2><i class="fas fa-tachometer-alt"></i> Speed Test</h2>
+                
+                <div class="test-in-progress" id="testProgress">
+                    <p>Testing your internet speed... <span id="progressText">0%</span></p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <div class="test-visualization">
+                    <div class="animation-container" id="animationContainer"></div>
+                    <div class="speed-gauge">
+                        <div class="gauge-background"></div>
+                        <div class="gauge-inner">
+                            <div class="speed-value" id="gaugeValue">0</div>
+                            <div class="speed-label" id="gaugeLabel">Mbps</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-results">
+                    <div class="result-card">
+                        <div class="result-value" id="downloadResult">0</div>
+                        <div class="result-label">DOWNLOAD</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-value" id="uploadResult">0</div>
+                        <div class="result-label">UPLOAD</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-value" id="latencyResult">0</div>
+                        <div class="result-label">LATENCY</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-value" id="jitterResult">0</div>
+                        <div class="result-label">JITTER</div>
+                    </div>
+                </div>
+                
+                <div class="network-info">
+                    <div class="info-item">
+                        <div class="info-label">PACKET LOSS</div>
+                        <div class="info-value" id="packetLossResult">0%</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">SERVER LOCATION</div>
+                        <div class="info-value" id="serverLocationResult">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">NETWORK</div>
+                        <div class="info-value" id="networkNameResult">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">IP ADDRESS</div>
+                        <div class="info-value" id="ipAddressResult">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Link sliders with number inputs
+        document.getElementById('download').addEventListener('input', function() {
+            document.getElementById('downloadValue').value = this.value;
+        });
+        
+        document.getElementById('downloadValue').addEventListener('input', function() {
+            document.getElementById('download').value = this.value;
+        });
+        
+        document.getElementById('upload').addEventListener('input', function() {
+            document.getElementById('uploadValue').value = this.value;
+        });
+        
+        document.getElementById('uploadValue').addEventListener('input', function() {
+            document.getElementById('upload').value = this.value;
+        });
+        
+        document.getElementById('latency').addEventListener('input', function() {
+            document.getElementById('latencyValue').value = this.value;
+        });
+        
+        document.getElementById('latencyValue').addEventListener('input', function() {
+            document.getElementById('latency').value = this.value;
+        });
+        
+        document.getElementById('jitter').addEventListener('input', function() {
+            document.getElementById('jitterValue').value = this.value;
+        });
+        
+        document.getElementById('jitterValue').addEventListener('input', function() {
+            document.getElementById('jitter').value = this.value;
+        });
+        
+        document.getElementById('packetLoss').addEventListener('input', function() {
+            document.getElementById('packetLossValue').value = this.value;
+        });
+        
+        document.getElementById('packetLossValue').addEventListener('input', function() {
+            document.getElementById('packetLoss').value = this.value;
+        });
+        
+        // Run test button
+        document.getElementById('runTest').addEventListener('click', runTest);
+        
+        function runTest() {
+            const testProgress = document.getElementById('testProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const animationContainer = document.getElementById('animationContainer');
+            
+            // Show progress bar
+            testProgress.style.display = 'block';
+            
+            // Reset UI
+            document.getElementById('gaugeValue').textContent = '0';
+            document.getElementById('downloadResult').textContent = '0';
+            document.getElementById('uploadResult').textContent = '0';
+            document.getElementById('latencyResult').textContent = '0';
+            document.getElementById('jitterResult').textContent = '0';
+            document.getElementById('packetLossResult').textContent = '0%';
+            progressFill.style.width = '0%';
+            progressText.textContent = '0%';
+            animationContainer.innerHTML = '';
+            
+            // Get custom values
+            const download = parseFloat(document.getElementById('download').value);
+            const upload = parseFloat(document.getElementById('upload').value);
+            const latency = parseFloat(document.getElementById('latency').value);
+            const jitter = parseFloat(document.getElementById('jitter').value);
+            const packetLoss = parseFloat(document.getElementById('packetLoss').value);
+            const serverLocation = document.getElementById('serverLocation').value;
+            const networkName = document.getElementById('networkName').value;
+            const ipAddress = document.getElementById('ipAddress').value;
+            
+            // Simulate test progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = progress + '%';
+                
+                // Create data particles
+                if (progress < 100) {
+                    for (let i = 0; i < 3; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'data-particle';
+                        particle.style.width = Math.random() * 10 + 5 + 'px';
+                        particle.style.height = particle.style.width;
+                        particle.style.left = Math.random() * 100 + '%';
+                        particle.style.top = '100%';
+                        particle.style.opacity = Math.random() * 0.5 + 0.3;
+                        animationContainer.appendChild(particle);
+                        
+                        // Remove particle after animation
+                        setTimeout(() => {
+                            particle.remove();
+                        }, 3000);
+                    }
+                }
+                
+                // Update gauge during download test (first half)
+                if (progress < 50) {
+                    const gaugeValue = Math.floor((download / 1000) * progress * 2);
+                    document.getElementById('gaugeValue').textContent = gaugeValue;
+                    document.getElementById('gaugeLabel').textContent = 'Mbps';
+                }
+                // Update gauge during upload test (second half)
+                else if (progress < 100) {
+                    const gaugeValue = Math.floor((upload / 500) * (progress - 50) * 2);
+                    document.getElementById('gaugeValue').textContent = gaugeValue;
+                    document.getElementById('gaugeLabel').textContent = 'Mbps';
+                }
+                
+                // When test completes
+                if (progress === 100) {
+                    clearInterval(interval);
+                    
+                    // Show final results after a slight delay
+                    setTimeout(() => {
+                        document.getElementById('gaugeValue').textContent = download;
+                        document.getElementById('downloadResult').textContent = download;
+                        document.getElementById('uploadResult').textContent = upload;
+                        document.getElementById('latencyResult').textContent = latency;
+                        document.getElementById('jitterResult').textContent = jitter;
+                        document.getElementById('packetLossResult').textContent = packetLoss + '%';
+                        document.getElementById('serverLocationResult').textContent = serverLocation;
+                        document.getElementById('networkNameResult').textContent = networkName;
+                        document.getElementById('ipAddressResult').textContent = ipAddress;
+                        
+                        // Hide progress bar after showing results
+                        setTimeout(() => {
+                            testProgress.style.display = 'none';
+                        }, 1000);
+                    }, 500);
+                }
+            }, 50);
+        }
+        
+        // Initial test to show something
+        setTimeout(runTest, 1000);
+    </script>
+</body>
+</html>

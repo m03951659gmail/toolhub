@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #4776E6, #8E54E9);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+            gap: 25px;
+        }
+        
+        .section {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section h2 {
+            color: #4776E6;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #4776E6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(71, 118, 230, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(90deg, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(71, 118, 230, 0.4);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border-left: 4px solid #4776E6;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .result h3 {
+            color: #4776E6;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .explanation {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            background: #f8f9ff;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #8E54E9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-percentage"></i> Percentage Calculator</h1>
+            <p>Calculate percentages easily with our three essential tools</p>
+        </header>
+        
+        <div class="calculator">
+            <!-- Section 1: What is X% of Y? -->
+            <div class="section">
+                <div class="icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h2>What is X% of Y?</h2>
+                <div class="input-group">
+                    <label for="percent">Percentage (X%)</label>
+                    <input type="number" id="percent" placeholder="Enter percentage">
+                </div>
+                <div class="input-group">
+                    <label for="number">Number (Y)</label>
+                    <input type="number" id="number" placeholder="Enter number">
+                </div>
+                <button onclick="calculatePercentage()">Calculate</button>
+                <div class="result">
+                    <h3>Result</h3>
+                    <div class="result-value" id="result1">-</div>
+                    <div class="explanation" id="explanation1"></div>
+                </div>
+            </div>
+            
+            <!-- Section 2: X is what percent of Y? -->
+            <div class="section">
+                <div class="icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h2>X is what percent of Y?</h2>
+                <div class="input-group">
+                    <label for="part">Part (X)</label>
+                    <input type="number" id="part" placeholder="Enter part">
+                </div>
+                <div class="input-group">
+                    <label for="whole">Whole (Y)</label>
+                    <input type="number" id="whole" placeholder="Enter whole">
+                </div>
+                <button onclick="calculatePercentOf()">Calculate</button>
+                <div class="result">
+                    <h3>Result</h3>
+                    <div class="result-value" id="result2">-</div>
+                    <div class="explanation" id="explanation2"></div>
+                </div>
+            </div>
+            
+            <!-- Section 3: Percentage Change -->
+            <div class="section">
+                <div class="icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h2>Percentage Change</h2>
+                <div class="input-group">
+                    <label for="original">Original Value</label>
+                    <input type="number" id="original" placeholder="Enter original value">
+                </div>
+                <div class="input-group">
+                    <label for="new">New Value</label>
+                    <input type="number" id="new" placeholder="Enter new value">
+                </div>
+                <button onclick="calculateChange()">Calculate</button>
+                <div class="result">
+                    <h3>Result</h3>
+                    <div class="result-value" id="result3">-</div>
+                    <div class="explanation" id="explanation3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Percentage Calculator &copy; 2023 | Made with <i class="fas fa-heart" style="color:#e74c3c"></i></p>
+        </footer>
+    </div>
+
+    <script>
+        function calculatePercentage() {
+            const percent = parseFloat(document.getElementById('percent').value);
+            const number = parseFloat(document.getElementById('number').value);
+            
+            if (isNaN(percent) || isNaN(number)) {
+                document.getElementById('result1').textContent = 'Invalid input';
+                document.getElementById('explanation1').textContent = 'Please enter valid numbers';
+                return;
+            }
+            
+            const result = (percent / 100) * number;
+            document.getElementById('result1').textContent = result.toFixed(2);
+            document.getElementById('explanation1').textContent = `${percent}% of ${number} is ${result.toFixed(2)}`;
+        }
+        
+        function calculatePercentOf() {
+            const part = parseFloat(document.getElementById('part').value);
+            const whole = parseFloat(document.getElementById('whole').value);
+            
+            if (isNaN(part) || isNaN(whole) || whole === 0) {
+                document.getElementById('result2').textContent = 'Invalid input';
+                document.getElementById('explanation2').textContent = whole === 0 ? 'Whole cannot be zero' : 'Please enter valid numbers';
+                return;
+            }
+            
+            const result = (part / whole) * 100;
+            document.getElementById('result2').textContent = result.toFixed(2) + '%';
+            document.getElementById('explanation2').textContent = `${part} is ${result.toFixed(2)}% of ${whole}`;
+        }
+        
+        function calculateChange() {
+            const original = parseFloat(document.getElementById('original').value);
+            const newVal = parseFloat(document.getElementById('new').value);
+            
+            if (isNaN(original) || isNaN(newVal)) {
+                document.getElementById('result3').textContent = 'Invalid input';
+                document.getElementById('explanation3').textContent = 'Please enter valid numbers';
+                return;
+            }
+            
+            if (original === 0) {
+                document.getElementById('result3').textContent = 'N/A';
+                document.getElementById('explanation3').textContent = 'Original value cannot be zero';
+                return;
+            }
+            
+            const change = ((newVal - original) / original) * 100;
+            const changeType = change >= 0 ? 'increase' : 'decrease';
+            const absChange = Math.abs(change).toFixed(2);
+            
+            document.getElementById('result3').textContent = change.toFixed(2) + '%';
+            document.getElementById('result3').style.color = change >= 0 ? '#2ecc71' : '#e74c3c';
+            document.getElementById('explanation3').textContent = `From ${original} to ${newVal} is a ${absChange}% ${changeType}`;
+        }
+    </script>
+</body>
+</html>

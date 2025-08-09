@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Word Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        header h1 i {
+            color: #ffcc00;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+        
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input {
+            padding: 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 4px rgba(75, 108, 183, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            font-size: 1.3rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px dashed #4b6cb7;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .result-section h2 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+        
+        #result {
+            font-size: 1.8rem;
+            color: #182848;
+            line-height: 1.6;
+            font-weight: 600;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .instructions {
+            background: #eef4ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #182848;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            input, .btn {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            #result {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Number to Word Converter</h1>
+            <p>Convert any number up to trillions into its word representation</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="number-input"><i class="fas fa-keyboard"></i> Enter a number:</label>
+                    <input type="number" id="number-input" placeholder="e.g., 1234567" min="0" max="999999999999999">
+                </div>
+                <button id="convert-btn" class="btn"><i class="fas fa-exchange-alt"></i> Convert to Words</button>
+            </div>
+            
+            <div class="result-section">
+                <h2><i class="fas fa-file-word"></i> Word Representation:</h2>
+                <div id="result">Your result will appear here...</div>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> How to use:</h3>
+                <ul>
+                    <li>Enter a number in the input field (from 0 to 999,999,999,999,999)</li>
+                    <li>Click the "Convert to Words" button</li>
+                    <li>The word representation will appear in the result area</li>
+                    <li>Supports positive integers only (no decimals or negative numbers)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Created by: Sabbir | Number to Word Converter</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const numberInput = document.getElementById('number-input');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            
+            // Conversion arrays
+            const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+            const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+            const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+            const scales = ['', 'thousand', 'million', 'billion', 'trillion'];
+            
+            // Convert number to words
+            function convertNumberToWords(number) {
+                if (number === 0) return 'zero';
+                
+                let words = '';
+                let scaleIndex = 0;
+                
+                while (number > 0) {
+                    // Process chunks of 3 digits
+                    const chunk = number % 1000;
+                    if (chunk !== 0) {
+                        const chunkWords = convertChunk(chunk);
+                        words = chunkWords + (scales[scaleIndex] ? ' ' + scales[scaleIndex] : '') + (words ? ', ' + words : '');
+                    }
+                    
+                    number = Math.floor(number / 1000);
+                    scaleIndex++;
+                }
+                
+                return words.charAt(0).toUpperCase() + words.slice(1);
+            }
+            
+            // Convert a 3-digit chunk to words
+            function convertChunk(chunk) {
+                let words = '';
+                
+                // Hundreds place
+                if (chunk >= 100) {
+                    words += units[Math.floor(chunk / 100)] + ' hundred';
+                    chunk %= 100;
+                    if (chunk > 0) words += ' and ';
+                }
+                
+                // Tens and units place
+                if (chunk >= 10 && chunk <= 19) {
+                    words += teens[chunk - 10];
+                } else {
+                    if (chunk >= 20) {
+                        words += tens[Math.floor(chunk / 10)];
+                        chunk %= 10;
+                        if (chunk > 0) words += '-';
+                    }
+                    
+                    if (chunk > 0) {
+                        words += units[chunk];
+                    }
+                }
+                
+                return words;
+            }
+            
+            // Event listeners
+            convertBtn.addEventListener('click', function() {
+                let number = parseInt(numberInput.value);
+                
+                // Validate input
+                if (isNaN(number) || number < 0) {
+                    resultElement.textContent = 'Please enter a valid positive number';
+                    resultElement.style.color = '#e74c3c';
+                    return;
+                }
+                
+                if (number > 999999999999999) {
+                    resultElement.textContent = 'Number is too large (max: 999,999,999,999,999)';
+                    resultElement.style.color = '#e74c3c';
+                    return;
+                }
+                
+                // Convert and display
+                const words = convertNumberToWords(number);
+                resultElement.textContent = words;
+                resultElement.style.color = '#182848';
+            });
+            
+            // Allow Enter key to trigger conversion
+            numberInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convertBtn.click();
+                }
+            });
+            
+            // Example conversion on load
+            resultElement.textContent = convertNumberToWords(1234567);
+        });
+    </script>
+</body>
+</html>
