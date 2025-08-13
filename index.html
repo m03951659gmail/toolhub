@@ -123,11 +123,49 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .header h2 {
             font-size: 28px;
             color: var(--primary-color);
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            border: none;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .search-container input:focus {
+            outline: 2px solid var(--primary-color);
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 18px;
         }
         
         .theme-toggle {
@@ -208,6 +246,24 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            opacity: 1;
+            transform: scale(1);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tool-card.hidden {
+            display: none;
         }
         
         .tool-card:hover {
@@ -264,6 +320,20 @@
             transform: translateX(4px);
         }
         
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -304,6 +374,10 @@
             .main-content {
                 margin-left: 80px;
             }
+            
+            .search-container {
+                width: 200px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -338,8 +412,23 @@
                 align-items: flex-start;
             }
             
-            .header .theme-toggle {
-                margin-top: 15px;
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-container {
+                flex-grow: 1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                width: 100%;
             }
         }
     </style>
@@ -356,34 +445,7 @@
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </li>
-            <li>
-                <i class="fas fa-calculator"></i>
-                <span>Calculator</span>
-            </li>
-            <li>
-                <i class="fas fa-clock"></i>
-                <span>Stopwatch</span>
-            </li>
-            <li>
-                <i class="fas fa-list"></i>
-                <span>Todo List</span>
-            </li>
-            <li>
-                <i class="fas fa-ruler"></i>
-                <span>Unit Converter</span>
-            </li>
-            <li>
-                <i class="fas fa-image"></i>
-                <span>Image Tools</span>
-            </li>
-            <li>
-                <i class="fas fa-file-alt"></i>
-                <span>Text Tools</span>
-            </li>
-            <li>
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </li>
+            
         </ul>
     </div>
     
@@ -391,9 +453,15 @@
     <div class="main-content">
         <div class="header">
             <h2>All-in-One Tools</h2>
-            <button class="theme-toggle">
-                <div class="toggle-circle"></div>
-            </button>
+            <div class="header-controls">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for tools...">
+                </div>
+                <button class="theme-toggle">
+                    <div class="toggle-circle"></div>
+                </button>
+            </div>
         </div>
         
         <div class="welcome-banner">
@@ -402,78 +470,359 @@
             <a href="#" class="btn">Explore All Tools</a>
         </div>
         
-        <div class="tools-grid">
-            <!-- Calculator Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-calculator"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Calculator</h3>
-                    <p>A full-featured calculator with basic and scientific functions. Perfect for everyday calculations or complex math problems.</p>
-                    <a href="calculator.html" class="tool-link">Open Calculator <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
+        <div class="tools-grid" id="toolsGrid">
             
-            <!-- Stopwatch Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-stopwatch"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Stopwatch</h3>
-                    <p>Measure elapsed time with precision. Great for workouts, cooking, experiments, or any time-sensitive tasks.</p>
-                    <a href="stopwatch.html" class="tool-link">Open Stopwatch <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Todo List Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Todo List</h3>
-                    <p>Organize your tasks and boost productivity. Add, complete, and remove items with a clean and intuitive interface.</p>
-                    <a href="todo.html" class="tool-link">Open Todo List <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Unit Converter Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-balance-scale"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Unit Converter</h3>
-                    <p>Convert between different units of measurement. Includes length, weight, temperature, volume, and more.</p>
-                    <a href="converter.html" class="tool-link">Open Converter <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Image Tools Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-image"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Image Tools</h3>
-                    <p>Resize, crop, compress, and convert images. Supports multiple formats including JPG, PNG, and GIF.</p>
-                    <a href="image-tools.html" class="tool-link">Open Image Tools <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Text Tools Card -->
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-font"></i>
-                </div>
-                <div class="tool-content">
-                    <h3>Text Tools</h3>
-                    <p>Format and manipulate text. Includes case converter, word counter, text reverser, and more utilities.</p>
-                    <a href="text-tools.html" class="tool-link">Open Text Tools <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
+            <!-- এখান থেকে শুরো -->
+           
+           <!-- Text to Speech Converter 1 -->
+<div class="tool-card" data-name="text to speech converter" data-category="writing">
+    <div class="tool-icon">
+        <i class="fas fa-microphone-alt"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text to Speech Converter</h3>
+        <p>Convert written text into natural-sounding speech with adjustable voice and speed.</p>
+        <a href="tool-1/text to speech converter 1/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Word Counter 2 -->
+<div class="tool-card" data-name="word counter" data-category="writing">
+    <div class="tool-icon">
+        <i class="fas fa-sort-alpha-down"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Word Counter</h3>
+        <p>Count words, characters, and sentences in your text instantly.</p>
+        <a href="tool-1/word counter 2/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Character Counter 3 -->
+<div class="tool-card" data-name="character counter" data-category="writing">
+    <div class="tool-icon">
+        <i class="fas fa-text-width"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Character Counter</h3>
+        <p>Track the number of characters in your text for precise writing.</p>
+        <a href="tool-1/Character Counter 3/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Case Converter 4 -->
+<div class="tool-card" data-name="case converter" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-exchange-alt"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Case Converter (Uppercase/Lowercase)</h3>
+        <p>Change text to uppercase, lowercase, title case, or sentence case easily.</p>
+        <a href="tool-1/Case Converter Uppercase Lowercase 4/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Password Generator 5 -->
+<div class="tool-card" data-name="password generator" data-category="security">
+    <div class="tool-icon">
+        <i class="fas fa-key"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Password Generator</h3>
+        <p>Create strong and secure passwords with customizable options.</p>
+        <a href="tool-1/Password Generator 5/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Text Repeater 6 -->
+<div class="tool-card" data-name="text repeater" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-redo"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text Repeater</h3>
+        <p>Repeat any text multiple times instantly for fun or testing.</p>
+        <a href="tool-1/Text Repeater 6/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Number to Word Converter 7 -->
+<div class="tool-card" data-name="number to word converter" data-category="math">
+    <div class="tool-icon">
+        <i class="fas fa-sort-numeric-up"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Number to Word Converter</h3>
+        <p>Convert numbers into words in multiple languages.</p>
+        <a href="tool-1/Number to Word converter 7/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Age Calculator 8 -->
+<div class="tool-card" data-name="age calculator" data-category="date-time">
+    <div class="tool-icon">
+        <i class="fas fa-birthday-cake"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Age Calculator</h3>
+        <p>Find out your exact age in years, months, and days.</p>
+        <a href="tool-1/Age Calculator 8/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+<!-- BMI Calculator 9 -->
+<div class="tool-card" data-name="bmi calculator" data-category="health">
+    <div class="tool-icon">
+        <i class="fas fa-weight"></i>
+    </div>
+    <div class="tool-content">
+        <h3>BMI Calculator</h3>
+        <p>Calculate your Body Mass Index and check your fitness level.</p>
+        <a href="tool-1/bmi calculator 9/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Loan Calculator 10 -->
+<div class="tool-card" data-name="loan calculator" data-category="finance">
+    <div class="tool-icon">
+        <i class="fas fa-hand-holding-usd"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Loan Calculator</h3>
+        <p>Estimate monthly loan payments and total interest.</p>
+        <a href="tool-1/Loan Calculator 10/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Unit Converter 11 -->
+<div class="tool-card" data-name="unit converter" data-category="utility">
+    <div class="tool-icon">
+        <i class="fas fa-ruler"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Unit Converter</h3>
+        <p>Convert units for length, weight, temperature, and more.</p>
+        <a href="tool-1/unit converter 11/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- QR Code Generator 12 -->
+<div class="tool-card" data-name="qr code generator" data-category="utility">
+    <div class="tool-icon">
+        <i class="fas fa-qrcode"></i>
+    </div>
+    <div class="tool-content">
+        <h3>QR Code Generator</h3>
+        <p>Create QR codes for text, URLs, and contact information.</p>
+        <a href="tool-1/QR Code Generator 12/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Text Comparison 13 -->
+<div class="tool-card" data-name="text comparison" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-align-left"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text Comparison</h3>
+        <p>Compare two pieces of text to find differences and similarities.</p>
+        <a href="tool-1/text Comparison 13/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Calculator 14 -->
+<div class="tool-card" data-name="calculator" data-category="math">
+    <div class="tool-icon">
+        <i class="fas fa-calculator"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Calculator</h3>
+        <p>Perform basic and advanced mathematical calculations easily.</p>
+        <a href="tool-1/Calculator 14/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Color Picker 15 -->
+<div class="tool-card" data-name="color picker" data-category="design">
+    <div class="tool-icon">
+        <i class="fas fa-palette"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Color Picker</h3>
+        <p>Select and identify colors with HEX, RGB, and HSL values.</p>
+        <a href="tool-1/color picker 15/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Color Code Converter 16 -->
+<div class="tool-card" data-name="color code converter" data-category="design">
+    <div class="tool-icon">
+        <i class="fas fa-tint"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Color Code Converter</h3>
+        <p>Convert colors between HEX, RGB, and HSL formats.</p>
+        <a href="tool-1/Color Code Converter 16/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Online Stopwatch 17 -->
+<div class="tool-card" data-name="online stopwatch" data-category="time">
+    <div class="tool-icon">
+        <i class="fas fa-stopwatch"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Online Stopwatch</h3>
+        <p>Track time precisely with a simple online stopwatch.</p>
+        <a href="tool-1/Online Stopwatch 17/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Countdown Timer 18 -->
+<div class="tool-card" data-name="countdown timer" data-category="time">
+    <div class="tool-icon">
+        <i class="fas fa-hourglass-half"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Countdown Timer</h3>
+        <p>Set a countdown timer for tasks, cooking, or reminders.</p>
+        <a href="tool-1/countdown timer 18/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Fake Internet Speed Test 19 -->
+<div class="tool-card" data-name="fake internet speed test" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-wifi"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Fake Internet Speed Test</h3>
+        <p>Prank your friends with a fake internet speed result.</p>
+        <a href="tool-1/fake internet speed test 19/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Love Calculator 20 -->
+<div class="tool-card" data-name="love calculator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-heart"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Love Calculator</h3>
+        <p>Check compatibility between two names for fun.</p>
+        <a href="tool-1/love calculator 20/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Internet Speed Test 21 -->
+<div class="tool-card" data-name="internet speed test" data-category="network">
+    <div class="tool-icon">
+        <i class="fas fa-tachometer-alt"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Internet Speed Test</h3>
+        <p>Measure your real download and upload internet speed.</p>
+        <a href="tool-1/internet speed test 21/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Meta Tag Generator 22 -->
+<div class="tool-card" data-name="meta tag generator" data-category="seo">
+    <div class="tool-icon">
+        <i class="fas fa-tags"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Meta Tag Generator</h3>
+        <p>Create SEO-friendly meta tags for your website.</p>
+        <a href="tool-1/meta tag generator 22/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Privacy Policy Generator 23 -->
+<div class="tool-card" data-name="privacy policy generator" data-category="legal">
+    <div class="tool-icon">
+        <i class="fas fa-user-shield"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Privacy Policy Generator</h3>
+        <p>Generate a custom privacy policy for your website or app.</p>
+        <a href="tool-1/privacy policy generator 23/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Random Number Generator 24 -->
+<div class="tool-card" data-name="random number generator" data-category="math">
+    <div class="tool-icon">
+        <i class="fas fa-random"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Random Number Generator</h3>
+        <p>Generate random numbers within your chosen range.</p>
+        <a href="tool-1/Random Number Generator 24/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Percentage Calculator 25 -->
+<div class="tool-card" data-name="percentage calculator" data-category="math">
+    <div class="tool-icon">
+        <i class="fas fa-percent"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Percentage Calculator</h3>
+        <p>Quickly calculate percentages for any number.</p>
+        <a href="tool-1/percentage calculator 25/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Days Between Dates Calculator 26 -->
+<div class="tool-card" data-name="days between dates calculator" data-category="date-time">
+    <div class="tool-icon">
+        <i class="fas fa-calendar-day"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Days Between Dates Calculator</h3>
+        <p>Find the exact number of days between two dates.</p>
+        <a href="tool-1/Days Between Dates Calculator 26/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Text to Binary / Binary to Text Converter 27 -->
+<div class="tool-card" data-name="text to binary" data-category="conversion">
+    <div class="tool-icon">
+        <i class="fas fa-code"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text ↔ Binary Converter</h3>
+        <p>Convert text to binary and binary back to text instantly.</p>
+        <a href="tool-1/Text to Binary  Binary to Text Converter 27/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Base64 to Image 28 -->
+<div class="tool-card" data-name="base64 to image" data-category="conversion">
+    <div class="tool-icon">
+        <i class="fas fa-image"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Base64 to Image</h3>
+        <p>Convert Base64-encoded data into downloadable image files.</p>
+        <a href="tool-1/Base64 to Image 28/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Image Filter Tool 29 -->
+<div class="tool-card" data-name="image filter tool" data-category="image">
+    <div class="tool-icon">
+        <i class="fas fa-adjust"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Image Filter Tool</h3>
+        <p>Apply various filters to images and preview results instantly.</p>
+        <a href="tool-1/image filter tool 29/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+           
+           
+            <!-- এখানে শেষ -->
         </div>
         
         <div class="footer">
@@ -506,6 +855,53 @@
                 navItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
             });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const toolCards = document.querySelectorAll('.tool-card');
+        const toolsGrid = document.getElementById('toolsGrid');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let hasVisibleItems = false;
+            
+            toolCards.forEach(card => {
+                const toolName = card.dataset.name.toLowerCase();
+                const toolCategory = card.dataset.category.toLowerCase();
+                
+                if (toolName.includes(searchTerm) || toolCategory.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                    hasVisibleItems = true;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Show no results message if no tools match
+            let noResults = document.querySelector('.no-results');
+            if (!hasVisibleItems) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        <h3>No tools found</h3>
+                        <p>Try a different search term</p>
+                    `;
+                    toolsGrid.appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        });
+        
+        // Focus on search input when pressing Ctrl+K
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
         });
     </script>
 </body>
