@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Upside Down Text Generator - Flip Your Text Instantly | Free Online Tool</title>
+    <meta name="description" content="Transform your text into upside-down Unicode characters instantly. Free online upside down text generator with live preview, copy functionality, and mobile-friendly design.">
+    <meta name="keywords" content="upside down text, flip text, unicode text generator, reverse text, inverted text, text converter, online text tool">
+    <meta name="author" content="Upside Down Text Generator">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Upside Down Text Generator - Flip Your Text Instantly">
+    <meta property="og:description" content="Transform your text into upside-down Unicode characters instantly. Free online tool with live preview and copy functionality.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://upsidedowntext.example.com">
+    <meta property="og:image" content="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7be70463-ed4f-4726-9233-e4b267cdf46d.png">
+    <meta property="og:site_name" content="Upside Down Text Generator">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Upside Down Text Generator">
+    <meta name="twitter:description" content="Transform your text into upside-down Unicode characters instantly.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/4F46E5/FFFFFF/png?text=Upside+Down+Text+Generator">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90' transform='rotate(180 50 50)'%3E🔄%3C/text%3E%3C/svg%3E">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'bounce-gentle': 'bounce 2s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom styles for enhanced UI */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hover-lift {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Custom scrollbar for textarea */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        /* Character counter styling */
+        .char-counter {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg p-4 sm:p-6 lg:p-8">
+    <!-- Background decorative elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-white opacity-10 rounded-full animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-16 w-16 h-16 bg-white opacity-10 rounded-full animate-bounce-gentle"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-white opacity-10 rounded-full animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8 fade-in-up">
+            <div class="inline-block p-3 bg-white/20 rounded-full mb-4">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 text-shadow">
+                Upside Down Text Generator
+            </h1>
+            <p class="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
+                Transform your text into upside-down Unicode characters instantly. Perfect for social media, messaging, and creative content.
+            </p>
+        </header>
+        
+        <!-- Main Card -->
+        <div class="glass-effect rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl fade-in-up" style="animation-delay: 0.2s;">
+            <!-- Input Section -->
+            <div class="mb-8">
+                <label for="normalText" class="block text-white font-semibold text-lg mb-3">
+                    Enter Your Text:
+                </label>
+                <div class="relative">
+                    <textarea
+                        id="normalText"
+                        placeholder="Type your text here..."
+                        class="w-full h-32 p-4 text-lg border-2 border-white/30 rounded-xl bg-white/10 text-white placeholder-white/60 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:outline-none transition-all duration-300 resize-none custom-scrollbar"
+                        maxlength="1000"
+                    ></textarea>
+                    <div class="absolute bottom-2 right-3 char-counter text-white/70" id="charCounter">
+                        0 / 1000
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Options -->
+            <div class="mb-8 space-y-4">
+                <h3 class="text-white font-semibold text-lg mb-3">Options:</h3>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" id="keepSpaces" checked class="w-5 h-5 text-indigo-600 bg-white/20 border-white/30 rounded focus:ring-indigo-500 focus:ring-2">
+                        <span class="text-white group-hover:text-white/80 transition-colors">Keep Spaces</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" id="keepPunctuation" checked class="w-5 h-5 text-indigo-600 bg-white/20 border-white/30 rounded focus:ring-indigo-500 focus:ring-2">
+                        <span class="text-white group-hover:text-white/80 transition-colors">Keep Punctuation</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" id="keepNumbers" checked class="w-5 h-5 text-indigo-600 bg-white/20 border-white/30 rounded focus:ring-indigo-500 focus:ring-2">
+                        <span class="text-white group-hover:text-white/80 transition-colors">Keep Numbers</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Output Section -->
+            <div class="mb-8">
+                <label for="upsideDownText" class="block text-white font-semibold text-lg mb-3">
+                    Upside Down Text:
+                </label>
+                <div class="relative">
+                    <textarea
+                        id="upsideDownText"
+                        placeholder="Your upside down text will appear here..."
+                        readonly
+                        class="w-full h-32 p-4 text-lg border-2 border-white/30 rounded-xl bg-white/5 text-white placeholder-white/60 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:outline-none transition-all duration-300 resize-none custom-scrollbar cursor-pointer"
+                    ></textarea>
+                    <button
+                        id="selectAllBtn"
+                        class="absolute top-2 right-2 text-white/60 hover:text-white transition-colors p-1 rounded"
+                        title="Click to select all text"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Unsupported Characters Notice -->
+            <div id="unsupportedNotice" class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/40 rounded-xl text-yellow-100 hidden">
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <div>
+                        <h4 class="font-semibold mb-1">Some characters couldn't be converted</h4>
+                        <p class="text-sm">Unsupported characters: <span id="unsupportedChars" class="font-mono bg-yellow-500/30 px-2 py-1 rounded"></span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button
+                    id="copyBtn"
+                    class="flex-1 bg-white/20 hover:bg-white/30 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 hover-lift flex items-center justify-center space-x-2 group"
+                >
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Copy to Clipboard</span>
+                </button>
+                
+                <button
+                    id="clearBtn"
+                    class="flex-1 bg-red-500/20 hover:bg-red-500/30 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 hover-lift flex items-center justify-center space-x-2 group"
+                >
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    <span>Clear All</span>
+                </button>
+                
+                <button
+                    id="swapBtn"
+                    class="flex-1 bg-green-500/20 hover:bg-green-500/30 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 hover-lift flex items-center justify-center space-x-2 group"
+                >
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                    </svg>
+                    <span>Swap Texts</span>
+                </button>
+            </div>
+            
+            <!-- Copy Success Message -->
+            <div id="copySuccess" class="mt-4 p-3 bg-green-500/20 border border-green-500/40 rounded-xl text-green-100 text-center hidden animate-pulse">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Text copied to clipboard successfully!</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Section -->
+        <div class="mt-8 glass-effect rounded-2xl p-6 fade-in-up" style="animation-delay: 0.4s;">
+            <h2 class="text-2xl font-bold text-white mb-4">How It Works</h2>
+            <div class="grid md:grid-cols-2 gap-6 text-white/90">
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Unicode Magic</h3>
+                    <p>This tool uses special Unicode characters that naturally appear upside down. Each letter is mapped to its corresponding inverted character.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Live Conversion</h3>
+                    <p>As you type, your text is instantly converted. The result maintains readability while creating a unique visual effect.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Customizable Options</h3>
+                    <p>Choose whether to preserve spaces, punctuation, and numbers to fine-tune your upside down text output.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-2">Copy & Share</h3>
+                    <p>Easily copy your upside down text and use it anywhere - social media, messages, documents, and more!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-white/70 fade-in-up" style="animation-delay: 0.6s;">
+            <p>© 2024 Upside Down Text Generator. Transform your text with style!</p>
+        </footer>
+    </div>
+    
+    <script>
+        /**
+         * Upside Down Text Generator
+         * Converts normal text to upside-down Unicode characters
+         */
+        
+        class UpsideDownTextGenerator {
+            constructor() {
+                // Unicode character mappings for upside down text
+                this.characterMap = {
+                    // Lowercase letters
+                    'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 
+                    'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u',
+                    'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n',
+                    'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+                    
+                    // Uppercase letters
+                    'A': '∀', 'B': 'ᗺ', 'C': 'Ɔ', 'D': 'ᗡ', 'E': 'Ǝ', 'F': 'ᖴ', 'G': 'פ',
+                    'H': 'H', 'I': 'I', 'J': 'ſ', 'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N',
+                    'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ᴿ', 'S': 'S', 'T': '┴', 'U': '∩',
+                    'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+                    
+                    // Numbers
+                    '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ',
+                    '6': '9', '7': 'ㄥ', '8': '8', '9': '6',
+                    
+                    // Punctuation and symbols
+                    '.': '˙', ',': "'", '!': '¡', '?': '¿', "'": ',', '"': '„',
+                    ';': '؛', ':': ':', '(': ')', ')': '(', '[': ']', ']': '[',
+                    '{': '}', '}': '{', '<': '>', '>': '<', '&': '⅋', '_': '‾'
+                };
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.updateCharCounter();
+            }
+            
+            /**
+             * Initialize DOM elements
+             */
+            initializeElements() {
+                this.normalTextArea = document.getElementById('normalText');
+                this.upsideDownTextArea = document.getElementById('upsideDownText');
+                this.copyBtn = document.getElementById('copyBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.swapBtn = document.getElementById('swapBtn');
+                this.selectAllBtn = document.getElementById('selectAllBtn');
+                this.copySuccess = document.getElementById('copySuccess');
+                this.unsupportedNotice = document.getElementById('unsupportedNotice');
+                this.unsupportedChars = document.getElementById('unsupportedChars');
+                this.charCounter = document.getElementById('charCounter');
+                
+                // Option checkboxes
+                this.keepSpaces = document.getElementById('keepSpaces');
+                this.keepPunctuation = document.getElementById('keepPunctuation');
+                this.keepNumbers = document.getElementById('keepNumbers');
+            }
+            
+            /**
+             * Bind event listeners
+             */
+            bindEvents() {
+                // Live text conversion
+                this.normalTextArea.addEventListener('input', () => {
+                    this.convertText();
+                    this.updateCharCounter();
+                });
+                
+                // Option changes trigger reconversion
+                [this.keepSpaces, this.keepPunctuation, this.keepNumbers].forEach(checkbox => {
+                    checkbox.addEventListener('change', () => this.convertText());
+                });
+                
+                // Button events
+                this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                this.clearBtn.addEventListener('click', () => this.clearAll());
+                this.swapBtn.addEventListener('click', () => this.swapTexts());
+                this.selectAllBtn.addEventListener('click', () => this.selectAllOutput());
+                
+                // Click to select all in output textarea
+                this.upsideDownTextArea.addEventListener('click', () => this.selectAllOutput());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key.toLowerCase()) {
+                            case 'l':
+                                e.preventDefault();
+                                this.clearAll();
+                                break;
+                            case 'k':
+                                e.preventDefault();
+                                this.copyToClipboard();
+                                break;
+                            case 'j':
+                                e.preventDefault();
+                                this.swapTexts();
+                                break;
+                        }
+                    }
+                });
+            }
+            
+            /**
+             * Convert normal text to upside down text
+             */
+            convertText() {
+                const inputText = this.normalTextArea.value;
+                const options = {
+                    keepSpaces: this.keepSpaces.checked,
+                    keepPunctuation: this.keepPunctuation.checked,
+                    keepNumbers: this.keepNumbers.checked
+                };
+                
+                let convertedText = '';
+                let unsupportedCharacters = new Set();
+                
+                // Convert each character
+                for (let char of inputText) {
+                    let convertedChar = char;
+                    
+                    // Check if character should be converted based on options
+                    if (this.shouldConvertCharacter(char, options)) {
+                        if (this.characterMap[char]) {
+                            convertedChar = this.characterMap[char];
+                        } else {
+                            // Character not supported, add to unsupported set
+                            if (char.trim() !== '' && char !== ' ') {
+                                unsupportedCharacters.add(char);
+                            }
+                        }
+                    }
+                    
+                    convertedText += convertedChar;
+                }
+                
+                // Reverse the string to complete the upside down effect
+                convertedText = convertedText.split('').reverse().join('');
+                
+                this.upsideDownTextArea.value = convertedText;
+                this.handleUnsupportedCharacters(unsupportedCharacters);
+                
+                // Add subtle animation to output
+                this.upsideDownTextArea.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.upsideDownTextArea.style.transform = 'scale(1)';
+                }, 100);
+            }
+            
+            /**
+             * Determine if a character should be converted based on options
+             */
+            shouldConvertCharacter(char, options) {
+                // Always convert letters
+                if (/[a-zA-Z]/.test(char)) return true;
+                
+                // Handle spaces
+                if (char === ' ') return options.keepSpaces;
+                
+                // Handle numbers
+                if (/[0-9]/.test(char)) return options.keepNumbers;
+                
+                // Handle punctuation
+                if (/[^\w\s]/.test(char)) return options.keepPunctuation;
+                
+                return true;
+            }
+            
+            /**
+             * Handle display of unsupported characters notice
+             */
+            handleUnsupportedCharacters(unsupportedChars) {
+                if (unsupportedChars.size > 0) {
+                    this.unsupportedChars.textContent = Array.from(unsupportedChars).join(' ');
+                    this.unsupportedNotice.classList.remove('hidden');
+                } else {
+                    this.unsupportedNotice.classList.add('hidden');
+                }
+            }
+            
+            /**
+             * Copy converted text to clipboard
+             */
+            async copyToClipboard() {
+                const textToCopy = this.upsideDownTextArea.value;
+                
+                if (!textToCopy.trim()) {
+                    this.showMessage('No text to copy!', 'error');
+                    return;
+                }
+                
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    this.showCopySuccess();
+                    
+                    // Add visual feedback to button
+                    this.copyBtn.classList.add('bg-green-500/30');
+                    setTimeout(() => {
+                        this.copyBtn.classList.remove('bg-green-500/30');
+                    }, 500);
+                } catch (err) {
+                    // Fallback for older browsers
+                    this.fallbackCopyToClipboard(textToCopy);
+                }
+            }
+            
+            /**
+             * Fallback copy method for older browsers
+             */
+            fallbackCopyToClipboard(text) {
+                this.upsideDownTextArea.select();
+                this.upsideDownTextArea.setSelectionRange(0, 99999);
+                
+                try {
+                    document.execCommand('copy');
+                    this.showCopySuccess();
+                } catch (err) {
+                    this.showMessage('Copy failed. Please select and copy manually.', 'error');
+                }
+            }
+            
+            /**
+             * Show copy success message
+             */
+            showCopySuccess() {
+                this.copySuccess.classList.remove('hidden');
+                setTimeout(() => {
+                    this.copySuccess.classList.add('hidden');
+                }, 3000);
+            }
+            
+            /**
+             * Clear all text areas
+             */
+            clearAll() {
+                this.normalTextArea.value = '';
+                this.upsideDownTextArea.value = '';
+                this.unsupportedNotice.classList.add('hidden');
+                this.updateCharCounter();
+                this.normalTextArea.focus();
+                
+                // Add clear animation
+                [this.normalTextArea, this.upsideDownTextArea].forEach(textarea => {
+                    textarea.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        textarea.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            }
+            
+            /**
+             * Swap normal and upside down text
+             */
+            swapTexts() {
+                const normalText = this.normalTextArea.value;
+                const upsideDownText = this.upsideDownTextArea.value;
+                
+                if (!upsideDownText.trim()) {
+                    this.showMessage('No upside down text to swap!', 'error');
+                    return;
+                }
+                
+                this.normalTextArea.value = upsideDownText;
+                this.convertText();
+                this.updateCharCounter();
+                
+                // Add swap animation
+                this.swapBtn.style.transform = 'rotate(180deg)';
+                setTimeout(() => {
+                    this.swapBtn.style.transform = 'rotate(0deg)';
+                }, 300);
+            }
+            
+            /**
+             * Select all text in output area
+             */
+            selectAllOutput() {
+                if (this.upsideDownTextArea.value.trim()) {
+                    this.upsideDownTextArea.select();
+                    this.upsideDownTextArea.setSelectionRange(0, 99999);
+                }
+            }
+            
+            /**
+             * Update character counter
+             */
+            updateCharCounter() {
+                const currentLength = this.normalTextArea.value.length;
+                const maxLength = parseInt(this.normalTextArea.getAttribute('maxlength'));
+                this.charCounter.textContent = `${currentLength} / ${maxLength}`;
+                
+                // Change color based on usage
+                if (currentLength > maxLength * 0.9) {
+                    this.charCounter.classList.add('text-red-300');
+                    this.charCounter.classList.remove('text-white/70', 'text-yellow-300');
+                } else if (currentLength > maxLength * 0.7) {
+                    this.charCounter.classList.add('text-yellow-300');
+                    this.charCounter.classList.remove('text-white/70', 'text-red-300');
+                } else {
+                    this.charCounter.classList.add('text-white/70');
+                    this.charCounter.classList.remove('text-yellow-300', 'text-red-300');
+                }
+            }
+            
+            /**
+             * Show general messages (for future expansion)
+             */
+            showMessage(message, type = 'info') {
+                // Create temporary message element
+                const messageEl = document.createElement('div');
+                messageEl.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 transition-all duration-300 ${
+                    type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+                }`;
+                messageEl.textContent = message;
+                
+                document.body.appendChild(messageEl);
+                
+                // Animate in
+                setTimeout(() => messageEl.classList.add('translate-x-0'), 10);
+                
+                // Remove after delay
+                setTimeout(() => {
+                    messageEl.style.transform = 'translateX(100%)';
+                    setTimeout(() => document.body.removeChild(messageEl), 300);
+                }, 3000);
+            }
+        }
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new UpsideDownTextGenerator();
+            
+            // Add some example text on load for demonstration
+            const examples = [
+                "Hello World!",
+                "Upside Down Text",
+                "This is amazing!",
+                "Try this out 123"
+            ];
+            
+            // Optionally set a random example (commented out to start clean)
+            // document.getElementById('normalText').value = examples[Math.floor(Math.random() * examples.length)];
+            // setTimeout(() => document.querySelector('.UpsideDownTextGenerator').convertText(), 100);
+        });
+        
+        // Add some interactive background effects
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.glass-effect');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const xPercent = (x / rect.width) * 100;
+                    const yPercent = (y / rect.height) * 100;
+                    card.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%)`;
+                }
+            });
+        });
+        
+        // Reset background on mouse leave
+        document.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.glass-effect').forEach(card => {
+                card.style.background = 'rgba(255, 255, 255, 0.1)';
+            });
+        });
+    </script>
+</body>
+</html>

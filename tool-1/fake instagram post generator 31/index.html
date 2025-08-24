@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Instagram Post Generator - Create Realistic Instagram Posts</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Create realistic fake Instagram posts with our easy-to-use generator. Upload images, add captions, likes, and download as PNG. Perfect for mockups and presentations.">
+    <meta name="keywords" content="instagram post generator, fake instagram, social media mockup, instagram template, post creator">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Fake Instagram Post Generator">
+    <meta property="og:description" content="Create realistic fake Instagram posts with our easy-to-use generator. Upload images, add captions, likes, and download as PNG.">
+    <meta property="og:image" content="https://example.com/instagram-generator-preview.jpg">
+    <meta property="og:url" content="https://example.com/instagram-post-generator">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fake Instagram Post Generator">
+    <meta name="twitter:description" content="Create realistic fake Instagram posts with our easy-to-use generator.">
+    <meta name="twitter:image" content="https://example.com/instagram-generator-preview.jpg">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* This file is included in the HTML head for additional custom styling */
+/* Note: Most styles are in the HTML file's style tag for simplicity in this example */
+
+/* Additional responsive adjustments */
+@media (max-width: 640px) {
+    .instagram-post {
+        margin: 0 10px;
+    }
+    
+    .file-input-label {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Improve mobile touch targets */
+@media (max-width: 768px) {
+    .file-input-wrapper input[type=file] {
+        min-height: 44px;
+    }
+}
+
+/* Animation for heart burst effect */
+.heart-animation {
+    animation: heartBurst 0.8s ease-out;
+}
+
+@keyframes heartBurst {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+/* Custom scrollbar for comments */
+#commentsList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#commentsList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#commentsList::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+#commentsList::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Focus states for better accessibility */
+input:focus, textarea:focus, button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Improve contrast for better accessibility */
+.text-gray-900 {
+    color: #111827;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.text-gray-700 {
+    color: #374151;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-500 {
+    color: #6b7280;
+}
+
+/* Ensure sufficient color contrast */
+.bg-blue-600 {
+    background-color: #2563eb;
+}
+
+.bg-blue-700 {
+    background-color: #1d4ed8;
+}
+
+.text-blue-600 {
+    color: #2563eb;
+}
+
+.text-blue-700 {
+    color: #1d4ed8;
+}
+
+/* Verified badge styling */
+#verifiedBadge svg {
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+}
+        
+        
+        /* Custom styles for Instagram-like appearance */
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .instagram-post {
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .comment {
+            margin-bottom: 8px;
+        }
+        
+        .heart-animation {
+            animation: heartBurst 0.8s ease-out;
+        }
+        
+        @keyframes heartBurst {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Custom file input styling */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .file-input-label:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Fake Instagram Post Generator</h1>
+            <p class="text-gray-600">Create realistic Instagram posts for mockups, presentations, or fun</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Generator Controls -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-6 text-gray-800">Customize Your Post</h2>
+                
+                <form id="postForm" class="space-y-6">
+                    <!-- Profile Image Upload -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="profileImageInput" accept="image/*">
+                            <div class="file-input-label">
+                                <i class="fas fa-upload mr-2"></i>
+                                <span>Choose Image</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Upload a square image for best results</p>
+                    </div>
+
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" id="username" value="johndoe" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Verified Badge Toggle -->
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="verified" class="mr-2 h-4 w-4 text-blue-600 rounded">
+                            <span class="text-sm font-medium text-gray-700">Verified Badge</span>
+                        </label>
+                    </div>
+
+                    <!-- Post Image Upload -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Image</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="postImageInput" accept="image/*">
+                            <div class="file-input-label">
+                                <i class="fas fa-upload mr-2"></i>
+                                <span>Choose Image</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Recommended: Square image (1080x1080px)</p>
+                    </div>
+
+                    <!-- Caption -->
+                    <div>
+                        <label for="caption" class="block text-sm font-medium text-gray-700 mb-2">Caption</label>
+                        <textarea id="caption" rows="4" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Write your caption here...">@beachlife enjoying the sunset #vacation #summer</textarea>
+                    </div>
+
+                    <!-- Likes -->
+                    <div>
+                        <label for="likes" class="block text-sm font-medium text-gray-700 mb-2">Likes</label>
+                        <input type="number" id="likes" value="1250" min="0"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Comments -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+                        <div id="commentsContainer" class="space-y-2 mb-2">
+                            <div class="flex">
+                                <input type="text" placeholder="Username" 
+                                       class="px-3 py-1 border border-gray-300 rounded-l-md text-sm w-1/3 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                       value="sarah_w">
+                                <input type="text" placeholder="Comment" 
+                                       class="px-3 py-1 border-y border-r border-gray-300 rounded-r-md text-sm w-2/3 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                       value="Beautiful view!">
+                            </div>
+                        </div>
+                        <button type="button" id="addComment" 
+                                class="text-sm text-blue-600 hover:text-blue-800 flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Add Comment
+                        </button>
+                    </div>
+
+                    <!-- Date and Time -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="postDate" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" id="postDate" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="postTime" class="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                            <input type="time" id="postTime" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                        <button type="button" id="generateBtn" 
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-sync-alt mr-2"></i> Update Preview
+                        </button>
+                        <button type="button" id="downloadBtn" 
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-download mr-2"></i> Download as PNG
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Preview Area -->
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-6 text-gray-800">Preview</h2>
+                    <div id="previewContainer" class="instagram-post">
+                        <!-- Post Header -->
+                        <div class="flex items-center p-4">
+                            <div class="relative">
+                                <img id="previewProfileImage" src="https://via.placeholder.com/40" 
+                                     class="w-10 h-10 rounded-full object-cover border-2 border-pink-400" alt="Profile">
+                                <div id="verifiedBadge" class="hidden absolute -top-1 -right-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-blue-500 fill-current">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <div class="flex items-center">
+                                    <h3 id="previewUsername" class="font-semibold text-gray-900">johndoe</h3>
+                                </div>
+                                <div id="previewTime" class="text-xs text-gray-500">2 hours ago</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Post Image -->
+                        <div id="postImageContainer">
+                            <img id="previewPostImage" src="https://via.placeholder.com/600x600" 
+                                 class="w-full object-cover" alt="Post content">
+                        </div>
+                        
+                        <!-- Post Actions -->
+                        <div class="p-4">
+                            <div class="flex justify-between mb-3">
+                                <div class="flex space-x-4">
+                                    <button id="likeButton" type="button" class="focus:outline-none">
+                                        <i class="far fa-heart text-2xl text-gray-800 hover:text-red-500 transition-colors duration-200"></i>
+                                    </button>
+                                    <button type="button" class="focus:outline-none">
+                                        <i class="far fa-comment text-2xl text-gray-800 hover:text-gray-500 transition-colors duration-200"></i>
+                                    </button>
+                                    <button type="button" class="focus:outline-none">
+                                        <i class="far fa-paper-plane text-2xl text-gray-800 hover:text-gray-500 transition-colors duration-200"></i>
+                                    </button>
+                                </div>
+                                <button type="button" class="focus:outline-none">
+                                    <i class="far fa-bookmark text-2xl text-gray-800 hover:text-gray-500 transition-colors duration-200"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Likes -->
+                            <div class="font-semibold text-gray-900 mb-2">
+                                <span id="previewLikes">1,250</span> likes
+                            </div>
+                            
+                            <!-- Caption -->
+                            <div class="text-sm">
+                                <span class="font-semibold text-gray-900" id="previewUsernameCaption">johndoe</span>
+                                <span id="previewCaption" class="ml-1">Beautiful sunset at the beach! #vacation #summer</span>
+                            </div>
+                            
+                            <!-- Comments -->
+                            <div id="commentsList" class="text-sm mt-3 max-h-40 overflow-y-auto pr-1">
+                                <div class="comment">
+                                    <span class="font-semibold text-gray-900">sarah_w</span>
+                                    <span class="ml-1">Beautiful view!</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Add Comment -->
+                            <div class="border-t border-gray-200 pt-3 mt-3">
+                                <div class="flex">
+                                    <input type="text" placeholder="Add a comment..." 
+                                           class="flex-1 border-0 p-0 text-sm focus:ring-0 focus:outline-none">
+                                    <button class="text-blue-600 font-semibold text-sm">Post</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-blue-900 mb-2">How to Use</h3>
+                    <ol class="text-sm text-blue-800 list-decimal list-inside space-y-1">
+                        <li>Upload your profile picture and post image</li>
+                        <li>Set your username and toggle the verified badge</li>
+                        <li>Add a caption, number of likes, and comments</li>
+                        <li>Set the post date and time</li>
+                        <li>Click "Update Preview" to see changes</li>
+                        <li>Click "Download as PNG" to save your fake post</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>Fake Instagram Post Generator - For mockup and educational purposes only</p>
+            <p class="mt-1">This tool is not affiliated with Instagram</p>
+        </footer>
+    </div>
+
+    <!-- html2canvas library for screenshot functionality -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

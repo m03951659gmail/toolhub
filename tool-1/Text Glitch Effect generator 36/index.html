@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Glitch Effect Generator - Live Preview</title>
+    <meta name="description" content="Generate cool text glitch effects with live preview and customizable settings like RGB split, scanlines, jitter, VHS, and pixelate. Copy CSS or download as PNG.">
+    <meta name="keywords" content="text glitch, glitch effect, text generator, CSS glitch, web tools, live preview, RGB split, scanlines, jitter, VHS, CRT, pixelate">
+    
+    <!-- Open Graph Tags for SEO -->
+    <meta property="og:title" content="Text Glitch Effect Generator">
+    <meta property="og:description" content="Create stunning text glitch effects with live preview and customizable settings.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website.com/glitch-generator"> <!-- Replace with actual URL -->
+    <meta property="og:image" content="https://placehold.co/1200x630/000000/FFFFFF?text=Text+Glitch+Generator"> <!-- Placeholder image -->
+    <meta property="og:image:alt" content="Text Glitch Effect Generator preview">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Custom styles for glitch effects */
+        .glitch-container {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            /* Ensure text fills container without overflowing by default */
+        }
+
+        .glitch-text-wrapper {
+            display: inline-block; /* Allows text to wrap naturally while containing glitch effects */
+            position: relative;
+            user-select: none;
+            word-break: break-all; /* Break words if they are too long for the container */
+            padding: 0 5px; /* Add some padding to prevent edge clipping */
+        }
+
+        .glitch-char {
+            display: inline-block;
+            position: relative;
+            transform: translateZ(0); /* Optimize for animations */
+            will-change: transform, opacity, filter, color; /* Inform browser about changes */
+            /* Default styles */
+            color: currentColor;
+            opacity: 1;
+            filter: none;
+        }
+
+        /* Base Glitch Animation (Jitter) */
+        @keyframes jitter {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-1px, 1px); }
+            20% { transform: translate(1px, -1px); }
+            30% { transform: translate(-1px, -1px); }
+            40% { transform: translate(1px, 1px); }
+            50% { transform: translate(-1px, 0); }
+            60% { transform: translate(0, 1px); }
+            70% { transform: translate(1px, 0); }
+            80% { transform: translate(-1px, 1px); }
+            90% { transform: translate(1px, -1px); }
+        }
+
+        /* RGB Split Preset */
+        .glitch-rgb .glitch-char {
+            animation: none !important; /* Disable other animations */
+        }
+        .glitch-rgb .glitch-char::before,
+        .glitch-rgb .glitch-char::after {
+            content: attr(data-char);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            will-change: transform;
+            opacity: var(--glitch-intensity, 1);
+            animation: rgb-split var(--glitch-speed, 0.5s) infinite alternate;
+        }
+
+        .glitch-rgb .glitch-char::before {
+            color: red;
+            mix-blend-mode: screen;
+            transform: translate(calc(var(--color-offset, 2px) * -1), calc(var(--color-offset, 2px) * -1));
+        }
+
+        .glitch-rgb .glitch-char::after {
+            color: cyan;
+            mix-blend-mode: screen;
+            transform: translate(var(--color-offset, 2px), var(--color-offset, 2px));
+        }
+
+        @keyframes rgb-split {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(calc(var(--color-offset, 2px) * -1.5), calc(var(--color-offset, 2px) * 1.5)); }
+            40% { transform: translate(var(--color-offset, 2px), calc(var(--color-offset, 2px) * -1)); }
+            60% { transform: translate(calc(var(--color-offset, 2px) * -1), var(--color-offset, 2px)); }
+            80% { transform: translate(calc(var(--color-offset, 2px) * 1.5), calc(var(--color-offset, 2px) * -1.5)); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Scanlines Preset */
+        .glitch-scanlines .glitch-text-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0%,
+                transparent 50%,
+                rgba(0, 0, 0, var(--glitch-intensity, 0.1)) 50%,
+                rgba(0, 0, 0, var(--glitch-intensity, 0.1)) 51%
+            );
+            pointer-events: none;
+            animation: scanline-flicker var(--glitch-speed, 0.3s) infinite steps(1);
+        }
+
+        @keyframes scanline-flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Jitter Preset */
+        .glitch-jitter .glitch-char {
+            animation: jitter var(--glitch-speed, 0.1s) infinite alternate;
+        }
+
+        /* VHS/CRT Preset */
+        .glitch-vhs .glitch-char {
+            animation: jitter var(--glitch-speed, 0.08s) infinite alternate;
+            text-shadow: 
+                var(--color-offset, 1px) 0px 0px rgba(255, 0, 0, var(--glitch-intensity, 0.7)), 
+                calc(var(--color-offset, 1px) * -1) 0px 0px rgba(0, 255, 255, var(--glitch-intensity, 0.7));
+            filter: blur(calc(var(--glitch-intensity, 0.5) * 1px));
+        }
+        .glitch-vhs .glitch-text-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 255, 0, 0.05); /* Green glow */
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            animation: vhs-flicker var(--glitch-speed, 0.5s) infinite alternate;
+        }
+        @keyframes vhs-flicker {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.1; }
+        }
+
+        /* Pixelate Preset */
+        .glitch-pixelate .glitch-char {
+            filter: url(#pixelateFilter) blur(0px); /* Apply SVG filter for pixelation */
+            transform: translateZ(0); /* Ensure filter is applied correctly */
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .glitch-char, .glitch-text-wrapper::before, .glitch-text-wrapper::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                animation-play-state: paused !important;
+            }
+        }
+
+        /* Scrollbar styles for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748; /* dark-800 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568; /* dark-600 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* dark-500 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- SVG Filter for Pixelate Effect -->
+    <svg width="0" height="0" style="position: absolute;">
+        <filter id="pixelateFilter">
+            <feFlood x="0" y="0" height="var(--glitch-intensity, 10)" width="var(--glitch-intensity, 10)" result="flood" />
+            <feComposite in="flood" in2="SourceGraphic" operator="in" result="comp" />
+            <feTile result="tile" />
+            <feOffset dx="0" dy="0" in="tile" result="offset" />
+            <feMerge>
+                <feMergeNode in="offset" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </svg>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 w-full max-w-2xl transform transition-all duration-300 ease-in-out">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200">Glitch Generator</h1>
+            <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-200">
+                ☀️ / 🌙
+            </button>
+        </div>
+
+        <!-- Live Preview Area -->
+        <div id="previewContainer" class="glitch-container bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6 flex items-center justify-center min-h-[150px] overflow-hidden shadow-inner relative">
+            <div id="glitchText" class="text-5xl md:text-6xl font-extrabold text-blue-600 dark:text-blue-400 select-none tracking-tight leading-tight whitespace-pre-wrap">
+                Hello Glitch!
+            </div>
+        </div>
+
+        <!-- Text Input -->
+        <div class="mb-6">
+            <label for="textInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Text:</label>
+            <textarea id="textInput" class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 resize-y min-h-[80px]" placeholder="Type your text here...">Hello Glitch!</textarea>
+        </div>
+
+        <!-- Presets and Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Glitch Presets -->
+            <div>
+                <label for="presetSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Glitch Preset:</label>
+                <select id="presetSelect" class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                    <option value="none">None</option>
+                    <option value="rgb">RGB Split</option>
+                    <option value="scanlines">Scanlines</option>
+                    <option value="jitter">Jitter</option>
+                    <option value="vhs">VHS/CRT</option>
+                    <option value="pixelate">Pixelate</option>
+                </select>
+            </div>
+
+            <!-- Glitch Controls -->
+            <div>
+                <label for="intensityRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intensity: <span id="intensityValue">1.0</span></label>
+                <input type="range" id="intensityRange" min="0" max="2" value="1" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500">
+            </div>
+
+            <div>
+                <label for="speedRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Speed: <span id="speedValue">0.5s</span></label>
+                <input type="range" id="speedRange" min="0.1" max="2" value="0.5" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500">
+            </div>
+
+            <div>
+                <label for="colorOffsetRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Color Offset: <span id="colorOffsetValue">2px</span></label>
+                <input type="range" id="colorOffsetRange" min="0" max="10" value="2" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500">
+            </div>
+
+            <div>
+                <label for="noiseRange" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Noise (Opacity): <span id="noiseValue">0.0</span></label>
+                <input type="range" id="noiseRange" min="0" max="1" value="0" step="0.05" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <button id="randomizeBtn" class="px-4 py-2 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition duration-200">
+                🎲 Randomize
+            </button>
+            <button id="resetBtn" class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition duration-200">
+                ↩️ Reset
+            </button>
+            <button id="copyCssBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition duration-200">
+                📋 Copy CSS
+            </button>
+            <button id="downloadPngBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-200">
+                ⬇️ Download PNG
+            </button>
+        </div>
+        
+        <!-- Message box for user feedback -->
+        <div id="messageBox" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg hidden opacity-0 transition-opacity duration-300 z-50"></div>
+
+    </div>
+
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        // DOM Elements
+        const textInput = document.getElementById('textInput');
+        const glitchText = document.getElementById('glitchText');
+        const presetSelect = document.getElementById('presetSelect');
+        const intensityRange = document.getElementById('intensityRange');
+        const speedRange = document.getElementById('speedRange');
+        const colorOffsetRange = document.getElementById('colorOffsetRange');
+        const noiseRange = document.getElementById('noiseRange');
+        const intensityValueSpan = document.getElementById('intensityValue');
+        const speedValueSpan = document.getElementById('speedValue');
+        const colorOffsetValueSpan = document.getElementById('colorOffsetValue');
+        const noiseValueSpan = document.getElementById('noiseValue');
+        const randomizeBtn = document.getElementById('randomizeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const copyCssBtn = document.getElementById('copyCssBtn');
+        const downloadPngBtn = document.getElementById('downloadPngBtn');
+        const previewContainer = document.getElementById('previewContainer');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const messageBox = document.getElementById('messageBox');
+
+        // Default settings
+        const defaultSettings = {
+            text: "Hello Glitch!",
+            preset: "none",
+            intensity: 1.0,
+            speed: 0.5,
+            colorOffset: 2,
+            noise: 0
+        };
+
+        // Current settings
+        let currentSettings = { ...defaultSettings };
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /**
+         * Shows a temporary message to the user.
+         * @param {string} message The message to display.
+         * @param {number} duration The duration in milliseconds for which the message will be shown.
+         */
+        function showMessage(message, duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden');
+            messageBox.classList.add('opacity-100');
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-100');
+                messageBox.classList.add('opacity-0');
+                // Hide after transition ends
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 300); // Duration of the opacity transition
+            }, duration);
+        }
+
+        /**
+         * Updates the text in the preview area by splitting it into characters.
+         * This allows individual characters to be animated or styled.
+         */
+        function updateGlitchTextHTML() {
+            const text = textInput.value || defaultSettings.text;
+            let htmlContent = '';
+            // Wrap each character in a span with data-char attribute
+            for (const char of text) {
+                htmlContent += `<span class="glitch-char" data-char="${char}">${char}</span>`;
+            }
+            glitchText.innerHTML = htmlContent;
+        }
+
+        /**
+         * Applies the selected glitch preset and control values to the preview.
+         * This function manages CSS classes and CSS variables.
+         */
+        function applyGlitchEffect() {
+            const preset = currentSettings.preset;
+            const intensity = currentSettings.intensity;
+            const speed = currentSettings.speed;
+            const colorOffset = currentSettings.colorOffset;
+            const noise = currentSettings.noise;
+
+            // Remove all existing preset classes
+            previewContainer.classList.remove('glitch-rgb', 'glitch-scanlines', 'glitch-jitter', 'glitch-vhs', 'glitch-pixelate');
+
+            // Apply selected preset class
+            if (preset !== 'none') {
+                previewContainer.classList.add(`glitch-${preset}`);
+            }
+
+            // Update CSS variables for controls
+            glitchText.style.setProperty('--glitch-intensity', intensity);
+            glitchText.style.setProperty('--glitch-speed', `${speed}s`);
+            glitchText.style.setProperty('--color-offset', `${colorOffset}px`);
+            glitchText.style.setProperty('--noise-opacity', noise); // For general noise/opacity
+
+            // Special handling for pixelate filter URL
+            if (preset === 'pixelate') {
+                glitchText.style.setProperty('--glitch-intensity', `${intensity * 10}`); // Adjust intensity for pixel size
+                // Ensure the SVG filter is referenced correctly
+                glitchText.querySelectorAll('.glitch-char').forEach(char => {
+                    char.style.filter = `url(#pixelateFilter) blur(0px)`;
+                });
+            } else {
+                glitchText.querySelectorAll('.glitch-char').forEach(char => {
+                    char.style.filter = ''; // Remove filter if not pixelate
+                });
+            }
+
+            // Apply noise effect via opacity if noise > 0
+            if (noise > 0) {
+                glitchText.style.opacity = 1 - noise;
+            } else {
+                glitchText.style.opacity = 1;
+            }
+
+            // Update display values for sliders
+            intensityValueSpan.textContent = intensity.toFixed(1);
+            speedValueSpan.textContent = `${speed.toFixed(1)}s`;
+            colorOffsetValueSpan.textContent = `${colorOffset}px`;
+            noiseValueSpan.textContent = noise.toFixed(2);
+
+            // Respect prefers-reduced-motion
+            if (prefersReducedMotion) {
+                glitchText.querySelectorAll('.glitch-char, .glitch-text-wrapper::before, .glitch-text-wrapper::after').forEach(el => {
+                    el.style.animationDuration = '0.001ms';
+                    el.style.animationIterationCount = '1';
+                    el.style.transitionDuration = '0.001ms';
+                    el.style.animationPlayState = 'paused';
+                });
+            }
+        }
+
+        /**
+         * Updates settings and re-applies glitch effect.
+         */
+        function updateGlitch() {
+            currentSettings.text = textInput.value;
+            currentSettings.preset = presetSelect.value;
+            currentSettings.intensity = parseFloat(intensityRange.value);
+            currentSettings.speed = parseFloat(speedRange.value);
+            currentSettings.colorOffset = parseFloat(colorOffsetRange.value);
+            currentSettings.noise = parseFloat(noiseRange.value);
+
+            updateGlitchTextHTML();
+            applyGlitchEffect();
+        }
+
+        /**
+         * Sets controls to a random state and applies glitch.
+         */
+        function randomizeSettings() {
+            const presets = ['none', 'rgb', 'scanlines', 'jitter', 'vhs', 'pixelate'];
+            currentSettings.preset = presets[Math.floor(Math.random() * presets.length)];
+            currentSettings.intensity = (Math.random() * (2 - 0.5) + 0.5).toFixed(1); // 0.5 to 2.0
+            currentSettings.speed = (Math.random() * (1.5 - 0.1) + 0.1).toFixed(1); // 0.1 to 1.5
+            currentSettings.colorOffset = Math.floor(Math.random() * 8) + 1; // 1 to 8px
+            currentSettings.noise = (Math.random() * 0.5).toFixed(2); // 0 to 0.5
+
+            // Update UI controls
+            presetSelect.value = currentSettings.preset;
+            intensityRange.value = currentSettings.intensity;
+            speedRange.value = currentSettings.speed;
+            colorOffsetRange.value = currentSettings.colorOffset;
+            noiseRange.value = currentSettings.noise;
+
+            updateGlitch();
+            showMessage('Settings randomized! ✨');
+        }
+
+        /**
+         * Resets all settings to their default values.
+         */
+        function resetSettings() {
+            currentSettings = { ...defaultSettings };
+
+            // Update UI controls
+            textInput.value = defaultSettings.text;
+            presetSelect.value = defaultSettings.preset;
+            intensityRange.value = defaultSettings.intensity;
+            speedRange.value = defaultSettings.speed;
+            colorOffsetRange.value = defaultSettings.colorOffset;
+            noiseRange.value = defaultSettings.noise;
+
+            updateGlitch();
+            showMessage('Settings reset to default. ✅');
+        }
+
+        /**
+         * Generates the CSS properties for the current glitch effect.
+         * This is a simplified representation as full keyframes cannot be extracted easily.
+         */
+        function generateCssOutput() {
+            let css = `:root {\n`;
+            css += `  --glitch-intensity: ${currentSettings.intensity};\n`;
+            css += `  --glitch-speed: ${currentSettings.speed}s;\n`;
+            css += `  --color-offset: ${currentSettings.colorOffset}px;\n`;
+            css += `  --noise-opacity: ${currentSettings.noise};\n`;
+            css += `}\n\n`;
+
+            css += `.glitch-container {\n  position: relative;\n  overflow: hidden;\n}\n\n`;
+            css += `.glitch-text-wrapper {\n  display: inline-block;\n  position: relative;\n}\n\n`;
+            css += `.glitch-char {\n  display: inline-block;\n  position: relative;\n  will-change: transform, opacity, filter, color;\n}\n\n`;
+
+            const preset = currentSettings.preset;
+            if (preset === 'rgb') {
+                css += `.glitch-rgb .glitch-char::before,\n.glitch-rgb .glitch-char::after {\n`;
+                css += `  content: attr(data-char);\n`;
+                css += `  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n`;
+                css += `  pointer-events: none;\n  will-change: transform;\n`;
+                css += `  opacity: var(--glitch-intensity);\n`;
+                css += `  animation: rgb-split var(--glitch-speed) infinite alternate;\n`;
+                css += `}\n\n`;
+                css += `.glitch-rgb .glitch-char::before {\n  color: red;\n  mix-blend-mode: screen;\n  transform: translate(calc(var(--color-offset) * -1), calc(var(--color-offset) * -1));\n}\n\n`;
+                css += `.glitch-rgb .glitch-char::after {\n  color: cyan;\n  mix-blend-mode: screen;\n  transform: translate(var(--color-offset), var(--color-offset));\n}\n\n`;
+                css += `@keyframes rgb-split {\n  0% { transform: translate(0, 0); }\n  20% { transform: translate(calc(var(--color-offset) * -1.5), calc(var(--color-offset) * 1.5)); }\n  40% { transform: translate(var(--color-offset), calc(var(--color-offset) * -1)); }\n  60% { transform: translate(calc(var(--color-offset) * -1), var(--color-offset)); }\n  80% { transform: translate(calc(var(--color-offset) * 1.5), calc(var(--color-offset) * -1.5)); }\n  100% { transform: translate(0, 0); }\n}\n`;
+            } else if (preset === 'scanlines') {
+                css += `.glitch-scanlines .glitch-text-wrapper::after {\n`;
+                css += `  content: '';\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n`;
+                css += `  background: repeating-linear-gradient(\n    to bottom,\n    transparent 0%,\n    transparent 50%,\n    rgba(0, 0, 0, var(--glitch-intensity)) 50%,\n    rgba(0, 0, 0, var(--glitch-intensity)) 51%\n  );\n`;
+                css += `  pointer-events: none;\n  animation: scanline-flicker var(--glitch-speed) infinite steps(1);\n`;
+                css += `}\n\n`;
+                css += `@keyframes scanline-flicker {\n  0% { opacity: 1; }\n  50% { opacity: 0.8; }\n  100% { opacity: 1; }\n}\n`;
+            } else if (preset === 'jitter') {
+                css += `.glitch-jitter .glitch-char {\n  animation: jitter var(--glitch-speed) infinite alternate;\n}\n\n`;
+                css += `@keyframes jitter {\n  0%, 100% { transform: translate(0, 0); }\n  10% { transform: translate(-1px, 1px); }\n  20% { transform: translate(1px, -1px); }\n  30% { transform: translate(-1px, -1px); }\n  40% { transform: translate(1px, 1px); }\n  50% { transform: translate(-1px, 0); }\n  60% { transform: translate(0, 1px); }\n  70% { transform: translate(1px, 0); }\n  80% { transform: translate(-1px, 1px); }\n  90% { transform: translate(1px, -1px); }\n}\n`;
+            } else if (preset === 'vhs') {
+                css += `.glitch-vhs .glitch-char {\n  animation: jitter var(--glitch-speed) infinite alternate;\n`;
+                css += `  text-shadow:\n    var(--color-offset) 0px 0px rgba(255, 0, 0, var(--glitch-intensity)),\n    calc(var(--color-offset) * -1) 0px 0px rgba(0, 255, 255, var(--glitch-intensity));\n`;
+                css += `  filter: blur(calc(var(--glitch-intensity) * 1px));\n}\n`;
+                css += `.glitch-vhs .glitch-text-wrapper::before {\n  content: '';\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 255, 0, 0.05);\n  mix-blend-mode: overlay;\n  pointer-events: none;\n  animation: vhs-flicker var(--glitch-speed) infinite alternate;\n}\n`;
+                css += `@keyframes vhs-flicker {\n  0%, 100% { opacity: 0; }\n  50% { opacity: 0.1; }\n}\n`;
+                css += `@keyframes jitter {\n  0%, 100% { transform: translate(0, 0); }\n  10% { transform: translate(-1px, 1px); }\n  20% { transform: translate(1px, -1px); }\n  30% { transform: translate(-1px, -1px); }\n  40% { transform: translate(1px, 1px); }\n  50% { transform: translate(-1px, 0); }\n  60% { transform: translate(0, 1px); }\n  70% { transform: translate(1px, 0); }\n  80% { transform: translate(-1px, 1px); }\n  90% { transform: translate(1px, -1px); }\n}\n`;
+            } else if (preset === 'pixelate') {
+                 css += `/* Note: Pixelate effect relies on an SVG filter. */\n`;
+                 css += `/* You need to embed the SVG filter in your HTML: */\n`;
+                 css += `<svg width="0" height="0" style="position: absolute;">\n`;
+                 css += `    <filter id="pixelateFilter">\n`;
+                 css += `        <feFlood x="0" y="0" height="var(--glitch-intensity, 10)" width="var(--glitch-intensity, 10)" result="flood" />\n`;
+                 css += `        <feComposite in="flood" in2="SourceGraphic" operator="in" result="comp" />\n`;
+                 css += `        <feTile result="tile" />\n`;
+                 css += `        <feOffset dx="0" dy="0" in="tile" result="offset" />\n`;
+                 css += `        <feMerge>\n`;
+                 css += `            <feMergeNode in="offset" />\n`;
+                 css += `            <feMergeNode in="SourceGraphic" />\n`;
+                 css += `        </feMerge>\n`;
+                 css += `    </filter>\n`;
+                 css += `</svg>\n\n`;
+                 css += `.glitch-pixelate .glitch-char {\n  filter: url(#pixelateFilter) blur(0px);\n}\n`;
+            }
+
+            // Include common styles for glitch-char if any preset is active
+            if (preset !== 'none') {
+                 css += `/* Common glitch character styles */\n`;
+                 css += `.glitch-char {\n  opacity: calc(1 - var(--noise-opacity)); /* Apply noise as overall opacity */\n}\n`;
+            }
+
+
+            css += `/* General Styles (Not directly part of the glitch effect, but for context) */\n`;
+            css += `body { font-family: 'Inter', sans-serif; }\n`;
+
+            return css;
+        }
+
+
+        /**
+         * Copies the generated CSS to the clipboard.
+         */
+        function copyCssToClipboard() {
+            const cssOutput = generateCssOutput();
+            navigator.clipboard.writeText(cssOutput).then(() => {
+                showMessage('CSS copied to clipboard! 🎉');
+            }).catch(err => {
+                console.error('Failed to copy CSS: ', err);
+                showMessage('Failed to copy CSS. Please try again.');
+            });
+        }
+
+        /**
+         * Downloads the preview container as a PNG image.
+         */
+        function downloadPng() {
+            // Temporarily hide scrollbar for clean screenshot
+            previewContainer.style.overflow = 'hidden';
+
+            // html2canvas takes a DOM element and renders it as a canvas
+            html2canvas(previewContainer, {
+                backgroundColor: null, // Transparent background if container background is transparent
+                useCORS: true, // Required for external images if any (not used here, but good practice)
+            }).then(canvas => {
+                // Restore scrollbar
+                previewContainer.style.overflow = '';
+
+                const link = document.createElement('a');
+                link.download = 'glitched-text.png';
+                link.href = canvas.toDataURL('image/png'); // Get data URL of the image
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showMessage('Image downloaded! 🖼️');
+            }).catch(error => {
+                console.error('oops, something went wrong!', error);
+                showMessage('Failed to download image. Please try again.');
+            });
+        }
+
+        /**
+         * Toggles dark mode on/off.
+         */
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            showMessage(`Dark mode ${isDarkMode ? 'enabled' : 'disabled'}!`);
+        }
+
+        // Event Listeners
+        textInput.addEventListener('input', updateGlitch);
+        presetSelect.addEventListener('change', updateGlitch);
+        intensityRange.addEventListener('input', updateGlitch);
+        speedRange.addEventListener('input', updateGlitch);
+        colorOffsetRange.addEventListener('input', updateGlitch);
+        noiseRange.addEventListener('input', updateGlitch);
+
+        randomizeBtn.addEventListener('click', randomizeSettings);
+        resetBtn.addEventListener('click', resetSettings);
+        copyCssBtn.addEventListener('click', copyCssToClipboard);
+        downloadPngBtn.addEventListener('click', downloadPng);
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // Initial setup on page load
+        window.onload = () => {
+            // Set initial dark mode based on localStorage or system preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            // Apply initial settings
+            textInput.value = defaultSettings.text;
+            resetSettings(); // Ensures all controls are set to default and preview is updated
+        };
+
+    </script>
+</body>
+</html>

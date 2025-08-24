@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Food Picker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            padding: 20px;
+        }
+
+        #app {
+            max-width: 700px;
+            width: 100%;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff6347;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Description section */
+        .description {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+            border-left: 4px solid #ff6347;
+        }
+
+        .description h3 {
+            color: #ff6347;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .description ol {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .description li {
+            margin-bottom: 8px;
+        }
+
+        /* Wheel container */
+        #wheel-container {
+            position: relative;
+            margin: 30px auto;
+            width: min(80vw, 350px);
+            height: min(80vw, 350px);
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        }
+
+        #pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            color: #ff6347;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Slices group with animation */
+        #slices {
+            transform-origin: 0 0;
+            transition: transform 5s cubic-bezier(0, 0, 0.25, 1); /* Ease-out effect */
+        }
+
+        /* Spin button */
+        #spin {
+            background: linear-gradient(to right, #ff6347, #ff8e6f);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 99, 71, 0.4);
+            margin: 15px 0;
+        }
+
+        #spin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 99, 71, 0.6);
+        }
+
+        #spin:active {
+            transform: translateY(1px);
+        }
+
+        #spin:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Result box */
+        #result {
+            margin: 25px 0;
+            font-size: 26px;
+            color: #333;
+            transition: all 0.5s;
+            min-height: 40px;
+        }
+
+        #result.animate {
+            transform: scale(1.2);
+            color: #ff6347;
+        }
+
+        #selected {
+            font-weight: bold;
+            color: #ff6347;
+        }
+
+        /* Customize section */
+        #customize {
+            margin-top: 35px;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        #customize h2 {
+            color: #ff6347;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #food-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        #food-list li {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        #food-list li:hover {
+            transform: translateX(5px);
+        }
+
+        #food-list input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: #ff6347;
+        }
+
+        #food-list span {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        #food-list button {
+            background: #ff6347;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #food-list button:hover {
+            background: #e04b30;
+        }
+
+        .add-food-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #new-food {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #add-food {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        #add-food:hover {
+            background: #3d8b40;
+        }
+
+        /* Share button */
+        #share {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none; /* Shown after selection */
+            transition: background 0.3s;
+        }
+
+        #share:hover {
+            background: #0b7dda;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #app {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .add-food-container {
+                flex-direction: column;
+            }
+            
+            #new-food {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Random Food Picker</h1>
+        <p class="subtitle">Let fate decide your next meal!</p>
+        
+        <div class="description">
+            <h3><i class="fas fa-info-circle"></i> How to Use This Tool</h3>
+            <p>Having trouble deciding what to eat? The Random Food Picker makes the decision for you!</p>
+            <ol>
+                <li>Add your favorite food options or use the default ones</li>
+                <li>Toggle the checkboxes to include/exclude foods from selection</li>
+                <li>Click the SPIN button to randomize your food choice</li>
+                <li>Share the result with your friends or family!</li>
+            </ol>
+        </div>
+        
+        <div id="wheel-container">
+            <svg id="wheel" viewBox="0 0 100 100">
+                <g transform="translate(50, 50)">
+                    <g id="slices"></g>
+                </g>
+            </svg>
+            <div id="pointer"><i class="fas fa-caret-down"></i></div>
+        </div>
+        
+        <button id="spin">SPIN <i class="fas fa-redo-alt"></i></button>
+        
+        <div id="result">Selected: <span id="selected"></span></div>
+        
+        <button id="share"><i class="fas fa-share-alt"></i> Share with Friends</button>
+        
+        <div id="customize">
+            <h2><i class="fas fa-utensils"></i> Customize Foods</h2>
+            <ul id="food-list"></ul>
+            
+            <div class="add-food-container">
+                <input id="new-food" placeholder="Add new food">
+                <button id="add-food">Add Food</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default food items
+        let foods = [
+            { name: 'Pizza', enabled: true },
+            { name: 'Burger', enabled: true },
+            { name: 'Hotdog', enabled: true },
+            { name: 'Fries', enabled: true },
+            { name: 'Shawarma', enabled: true },
+            { name: 'Sandwich', enabled: true },
+            { name: 'Pasta', enabled: true }
+        ];
+
+        // Load from localStorage if available
+        if (localStorage.getItem('foods')) {
+            foods = JSON.parse(localStorage.getItem('foods'));
+        }
+
+        // Elements
+        const slicesG = document.getElementById('slices');
+        const spinBtn = document.getElementById('spin');
+        const selectedSpan = document.getElementById('selected');
+        const resultDiv = document.getElementById('result');
+        const shareBtn = document.getElementById('share');
+        const foodListUl = document.getElementById('food-list');
+        const newFoodInput = document.getElementById('new-food');
+        const addFoodBtn = document.getElementById('add-food');
+
+        // Track current rotation (in degrees)
+        let currentRotation = 0;
+
+        // Save foods to localStorage
+        function saveFoods() {
+            localStorage.setItem('foods', JSON.stringify(foods));
+        }
+
+        // Build the customize list UI
+        function buildList() {
+            foodListUl.innerHTML = '';
+            foods.forEach((food, index) => {
+                const li = document.createElement('li');
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = food.enabled;
+                checkbox.addEventListener('change', () => {
+                    foods[index].enabled = checkbox.checked;
+                    buildWheel();
+                    saveFoods();
+                });
+
+                const span = document.createElement('span');
+                span.textContent = food.name;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                removeBtn.addEventListener('click', () => {
+                    foods.splice(index, 1);
+                    buildList();
+                    buildWheel();
+                    saveFoods();
+                });
+
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                li.appendChild(removeBtn);
+                foodListUl.appendChild(li);
+            });
+        }
+
+        // Build the wheel SVG
+        function buildWheel() {
+            slicesG.innerHTML = '';
+            const activeFoods = foods.filter(f => f.enabled);
+            const num = activeFoods.length;
+            if (num < 1) {
+                alert('Please add at least one food item!');
+                return;
+            }
+
+            const sliceAngle = 360 / num;
+            const colors = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#FF33A1', '#33FFF3', '#F3FF33', '#FF8C42', '#6A85FF', '#FF4F81'];
+
+            // Offset to start slices from top (equivalent to rotating coordinates)
+            const offset = -90;
+
+            for (let i = 0; i < num; i++) {
+                const startAngle = i * sliceAngle + offset;
+                const endAngle = (i + 1) * sliceAngle + offset;
+                const startRad = startAngle * Math.PI / 180;
+                const endRad = endAngle * Math.PI / 180;
+
+                const x1 = 50 * Math.cos(startRad);
+                const y1 = 50 * Math.sin(startRad);
+                const x2 = 50 * Math.cos(endRad);
+                const y2 = 50 * Math.sin(endRad);
+
+                const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M0,0 L${x1},${y1} A50,50 0 ${largeArc} 1 ${x2},${y2} Z`);
+                path.setAttribute('fill', colors[i % colors.length]);
+                path.setAttribute('stroke', 'white');
+                path.setAttribute('stroke-width', '1');
+                slicesG.appendChild(path);
+
+                // Add text
+                const midAngle = (startAngle + endAngle) / 2;
+                const midRad = midAngle * Math.PI / 180;
+                const textR = 35;
+                const tx = textR * Math.cos(midRad);
+                const ty = textR * Math.sin(midRad);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', tx);
+                text.setAttribute('y', ty);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'central');
+                text.setAttribute('fill', 'white');
+                text.setAttribute('font-size', '3');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('transform', `rotate(${ -midAngle + 90 } ${tx} ${ty})`);
+                text.textContent = activeFoods[i].name.substring(0, 10);
+                slicesG.appendChild(text);
+            }
+        }
+
+        // Spin function
+        function spin() {
+            const activeFoods = foods.filter(f => f.enabled);
+            const num = activeFoods.length;
+            if (num < 1) return;
+
+            spinBtn.disabled = true;
+            selectedSpan.textContent = '';
+            shareBtn.style.display = 'none';
+
+            const selectedIndex = Math.floor(Math.random() * num);
+            const selected = activeFoods[selectedIndex];
+            const sliceAngle = 360 / num;
+
+            // Calculate target angle to center the selected slice under the pointer (top)
+            const midSliceAngle = (selectedIndex * sliceAngle) + (sliceAngle / 2);
+            let targetRotation = -midSliceAngle; // Negative for clockwise alignment
+
+            // Current mod 360
+            const currentMod = currentRotation % 360;
+
+            // Target mod 360 (normalize to -360 to 0 for consistency)
+            let targetMod = targetRotation % 360;
+            if (targetMod > 0) targetMod -= 360;
+
+            // Positive delta to target (clockwise direction)
+            let delta = (targetMod - currentMod + 720) % 360; // Ensure positive 0-360
+
+            // Add full spins (5-10 for randomness)
+            const fullSpins = 5 + Math.floor(Math.random() * 6);
+            const additionalRotation = delta + (360 * fullSpins);
+
+            // Update current rotation
+            currentRotation += additionalRotation;
+
+            // Apply rotation with transition
+            slicesG.style.transform = `rotate(${currentRotation}deg)`;
+
+            // On transition end
+            slicesG.addEventListener('transitionend', function handleEnd() {
+                slicesG.removeEventListener('transitionend', handleEnd);
+                selectedSpan.textContent = selected.name;
+                resultDiv.classList.add('animate');
+                setTimeout(() => resultDiv.classList.remove('animate'), 500);
+                shareBtn.style.display = 'block';
+                spinBtn.disabled = false;
+
+                // Set up share
+                shareBtn.onclick = () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Random Food Picker',
+                            text: `I got ${selected.name}! Try it out!`
+                        }).catch(console.error);
+                    } else {
+                        alert('Share not supported on this browser. Copy this: I got ' + selected.name + ' from the Random Food Picker!');
+                    }
+                };
+            }, { once: true });
+        }
+
+        // Event listeners
+        spinBtn.addEventListener('click', spin);
+        
+        addFoodBtn.addEventListener('click', () => {
+            const newName = newFoodInput.value.trim();
+            if (newName) {
+                foods.push({ name: newName, enabled: true });
+                buildList();
+                buildWheel();
+                saveFoods();
+                newFoodInput.value = '';
+            }
+        });
+        
+        newFoodInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addFoodBtn.click();
+            }
+        });
+
+        // Initial build
+        buildList();
+        buildWheel();
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Invisible Ink Text Generator – Hide text using zero-width Unicode characters or CSS. Encode, decode, copy, and share invisibly." />
+  <meta property="og:title" content="Invisible Ink Text Generator" />
+  <meta property="og:description" content="Hide text using zero-width Unicode or CSS. For fun, testing, and education." />
+  <meta property="og:type" content="tool" />
+  <title>Invisible Ink Text Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="light-theme">
+  <div class="container">
+    <header>
+      <h1>Invisible Ink Text Generator</h1>
+      <p class="subtitle">Hide text using Unicode or CSS. <button id="faq-toggle" aria-expanded="false">Learn more</button></p>
+    </header>
+
+    <section id="faq" hidden>
+      <h2>FAQ</h2>
+      <dl>
+        <dt>What is invisible text?</dt>
+        <dd>Text that appears blank but contains hidden data using zero-width Unicode characters (like U+200B) or CSS tricks (e.g., white-on-white).</dd>
+
+        <dt>How does it work?</dt>
+        <dd>
+          <strong>Zero-Width:</strong> Each character is encoded into bits, then represented by invisible Unicode characters.<br>
+          <strong>CSS Hidden:</strong> Text is styled to be invisible (e.g., opacity 0.01).<br>
+          <strong>Combined:</strong> Both methods used together.
+        </dd>
+
+        <dt>Is it safe?</dt>
+        <dd>Yes, but only for fun, testing, or education. Hidden text can be detected and decoded easily. Not secure for privacy.</dd>
+
+        <dt>Where can I use it?</dt>
+        <dd>In social media bios, messages (Discord, WhatsApp), or to test detection tools. Not for spam or deception.</dd>
+      </dl>
+      <p><button id="try-sample">Try Sample</button></p>
+    </section>
+
+    <form id="ink-form">
+      <label for="input-text">Enter your message:</label>
+      <textarea id="input-text" placeholder="Type something secret..." rows="4" aria-describedby="char-count"></textarea>
+      <div id="char-count">0 characters, 0 words</div>
+
+      <fieldset>
+        <legend>Encoding Mode</legend>
+        <div class="radio-group">
+          <label><input type="radio" name="mode" value="zero-width" checked> Zero-Width Encode</label>
+          <label><input type="radio" name="mode" value="css-hidden"> CSS Hidden</label>
+          <label><input type="radio" name="mode" value="combined"> Combined</label>
+        </div>
+      </fieldset>
+
+      <div class="button-group">
+        <button type="button" id="generate">Generate</button>
+        <button type="button" id="reveal" disabled>Reveal</button>
+        <button type="button" id="copy" disabled>Copy</button>
+        <button type="button" id="clear">Clear</button>
+        <button type="button" id="download" disabled>Download .txt</button>
+        <button type="button" id="strip">Strip Invisibles</button>
+      </div>
+    </form>
+
+    <section id="output-section">
+      <label for="output-text">Output (copyable):</label>
+      <textarea id="output-text" readonly placeholder="Generated invisible text will appear here..." aria-describedby="output-desc"></textarea>
+      <p id="output-desc" class="sr-only">Output appears blank; use Reveal to view hidden content.</p>
+
+      <div id="preview" class="preview blank" aria-live="polite"></div>
+      <p id="counter" class="counter">Zero-width chars: 0 | Payload size: 0 B</p>
+    </section>
+
+    <footer>
+      <p class="disclaimer">
+        ⚠️ For educational use only. Do not use for abuse or spam.
+      </p>
+      <button id="theme-toggle">Switch to Dark Theme</button>
+    </footer>
+  </div>
+
+  <div id="toast" aria-live="assertive" role="status"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

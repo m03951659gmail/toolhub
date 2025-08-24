@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Create beautiful typewriter text animations with live preview. Customize speed, delay, loop, cursor, and more. Export HTML/CSS/JS snippets." />
+  <meta name="keywords" content="typewriter animation, text generator, CSS animation, JavaScript typewriter, live preview, code snippet" />
+  <meta name="author" content="Typewriter Generator Team" />
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:title" content="Typewriter Animation Text Generator" />
+  <meta property="og:description" content="Generate customizable typewriter text effects with live preview. Export ready-to-use code snippets." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourdomain.com/typewriter-generator" />
+  <meta property="og:image" content="https://yourdomain.com/images/typewriter-preview.jpg" />
+
+  <title>Typewriter Animation Text Generator</title>
+
+  <!-- Tailwind CSS via CDN (for simplicity) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+      /* Optional: Custom styles if needed beyond Tailwind */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Ensure cursor is aligned properly */
+#typewriterText .typewriter-cursor {
+  margin-left: 2px;
+}
+  </style>
+  
+  
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 text-center">
+      <h1 class="text-2xl md:text-3xl font-bold">Typewriter Animation Generator</h1>
+      <p class="opacity-90 mt-1">Create &amp; export beautiful typewriter effects</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Controls Panel -->
+      <div class="space-y-5">
+        <div>
+          <label class="block text-sm font-semibold mb-2">Text Input (Supports ^500 for pauses)</label>
+          <textarea id="inputText" rows="4" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter your text... Use ^500 for a 500ms pause. Multiline supported.">Hello, World!^1000
+Welcome to the future.^500
+Are you ready?</textarea>
+        </div>
+
+        <!-- Animation Mode -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Mode</label>
+            <select id="animationMode" class="w-full border border-gray-300 rounded-lg p-2">
+              <option value="char">Character-by-Character</option>
+              <option value="word">Word-by-Word</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-2">Speed (ms)</label>
+            <input type="number" id="speed" class="w-full border border-gray-300 rounded-lg p-2" value="100" min="10" max="1000"/>
+          </div>
+        </div>
+
+        <!-- Delays & Loop -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Start Delay (ms)</label>
+            <input type="number" id="startDelay" class="w-full border border-gray-300 rounded-lg p-2" value="500" min="0"/>
+          </div>
+
+          <div class="flex items-end">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" id="loop" class="form-checkbox h-5 w-5 text-blue-500" checked>
+              <span class="text-sm font-semibold">Loop Animation</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Cursor Options -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Cursor Symbol</label>
+            <input type="text" id="cursorChar" class="w-full border border-gray-300 rounded-lg p-2" value="|" maxlength="3"/>
+          </div>
+
+          <div class="flex items-end">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" id="blinkCursor" class="form-checkbox h-5 w-5 text-blue-500" checked>
+              <span class="text-sm font-semibold">Blink Cursor</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Backspace/Retype -->
+        <div>
+          <label class="block text-sm font-semibold mb-2">Backspace Speed (ms)</label>
+          <input type="number" id="backspaceSpeed" class="w-full border border-gray-300 rounded-lg p-2" value="50" min="0"/>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg font-medium transition">Start</button>
+          <button id="stopBtn" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium transition">Stop</button>
+          <button id="resetBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg font-medium transition">Reset</button>
+          <button id="copyHtmlBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition">Copy HTML</button>
+          <button id="copyCodeBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg font-medium transition">Copy CSS/JS</button>
+          <button id="clearBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-medium transition">Clear</button>
+        </div>
+      </div>
+
+      <!-- Preview Panel -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3">Live Preview</h2>
+        <div id="previewContainer" class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-40 flex items-center justify-center text-center">
+          <div id="typewriterText" class="text-lg leading-relaxed"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2 text-center">Animation plays in real-time as you adjust settings.</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 p-4 text-center text-sm text-gray-600 border-t">
+      Built with HTML, CSS, JavaScript &amp; Tailwind CSS | Perfect for websites, portfolios, and landing pages
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

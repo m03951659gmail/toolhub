@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse Code Translator - Text & Audio</title>
+    <meta name="description" content="Translate text to Morse code and vice-versa, with audio playback, adjustable speed, frequency, and volume. Supports A-Z, 0-9, punctuation, and prosigns.">
+    <meta name="keywords" content="Morse code, translator, text to morse, morse to text, audio, WPM, Farnsworth, frequency, volume, HTML, CSS, JavaScript, Tailwind CSS">
+
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="Morse Code Translator - Text & Audio">
+    <meta property="og:description" content="Translate text to Morse code and vice-versa, with audio playback, adjustable speed, frequency, and volume. Supports A-Z, 0-9, punctuation, and prosigns.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/morse-translator">
+    <meta property="og:image" content="https://placehold.co/1200x630/aabbcc/000000?text=Morse+Translator"> <!-- Placeholder image -->
+    <meta property="og:image:alt" content="A screenshot of the Morse Code Translator application.">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05); /* Soft shadows */
+            width: 100%;
+            max-width: 900px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            max-height: 300px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            transition: border-color 0.2s;
+        }
+        textarea.invalid-input {
+            border-color: #ef4444; /* Red border for invalid input */
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d1d5db; /* Light gray track */
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5; /* Violet thumb */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+        .button-primary {
+            @apply px-5 py-2 rounded-lg bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150;
+        }
+        .button-secondary {
+            @apply px-5 py-2 rounded-lg bg-gray-200 text-gray-800 font-semibold shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition ease-in-out duration-150;
+        }
+        .file-input-label {
+            @apply cursor-pointer button-secondary flex items-center justify-center gap-2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .grid {
+                grid-template-columns: 1fr; /* Stack columns on small screens */
+            }
+            .controls-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Morse Code Translator 📻</h1>
+
+        <!-- Input/Output Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="inputText" class="block text-lg font-medium text-gray-700 mb-2">Input Text/Morse:</label>
+                <textarea id="inputText" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type text or Morse code here..." aria-label="Input field for text or Morse code. Auto-detects input type." spellcheck="false"></textarea>
+            </div>
+            <div>
+                <label for="outputText" class="block text-lg font-medium text-gray-700 mb-2">Translated Output:</label>
+                <textarea id="outputText" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none" placeholder="Translation will appear here..." readonly aria-label="Output field for translated Morse code or text."></textarea>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-4">
+            <button id="copyBtn" class="button-primary" aria-label="Copy translated output to clipboard.">Copy</button>
+            <button id="clearBtn" class="button-secondary" aria-label="Clear all input and output fields.">Clear</button>
+
+            <label for="fileUpload" class="file-input-label">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L6.293 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                Upload .txt
+                <input type="file" id="fileUpload" class="hidden" accept=".txt" aria-label="Upload a text file for translation.">
+            </label>
+            <button id="downloadResultBtn" class="button-primary" aria-label="Download the translated output as a text file.">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                Download .txt
+            </button>
+        </div>
+
+        <!-- Audio Controls Section -->
+        <div class="bg-gray-50 p-6 rounded-xl mt-6 shadow-inner">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Audio Controls 🔊</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 controls-grid">
+                <div class="flex flex-col items-center">
+                    <label for="wpmSlider" class="text-sm font-medium text-gray-600 mb-2">WPM: <span id="wpmValue">20</span></label>
+                    <input type="range" id="wpmSlider" min="5" max="40" value="20" aria-label="Adjust words per minute for audio playback.">
+                </div>
+                <div class="flex flex-col items-center">
+                    <label for="farnsworthSlider" class="text-sm font-medium text-gray-600 mb-2">Farnsworth: <span id="farnsworthValue">15</span></label>
+                    <input type="range" id="farnsworthSlider" min="5" max="40" value="15" aria-label="Adjust Farnsworth spacing for audio playback.">
+                </div>
+                <div class="flex flex-col items-center">
+                    <label for="frequencySlider" class="text-sm font-medium text-gray-600 mb-2">Frequency (Hz): <span id="frequencyValue">700</span></label>
+                    <input type="range" id="frequencySlider" min="300" max="1000" value="700" aria-label="Adjust audio tone frequency in Hertz.">
+                </div>
+                <div class="flex flex-col items-center">
+                    <label for="volumeSlider" class="text-sm font-medium text-gray-600 mb-2">Volume: <span id="volumeValue">0.5</span></label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.5" aria-label="Adjust audio playback volume.">
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 mt-6">
+                <button id="playAudioBtn" class="button-primary px-6 py-3" aria-label="Play Morse code audio.">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.027l2.247 1.632A.8.8 0 0112 9.496v.008a.8.8 0 01-.2 1.488l-2.247 1.632A.8 0 019 12.027V7.973a.8.8 0 01.555-.746z" clip-rule="evenodd" />
+                    </svg>
+                    Play
+                </button>
+                <button id="pauseAudioBtn" class="button-secondary px-6 py-3" aria-label="Pause Morse code audio.">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Pause
+                </button>
+                <button id="stopAudioBtn" class="button-secondary px-6 py-3" aria-label="Stop Morse code audio.">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1zM13 7a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Stop
+                </button>
+                <button id="downloadWavBtn" class="button-primary px-6 py-3" aria-label="Download generated audio as a WAV file.">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3.5-7.5a.5.5 0 011 0V11h.5a.5.5 0 010 1H8v.5a.5.5 0 01-1 0V12h-.5a.5.5 0 010-1H7v-.5zm5.5 0a.5.5 0 011 0V11h.5a.5.5 0 010 1H13v.5a.5.5 0 01-1 0V12h-.5a.5.5 0 010-1H12v-.5z" clip-rule="evenodd" />
+                    </svg>
+                    Download WAV
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Import -->
+    <script src="script.js"></script>
+</body>
+</html>

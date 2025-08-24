@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Emoji Art Generator – Convert Text into Emoji Designs</title>
+    <meta name="description" content="Generate Emoji Art instantly. Convert text into beautiful emoji patterns, copy, download, share, and customize easily.">
+    <meta property="og:title" content="Text to Emoji Art Generator">
+    <meta property="og:description" content="Turn any text into amazing emoji art.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .emoji-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+            gap: 4px;
+        }
+        .emoji-picker span {
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .emoji-picker span:hover {
+            background-color: #e5e7eb; /* light gray */
+        }
+        .dark .emoji-picker span:hover {
+            background-color: #374151; /* dark gray */
+        }
+        #output {
+            white-space: pre;
+            font-family: monospace;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Text to Emoji Art Generator</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">Convert your text into beautiful emoji patterns instantly.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Panel: Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Input Section -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-semibold mb-4">1. Enter Your Text</h2>
+                    <textarea id="text-input" class="w-full h-32 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Hello World!"></textarea>
+                </div>
+
+                <!-- Emoji Selection -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-semibold mb-4">2. Choose Emoji</h2>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <input type="text" id="emoji-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none" value="❤️">
+                        <button id="multi-emoji-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg" title="Toggle Multi-Emoji Mode">🎨</button>
+                    </div>
+                    <div id="emoji-picker-container" class="emoji-picker"></div>
+                    <div class="mt-4">
+                        <h3 class="font-semibold mb-2">Recently Used</h3>
+                        <div id="recent-emojis" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+                 <!-- Customization -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-semibold mb-4">3. Customize</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="font-size" class="block font-medium mb-1">Font Size</label>
+                            <select id="font-size" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
+                                <option value="8px">Small</option>
+                                <option value="12px" selected>Medium</option>
+                                <option value="16px">Large</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bg-color" class="block font-medium mb-1">Background Color</label>
+                            <input type="color" id="bg-color" value="#ffffff" class="w-full h-10 p-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Output and Actions -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold">Generated Art</h2>
+                         <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                            <svg id="theme-icon-light" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <svg id="theme-icon-dark" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        </button>
+                    </div>
+                    <div id="output-container" class="w-full overflow-x-auto p-4 rounded-lg bg-white border border-gray-200 dark:border-gray-700">
+                        <pre id="output"></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                     <h2 class="text-2xl font-semibold mb-4">Actions</h2>
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button id="copy-btn" class="flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">Copy Text</button>
+                        <button id="download-img-btn" class="flex items-center justify-center p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">Download IMG</button>
+                        <button id="download-txt-btn" class="flex items-center justify-center p-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">Download TXT</button>
+                        <button id="share-btn" class="flex items-center justify-center p-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors">Share</button>
+                     </div>
+                     <div id="share-options" class="hidden mt-4 flex justify-center gap-4">
+                        <!-- Social Share Links will be injected here -->
+                     </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-semibold mb-4">History</h2>
+                    <div id="history-container" class="space-y-2 max-h-48 overflow-y-auto">
+                        <!-- History items will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA: Character Patterns ---
+        const patterns = {
+            'A': [' * ', '* *', '***', '* *', '* *'], 'B': ['** ', '* *', '** ', '* *', '** '], 'C': [' **', '* ', '* ', '* ', ' **'],
+            'D': ['** ', '* *', '* *', '* *', '** '], 'E': ['***', '* ', '** ', '* ', '***'], 'F': ['***', '* ', '** ', '* ', '* '],
+            'G': [' **', '* ', '* *', '* *', ' **'], 'H': ['* *', '* *', '***', '* *', '* *'], 'I': ['***', ' * ', ' * ', ' * ', '***'],
+            'J': ['  *', '  *', '  *', '* *', ' * '], 'K': ['* *', '* *', '** ', '* *', '* *'], 'L': ['* ', '* ', '* ', '* ', '***'],
+            'M': ['* *', '***', '***', '* *', '* *'], 'N': ['* *', '** *', '* **', '* *', '* *'], 'O': [' * ', '* *', '* *', '* *', ' * '],
+            'P': ['** ', '* *', '** ', '* ', '* '], 'Q': [' * ', '* *', '* *', '* *', ' **'], 'R': ['** ', '* *', '** ', '* *', '* *'],
+            'S': [' **', '* ', ' * ', '  *', '** '], 'T': ['***', ' * ', ' * ', ' * ', ' * '], 'U': ['* *', '* *', '* *', '* *', '***'],
+            'V': ['* *', '* *', '* *', ' * ', ' * '], 'W': ['* *', '* *', '***', '***', '* *'], 'X': ['* *', ' * ', ' * ', ' * ', '* *'],
+            'Y': ['* *', '* *', ' * ', ' * ', ' * '], 'Z': ['***', '  *', ' * ', '* ', '***'],
+            '0': [' * ', '* *', '* *', '* *', ' * '], '1': [' * ', '** ', ' * ', ' * ', '***'], '2': ['** ', '  *', ' * ', '* ', '***'],
+            '3': ['** ', '  *', ' **', '  *', '** '], '4': ['* *', '* *', '***', '  *', '  *'], '5': ['***', '* ', '***', '  *', '***'],
+            '6': [' * ', '* ', '** ', '* *', ' * '], '7': ['***', '  *', ' * ', ' * ', ' * '], '8': [' * ', '* *', ' * ', '* *', ' * '],
+            '9': [' * ', '* *', ' **', '  *', ' * '],
+            ' ': ['   ', '   ', '   ', '   ', '   '], '!': [' * ', ' * ', ' * ', '   ', ' * '], '?': ['** ', '  *', ' * ', '   ', ' * '],
+            '.': ['   ', '   ', '   ', '   ', ' * '], ',': ['   ', '   ', '   ', ' * ', '* '], '+': ['   ', ' * ', '***', ' * ', '   '],
+            '-': ['   ', '   ', '***', '   ', '   '], '=': ['   ', '***', '   ', '***', '   '],
+        };
+
+        // --- DOM Elements ---
+        const textInput = document.getElementById('text-input');
+        const emojiInput = document.getElementById('emoji-input');
+        const output = document.getElementById('output');
+        const outputContainer = document.getElementById('output-container');
+        const copyBtn = document.getElementById('copy-btn');
+        const downloadImgBtn = document.getElementById('download-img-btn');
+        const downloadTxtBtn = document.getElementById('download-txt-btn');
+        const fontSizeSelect = document.getElementById('font-size');
+        const bgColorInput = document.getElementById('bg-color');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconLight = document.getElementById('theme-icon-light');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+        const emojiPickerContainer = document.getElementById('emoji-picker-container');
+        const recentEmojisContainer = document.getElementById('recent-emojis');
+        const multiEmojiToggle = document.getElementById('multi-emoji-toggle');
+        const historyContainer = document.getElementById('history-container');
+        const shareBtn = document.getElementById('share-btn');
+        const shareOptions = document.getElementById('share-options');
+
+        // --- State ---
+        let multiEmojiMode = false;
+        let recentEmojis = JSON.parse(localStorage.getItem('recentEmojis')) || [];
+        let history = JSON.parse(localStorage.getItem('emojiArtHistory')) || [];
+
+        // --- Emojis for Picker ---
+        const popularEmojis = ['❤️', '😂', '👍', '🔥', '⭐', '😊', '🎉', '🚀', '💯', '✨', '💀', '✅', '👋', '💰', '💡', '🙏'];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            populateEmojiPicker();
+            updateRecentEmojis();
+            updateHistory();
+            generateArt();
+            
+            // Event Listeners
+            textInput.addEventListener('input', generateArt);
+            emojiInput.addEventListener('input', generateArt);
+            fontSizeSelect.addEventListener('change', (e) => {
+                output.style.fontSize = e.target.value;
+                generateArt();
+            });
+            bgColorInput.addEventListener('input', (e) => {
+                outputContainer.style.backgroundColor = e.target.value;
+            });
+            copyBtn.addEventListener('click', copyToClipboard);
+            downloadImgBtn.addEventListener('click', downloadAsImage);
+            downloadTxtBtn.addEventListener('click', downloadAsText);
+            themeToggle.addEventListener('click', toggleTheme);
+            multiEmojiToggle.addEventListener('click', toggleMultiEmojiMode);
+            shareBtn.addEventListener('click', toggleShareOptions);
+        });
+
+        // --- Core Functions ---
+        function generateArt() {
+            const text = textInput.value.toUpperCase();
+            const emoji = emojiInput.value;
+            if (!text) {
+                output.textContent = '';
+                return;
+            }
+
+            let artLines = Array(5).fill('');
+            const emojis = multiEmojiMode ? getUniqueEmojis(text) : [emoji];
+            
+            for (let char of text) {
+                const pattern = patterns[char] || patterns['?'];
+                for (let i = 0; i < 5; i++) {
+                    const linePattern = pattern[i];
+                    let lineArt = '';
+                    for (let p of linePattern) {
+                        if (p === '*') {
+                            lineArt += multiEmojiMode ? getEmojiForChar(char, emojis) : emoji;
+                        } else {
+                            lineArt += ' ';
+                        }
+                    }
+                    artLines[i] += lineArt + ' ';
+                }
+            }
+            
+            output.textContent = artLines.join('\n');
+            output.classList.add('animate-fade-in');
+            setTimeout(() => output.classList.remove('animate-fade-in'), 500);
+
+            updateRecentEmojis(emoji);
+            saveToHistory(text, emoji);
+        }
+
+        function getUniqueEmojis(text) {
+            const uniqueChars = [...new Set(text.replace(/\s/g, ''))];
+            return popularEmojis.slice(0, uniqueChars.length);
+        }
+
+        function getEmojiForChar(char, emojis) {
+            const uniqueChars = [...new Set(textInput.value.toUpperCase().replace(/\s/g, ''))];
+            const index = uniqueChars.indexOf(char);
+            return emojis[index % emojis.length] || '❓';
+        }
+
+        // --- UI & UX Functions ---
+        function populateEmojiPicker() {
+            popularEmojis.forEach(emoji => {
+                const span = document.createElement('span');
+                span.textContent = emoji;
+                span.addEventListener('click', () => {
+                    emojiInput.value = emoji;
+                    generateArt();
+                });
+                emojiPickerContainer.appendChild(span);
+            });
+        }
+
+        function updateRecentEmojis(newEmoji) {
+            if (newEmoji && !recentEmojis.includes(newEmoji)) {
+                recentEmojis.unshift(newEmoji);
+                recentEmojis = recentEmojis.slice(0, 8); // Keep last 8
+                localStorage.setItem('recentEmojis', JSON.stringify(recentEmojis));
+            }
+
+            recentEmojisContainer.innerHTML = '';
+            recentEmojis.forEach(emoji => {
+                const span = document.createElement('span');
+                span.textContent = emoji;
+                span.className = 'cursor-pointer p-1 bg-gray-200 dark:bg-gray-700 rounded';
+                span.addEventListener('click', () => {
+                    emojiInput.value = emoji;
+                    generateArt();
+                });
+                recentEmojisContainer.appendChild(span);
+            });
+        }
+        
+        function saveToHistory(text, emoji) {
+            if(!text.trim()) return;
+            const existingIndex = history.findIndex(item => item.text === text && item.emoji === emoji);
+            if (existingIndex > -1) {
+                history.splice(existingIndex, 1);
+            }
+            history.unshift({ text, emoji, timestamp: new Date().toISOString() });
+            history = history.slice(0, 10); // Keep last 10
+            localStorage.setItem('emojiArtHistory', JSON.stringify(history));
+            updateHistory();
+        }
+
+        function updateHistory() {
+            historyContainer.innerHTML = '';
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<p class="text-gray-500">No history yet.</p>';
+                return;
+            }
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-2 bg-gray-100 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600';
+                div.textContent = `"${item.text}" with ${item.emoji}`;
+                div.addEventListener('click', () => {
+                    textInput.value = item.text;
+                    emojiInput.value = item.emoji;
+                    generateArt();
+                });
+                historyContainer.appendChild(div);
+            });
+        }
+
+        function toggleMultiEmojiMode() {
+            multiEmojiMode = !multiEmojiMode;
+            multiEmojiToggle.classList.toggle('bg-blue-500', multiEmojiMode);
+            multiEmojiToggle.classList.toggle('text-white', multiEmojiMode);
+            emojiInput.disabled = multiEmojiMode;
+            generateArt();
+        }
+
+        // --- Action Functions ---
+        function copyToClipboard() {
+            navigator.clipboard.writeText(output.textContent).then(() => {
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => copyBtn.textContent = 'Copy Text', 2000);
+            });
+        }
+
+        function downloadAsText() {
+            const blob = new Blob([output.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'emoji-art.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadAsImage() {
+            const pre = output;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const style = window.getComputedStyle(pre);
+            const fontSize = parseInt(style.fontSize, 10);
+            const fontFamily = style.fontFamily;
+            const lines = pre.textContent.split('\n');
+            
+            // Estimate canvas size
+            ctx.font = `${fontSize}px ${fontFamily}`;
+            const maxWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+            const lineHeight = fontSize * 1.2;
+            
+            canvas.width = maxWidth + 40; // padding
+            canvas.height = (lines.length * lineHeight) + 40; // padding
+
+            // Redraw on canvas
+            ctx.fillStyle = bgColorInput.value;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = `${fontSize}px ${fontFamily}`;
+            ctx.fillStyle = window.getComputedStyle(document.body).getPropertyValue('color');
+            ctx.textBaseline = 'top';
+
+            lines.forEach((line, i) => {
+                ctx.fillText(line, 20, 20 + (i * lineHeight));
+            });
+            
+            const url = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'emoji-art.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        function toggleShareOptions() {
+            const isHidden = shareOptions.classList.contains('hidden');
+            if (isHidden) {
+                const text = encodeURIComponent(`Check out my Emoji Art:\n\n${output.textContent}`);
+                const url = encodeURIComponent(window.location.href);
+                shareOptions.innerHTML = `
+                    <a href="https://api.whatsapp.com/send?text=${text}" target="_blank" class="p-2 bg-green-500 text-white rounded-full">WhatsApp</a>
+                    <a href="https://twitter.com/intent/tweet?text=${text}&url=${url}" target="_blank" class="p-2 bg-blue-400 text-white rounded-full">Twitter/X</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}" target="_blank" class="p-2 bg-blue-800 text-white rounded-full">Facebook</a>
+                `;
+                shareOptions.classList.remove('hidden');
+            } else {
+                shareOptions.classList.add('hidden');
+            }
+        }
+
+        // --- Theme Management ---
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                themeIconLight.classList.add('hidden');
+                themeIconDark.classList.remove('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIconLight.classList.remove('hidden');
+                themeIconDark.classList.add('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                themeIconLight.classList.remove('hidden');
+                themeIconDark.classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                themeIconLight.classList.add('hidden');
+                themeIconDark.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

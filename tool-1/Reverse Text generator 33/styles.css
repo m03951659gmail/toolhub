@@ -1,0 +1,77 @@
+/* Custom styles that extend Tailwind */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Apply Inter font to the entire document */
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Style for the output container hover effect */
+#outputContainer {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+#outputContainer:hover {
+    /* This will make the copy button visible on hover */
+}
+
+/* Animation for button press */
+button:active {
+    transform: scale(0.95);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #3B82F6;
+    outline-offset: 2px;
+}
+
+/* Custom scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Animation for success feedback when copying */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Toast notification style */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #10B981;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    animation: fadeIn 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

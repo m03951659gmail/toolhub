@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pig Latin Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #5a67d8;
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #5a67d8;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        button:hover {
+            background-color: #4c51bf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button.secondary {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        button.secondary:hover {
+            background-color: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .output-container {
+            background-color: #f7fafc;
+            border-radius: 8px;
+            padding: 18px;
+            min-height: 100px;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background-color: #48bb78;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background-color: #38a169;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ebf8ff;
+            border-radius: 8px;
+            border-left: 4px solid #3182ce;
+            font-size: 0.9rem;
+            color: #2c5282;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pig Latin Translator</h1>
+            <p class="subtitle">Convert your text between English and Pig Latin</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="textInput">Enter your text:</label>
+                <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button id="translateToPigLatin">Translate to Pig Latin</button>
+                <button id="translateToEnglish" class="secondary">Translate to English</button>
+                <button id="clearText" class="secondary">Clear</button>
+            </div>
+            
+            <div class="input-group">
+                <label for="outputText">Translation:</label>
+                <div id="outputText" class="output-container">Your translation will appear here...</div>
+                <button id="copyText" class="copy-btn">Copy to Clipboard</button>
+            </div>
+            
+            <div class="info">
+                <strong>How Pig Latin works:</strong>
+                <p>For words beginning with consonants: move consonants to the end and add "ay" (e.g., "hello" → "ellohay").</p>
+                <p>For words beginning with vowels: add "way" to the end (e.g., "apple" → "appleway").</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const textInput = document.getElementById('textInput');
+        const outputText = document.getElementById('outputText');
+        const translateToPigLatinBtn = document.getElementById('translateToPigLatin');
+        const translateToEnglishBtn = document.getElementById('translateToEnglish');
+        const clearTextBtn = document.getElementById('clearText');
+        const copyTextBtn = document.getElementById('copyText');
+        
+        // Vowels for reference
+        const vowels = ['a', 'e', 'i', 'o', 'u'];
+        
+        // Translate English to Pig Latin
+        function toPigLatin(text) {
+            if (!text.trim()) return '';
+            
+            return text.split(' ').map(word => {
+                // Preserve punctuation and case
+                const punctuationMatch = word.match(/[^a-zA-Z]/g);
+                const punctuation = punctuationMatch ? punctuationMatch.join('') : '';
+                const cleanWord = word.replace(/[^a-zA-Z]/g, '');
+                
+                if (!cleanWord) return word;
+                
+                const isCapitalized = cleanWord[0] === cleanWord[0].toUpperCase();
+                const isAllCaps = cleanWord === cleanWord.toUpperCase();
+                const lowerWord = cleanWord.toLowerCase();
+                
+                let pigLatinWord;
+                
+                // Check if word starts with vowel
+                if (vowels.includes(lowerWord[0])) {
+                    pigLatinWord = lowerWord + 'way';
+                } else {
+                    // Find the index of the first vowel
+                    let firstVowelIndex = 0;
+                    for (let i = 0; i < lowerWord.length; i++) {
+                        if (vowels.includes(lowerWord[i])) {
+                            firstVowelIndex = i;
+                            break;
+                        }
+                        // If no vowel found, treat the whole word as consonant cluster
+                        if (i === lowerWord.length - 1) {
+                            firstVowelIndex = 0; // Will move all consonants
+                        }
+                    }
+                    
+                    // Handle case where no vowel was found
+                    if (firstVowelIndex === 0 && !vowels.includes(lowerWord[0])) {
+                        pigLatinWord = lowerWord + 'ay';
+                    } else {
+                        const consonantCluster = lowerWord.slice(0, firstVowelIndex);
+                        const restOfWord = lowerWord.slice(firstVowelIndex);
+                        pigLatinWord = restOfWord + consonantCluster + 'ay';
+                    }
+                }
+                
+                // Restore original capitalization
+                if (isAllCaps) {
+                    pigLatinWord = pigLatinWord.toUpperCase();
+                } else if (isCapitalized) {
+                    pigLatinWord = pigLatinWord.charAt(0).toUpperCase() + pigLatinWord.slice(1);
+                }
+                
+                // Add back punctuation
+                return pigLatinWord + punctuation;
+            }).join(' ');
+        }
+        
+        // Translate Pig Latin back to English
+        function toEnglish(text) {
+            if (!text.trim()) return '';
+            
+            return text.split(' ').map(word => {
+                // Preserve punctuation and case
+                const punctuationMatch = word.match(/[^a-zA-Z]/g);
+                const punctuation = punctuationMatch ? punctuationMatch.join('') : '';
+                const cleanWord = word.replace(/[^a-zA-Z]/g, '');
+                
+                if (!cleanWord) return word;
+                
+                const isCapitalized = cleanWord[0] === cleanWord[0].toUpperCase();
+                const isAllCaps = cleanWord === cleanWord.toUpperCase();
+                const lowerWord = cleanWord.toLowerCase();
+                
+                let englishWord = lowerWord;
+                
+                // Check if it ends with 'way' (vowel rule)
+                if (lowerWord.endsWith('way') && lowerWord.length > 3) {
+                    englishWord = lowerWord.slice(0, -3);
+                } 
+                // Check if it ends with 'ay' (consonant rule)
+                else if (lowerWord.endsWith('ay') && lowerWord.length > 2) {
+                    const consonantEnding = lowerWord.slice(-3, -2);
+                    // Make sure the 'ay' ending comes after a consonant cluster
+                    // by checking if removing 'ay' and moving last consonants to front makes a valid word
+                    const body = lowerWord.slice(0, -2);
+                    // Find the consonant cluster at the end that was moved
+                    for (let i = body.length - 1; i >= 0; i--) {
+                        if (vowels.includes(body[i])) {
+                            const consonantCluster = body.slice(i + 1);
+                            const rest = body.slice(0, i + 1);
+                            if (consonantCluster && rest) {
+                                englishWord = consonantCluster + rest;
+                                break;
+                            }
+                        }
+                        // If we reach the beginning and haven't found a vowel, 
+                        // the entire word might be the consonant cluster
+                        if (i === 0) {
+                            englishWord = body;
+                        }
+                    }
+                }
+                
+                // Restore original capitalization
+                if (isAllCaps) {
+                    englishWord = englishWord.toUpperCase();
+                } else if (isCapitalized) {
+                    englishWord = englishWord.charAt(0).toUpperCase() + englishWord.slice(1);
+                }
+                
+                // Add back punctuation
+                return englishWord + punctuation;
+            }).join(' ');
+        }
+        
+        // Event Listeners
+        translateToPigLatinBtn.addEventListener('click', () => {
+            const input = textInput.value;
+            const result = toPigLatin(input);
+            outputText.textContent = result || 'No text to translate';
+        });
+        
+        translateToEnglishBtn.addEventListener('click', () => {
+            const input = textInput.value;
+            const result = toEnglish(input);
+            outputText.textContent = result || 'No text to translate';
+        });
+        
+        clearTextBtn.addEventListener('click', () => {
+            textInput.value = '';
+            outputText.textContent = 'Your translation will appear here...';
+            textInput.focus();
+        });
+        
+        copyTextBtn.addEventListener('click', () => {
+            const textToCopy = outputText.textContent;
+            if (textToCopy && textToCopy !== 'Your translation will appear here...') {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = copyTextBtn.textContent;
+                    copyTextBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyTextBtn.textContent = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            }
+        });
+        
+        // Auto-translate on input (with debounce)
+        let debounceTimer;
+        textInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                if (textInput.value.trim()) {
+                    const result = toPigLatin(textInput.value);
+                    outputText.textContent = result;
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

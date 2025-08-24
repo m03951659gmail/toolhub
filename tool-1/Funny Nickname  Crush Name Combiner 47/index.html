@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Fun Generators - Funny Nicknames & Crush Name Combiner</title>
+    <meta name="description" content="Generate hilarious random nicknames and combine your name with your crush's name into fun couple nicknames. Fast, mobile-friendly tools with copy options.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #7c3aed;
+            --secondary: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-box {
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #9333ea 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .bounce {
+            animation: bounce 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-purple-900 mb-4">Double Fun Generators</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Create hilarious nicknames and combine names with your crush - all in one place!</p>
+           <!--<img src="https://placehold.co/1200x400" alt="Illustration of a happy cartoon couple with speech bubbles showing funny nicknames in bright colors" class="mt-8 rounded-xl shadow-lg mx-auto w-full max-w-4xl" />
+        </header>
+        
+        <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <!-- Funny Nickname Generator Card -->
+            <div class="card bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-2">Funny Nickname Generator</h2>
+                    <p class="text-gray-600 mb-6">Generate completely random hilarious nicknames with just one click!</p>
+                    
+                    <div class="flex flex-col space-y-4">
+                        <button id="generate-nickname" class="generate-btn text-white font-medium py-3 px-6 rounded-lg">
+                            Generate Random Nickname
+                        </button>
+                        
+                        <div id="nickname-result" class="result-box bg-purple-50 rounded-lg p-4 hidden">
+                            <div class="flex justify-between items-center">
+                                <p id="nickname-text" class="text-xl font-semibold text-purple-800"></p>
+                                <button id="copy-nickname" class="copy-btn bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 pb-6">
+                    <h3 class="font-medium text-gray-700 mb-2">Recent Suggestions:</h3>
+                    <div id="nickname-suggestions" class="grid grid-cols-2 gap-2">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 text-center">
+                    <p class="text-sm text-purple-600">Refresh for more random hilarious names!</p>
+                </div>
+            </div>
+            
+            <!-- Crush Name Generator Card -->
+            <div class="card bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-indigo-800 mb-2">Crush Nickname Generator</h2>
+                    <p class="text-gray-600 mb-6">Combine your name with your crush's name for cute/funny couple nicknames!</p>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="your-name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                                <input type="text" id="your-name" placeholder="e.g. Alex" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
+                            </div>
+                            <div>
+                                <label for="crush-name" class="block text-sm font-medium text-gray-700 mb-1">Crush's Name</label>
+                                <input type="text" id="crush-name" placeholder="e.g. Taylor" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
+                            </div>
+                        </div>
+                        
+                        <button id="generate-crush-nickname" class="generate-btn text-white font-medium py-3 px-6 rounded-lg">
+                            Combine Names
+                        </button>
+                        
+                        <div id="crush-result" class="result-box bg-indigo-50 rounded-lg p-4 hidden">
+                            <div class="flex justify-between items-center">
+                                <p id="crush-text" class="text-xl font-semibold text-indigo-800"></p>
+                                <button id="copy-crush" class="copy-btn bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-1 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 pb-6">
+                    <h3 class="font-medium text-gray-700 mb-2">Name Combinations:</h3>
+                    <div id="crush-suggestions" class="grid grid-cols-2 gap-2">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="bg-indigo-50 p-4 text-center">
+                    <p class="text-sm text-indigo-600">Try different name orders for more variations!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SEO Optimized Content -->
+        <section class="mt-16 max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">About Our Nickname Generators</h2>
+            <div class="prose prose-purple">
+                <p class="text-gray-600 mb-4">Our <strong>Funny Nickname Generator</strong> creates completely random hilarious nicknames by combining creative adjectives with funny nouns. Whether you need a gamer tag, social media handle, or just a laugh, our generator provides endless possibilities.</p>
+                
+                <p class="text-gray-600 mb-4">The <strong>Crush Nickname Generator</strong> specializes in combining names in cute and funny ways to create perfect couple nicknames. Whether it's for fun or a special someone, discover unique combinations of any two names with our smart algorithms.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mt-6 mb-2">How To Use These Tools</h3>
+                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                    <li>Simply click "Generate" for random hilarious nicknames</li>
+                    <li>Enter two names in the crush nickname generator and combine them</li>
+                    <li>Copy your favorites with the "Copy" buttons</li>
+                    <li>Share your creations with friends</li>
+                    <li>Refresh for new random suggestions</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="mt-16 pt-8 border-t border-gray-200 text-center">
+            <p class="text-gray-500 text-sm">© 2023 Double Fun Generators. All nicknames are randomly generated for entertainment purposes.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Nickname Generator Data
+        const adjectives = [
+            'Wacky', 'Silly', 'Zany', 'Goofy', 'Quirky', 'Bouncy', 
+            'Fluffy', 'Giggly', 'Jolly', 'Lanky', 'Mighty', 'Nosy',
+            'Peculiar', 'Rowdy', 'Snazzy', 'Tipsy', 'Wobbly', 'Yummy',
+            'Chonky', 'Dorky', 'Energetic', 'Feisty', 'Glittery', 'Hungry'
+        ];
+        
+        const nouns = [
+            'Banana', 'Noodle', 'Pickle', 'Muffin', 'Potato', 'T-Rex',
+            'Unicorn', 'Walrus', 'Yak', 'Zebra', 'Alpaca', 'Bubble',
+            'Cupcake', 'Donut', 'Elephant', 'Fluffball', 'Grizzly', 
+            'Hippo', 'Jellybean', 'Koala', 'Llama', 'Marshmallow'
+        ];
+        
+        // Nickname combinations templates
+        const crushTemplates = [
+            {pattern: '{firstName}{secondName}', weight: 3},
+            {pattern: '{firstInitial}{secondName}', weight: 4},
+            {pattern: '{firstName}{secondInitial}', weight: 4},
+            {pattern: '{first3}{second3}', weight: 2},
+            {pattern: '{first4}{second4}', weight: 2},
+            {pattern: '{firstName}Bear', weight: 1},
+            {pattern: '{secondName}Berry', weight: 1},
+            {pattern: 'Mc{firstName}{secondInitial}', weight: 1},
+            {pattern: 'Baby{secondInitial}{firstName}', weight: 1},
+            {pattern: 'Lil {firstInitial}{secondInitial}', weight: 2},
+            {pattern: '{first2}{second2}{first2}{second2}', weight: 1},
+            {pattern: '{firstName}-{secondName}', weight: 3},
+            {pattern: '{firstName} + {secondName}', weight: 2},
+            {pattern: '{secondName}{firstInitial}Love', weight: 1},
+            {pattern: '{firstName}The{secondName}', weight: 1},
+        ];
+        
+        // DOM Elements
+        const generateNickBtn = document.getElementById('generate-nickname');
+        const nicknameResult = document.getElementById('nickname-result');
+        const nicknameText = document.getElementById('nickname-text');
+        const copyNickBtn = document.getElementById('copy-nickname');
+        const nicknameSuggestions = document.getElementById('nickname-suggestions');
+        
+        const generateCrushBtn = document.getElementById('generate-crush-nickname');
+        const yourNameInput = document.getElementById('your-name');
+        const crushNameInput = document.getElementById('crush-name');
+        const crushResult = document.getElementById('crush-result');
+        const crushText = document.getElementById('crush-text');
+        const copyCrushBtn = document.getElementById('copy-crush');
+        const crushSuggestions = document.getElementById('crush-suggestions');
+        
+        // Initialize with some random nicknames
+        window.addEventListener('DOMContentLoaded', () => {
+            generateRandomNicknameSuggestions();
+            generateRandomCrushSuggestions();
+        });
+        
+        // FUNNY NICKNAME GENERATOR LOGIC
+        generateNickBtn.addEventListener('click', () => {
+            const nickname = generateRandomNickname();
+            nicknameText.textContent = nickname;
+            nicknameResult.classList.remove('hidden');
+            nicknameResult.classList.add('bounce');
+            
+            // Add to suggestions if not already there
+            if (![...nicknameSuggestions.children].some(el => el.textContent.includes(nickname))) {
+                if (nicknameSuggestions.children.length >= 6) {
+                    nicknameSuggestions.removeChild(nicknameSuggestions.lastChild);
+                }
+                
+                const suggestion = document.createElement('div');
+                suggestion.className = 'text-sm bg-purple-100 rounded px-2 py-1 text-purple-800 truncate';
+                suggestion.textContent = nickname;
+                nicknameSuggestions.prepend(suggestion);
+            }
+            
+            setTimeout(() => {
+                nicknameResult.classList.remove('bounce');
+            }, 500);
+        });
+        
+        copyNickBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(nicknameText.textContent);
+            copyNickBtn.textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyNickBtn.textContent = 'Copy';
+            }, 2000);
+        });
+        
+        function generateRandomNickname() {
+            const adjIndex = Math.floor(Math.random() * adjectives.length);
+            const nounIndex = Math.floor(Math.random() * nouns.length);
+            return `${adjectives[adjIndex]} ${nouns[nounIndex]}`;
+        }
+        
+        function generateRandomNicknameSuggestions() {
+            nicknameSuggestions.innerHTML = '';
+            
+            for (let i = 0; i < 6; i++) {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'text-sm bg-purple-100 rounded px-2 py-1 text-purple-800 truncate';
+                suggestion.textContent = generateRandomNickname();
+                nicknameSuggestions.appendChild(suggestion);
+            }
+        }
+        
+        // CRUSH NICKNAME GENERATOR LOGIC
+        generateCrushBtn.addEventListener('click', () => {
+            const yourName = yourNameInput.value.trim();
+            const crushName = crushNameInput.value.trim();
+            
+            if (!yourName || !crushName) {
+                alert('Please enter both names!');
+                return;
+            }
+            
+            const nickname = generateCrushNickname(yourName, crushName);
+            crushText.textContent = nickname;
+            crushResult.classList.remove('hidden');
+            crushResult.classList.add('bounce');
+            
+            // Add to suggestions if not already there
+            if (![...crushSuggestions.children].some(el => el.textContent.includes(nickname))) {
+                if (crushSuggestions.children.length >= 6) {
+                    crushSuggestions.removeChild(crushSuggestions.lastChild);
+                }
+                
+                const suggestion = document.createElement('div');
+                suggestion.className = 'text-sm bg-indigo-100 rounded px-2 py-1 text-indigo-800 truncate';
+                suggestion.textContent = `${nickname} (${yourName} + ${crushName})`;
+                crushSuggestions.prepend(suggestion);
+            }
+            
+            setTimeout(() => {
+                crushResult.classList.remove('bounce');
+            }, 500);
+        });
+        
+        copyCrushBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(crushText.textContent);
+            copyCrushBtn.textContent = 'Copied!';
+            
+            setTimeout(() => {
+                copyCrushBtn.textContent = 'Copy';
+            }, 2000);
+        });
+        
+        function generateCrushNickname(firstName, secondName) {
+            // Process names
+            firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+            secondName = secondName.charAt(0).toUpperCase() + secondName.slice(1).toLowerCase();
+            
+            const firstInitial = firstName.charAt(0);
+            const secondInitial = secondName.charAt(0);
+            const first2 = firstName.length >= 2 ? firstName.substring(0, 2) : firstName;
+            const second2 = secondName.length >= 2 ? secondName.substring(0, 2) : secondName;
+            const first3 = firstName.length >= 3 ? firstName.substring(0, 3) : firstName;
+            const second3 = secondName.length >= 3 ? secondName.substring(0, 3) : secondName;
+            const first4 = firstName.length >= 4 ? firstName.substring(0, 4) : firstName;
+            const second4 = secondName.length >= 4 ? secondName.substring(0, 4) : secondName;
+            
+            // Create weighted options
+            let options = [];
+            crushTemplates.forEach(template => {
+                for (let i = 0; i < template.weight; i++) {
+                    options.push(template.pattern
+                        .replace('{firstName}', firstName)
+                        .replace('{secondName}', secondName)
+                        .replace('{firstInitial}', firstInitial)
+                        .replace('{secondInitial}', secondInitial)
+                        .replace('{first2}', first2)
+                        .replace('{second2}', second2)
+                        .replace('{first3}', first3)
+                        .replace('{second3}', second3)
+                        .replace('{first4}', first4)
+                        .replace('{second4}', second4));
+                }
+            });
+            
+            // Select a random option
+            const selection = Math.floor(Math.random() * options.length);
+            return options[selection];
+        }
+        
+        function generateRandomCrushSuggestions() {
+            crushSuggestions.innerHTML = '';
+            const demoNames = [
+                ['Alex', 'Jordan'],
+                ['Sam', 'Taylor'],
+                ['Casey', 'Jamie'],
+                ['Morgan', 'Riley'],
+                ['Charlie', 'Quinn'],
+                ['Skyler', 'Parker']
+            ];
+            
+            for (let i = 0; i < 6; i++) {
+                const [name1, name2] = demoNames[i % demoNames.length];
+                const suggestion = document.createElement('div');
+                suggestion.className = 'text-sm bg-indigo-100 rounded px-2 py-1 text-indigo-800 truncate';
+                suggestion.textContent = `${generateCrushNickname(name1, name2)} (${name1} + ${name2})`;
+                crushSuggestions.appendChild(suggestion);
+            }
+        }
+    </script>
+</body>
+</html>

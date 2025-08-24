@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online Zalgo and Sarcasm Text Generator. Convert your text to glitchy Zalgo or sarcastic case with real-time preview and customizable intensity.">
+    <meta name="keywords" content="zalgo text generator, sarcasm text generator, glitch text, text converter, online text tool">
+    <meta name="author" content="Text Generator Tool">
+    <title>Zalgo & Sarcasm Text Generator - Free Online Tool</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --accent: #ec4899;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin: 20px 0 15px;
+            font-weight: 600;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+
+        .generator-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: #ffffff;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .zalgo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            flex-grow: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .value-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .output-container {
+            position: relative;
+        }
+
+        .output {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-height: 100px;
+            background-color: #f1f5f9;
+            font-size: 1rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #0d9668;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: #db2777;
+        }
+
+        .copy-feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .copy-feedback.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Zalgo text styling */
+        .zalgo-text {
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Zalgo & Sarcasm Text Generator</h1>
+            <p class="description">Transform your text into glitchy Zalgo or sarcastic case with real-time preview. Customize intensity and copy to clipboard instantly!</p>
+        </header>
+
+        <div class="generator-container">
+            <div class="card">
+                <h2>Zalgo Text Generator</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;">Create glitchy, corrupted text with customizable intensity levels.</p>
+                
+                <div class="input-group">
+                    <label for="zalgo-input">Enter your text:</label>
+                    <textarea id="zalgo-input" placeholder="Type your text here to convert to Zalgo..."></textarea>
+                </div>
+
+                <h3>Intensity Controls</h3>
+                <div class="zalgo-controls">
+                    <div class="control-group">
+                        <label for="up-intensity">Above:</label>
+                        <div class="slider-container">
+                            <input type="range" id="up-intensity" class="slider" min="0" max="20" value="8">
+                            <span id="up-value" class="value-display">8</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="down-intensity">Below:</label>
+                        <div class="slider-container">
+                            <input type="range" id="down-intensity" class="slider" min="0" max="20" value="8">
+                            <span id="down-value" class="value-display">8</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="mid-intensity">Middle:</label>
+                        <div class="slider-container">
+                            <input type="range" id="mid-intensity" class="slider" min="0" max="20" value="8">
+                            <span id="mid-value" class="value-display">8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-container">
+                    <label>Generated Zalgo Text:</label>
+                    <div id="zalgo-output" class="output">Your Zalgo text will appear here...</div>
+                </div>
+
+                <div class="buttons">
+                    <button id="generate-zalgo" class="btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H0v-5zM1 10v3h3a.5.5 0 0 1 0 1H1v1h4a1.5 1.5 0 0 0 1.5-1.5v-3.5a.5.5 0 0 1 1 0v3.5A2.5 2.5 0 0 1 5 15H1a1 1 0 0 1-1-1v-4a.5.5 0 0 1 .5-.5zM15.5 3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H15V3.5zM15 4v3H9a.5.5 0 0 1 0-1h5V5h-4A1.5 1.5 0 0 0 8.5 6.5v3.5a.5.5 0 0 1-1 0v-3.5A2.5 2.5 0 0 1 10 4h5z"/>
+                        </svg>
+                        Generate Zalgo
+                    </button>
+                    <button id="copy-zalgo" class="btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1z"/>
+                        </svg>
+                        Copy to Clipboard
+                    </button>
+                    <button id="clear-zalgo" class="btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Sarcasm Text Generator</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 15px;">Convert your text to alternating uppercase and lowercase letters for that sarcastic tone.</p>
+                
+                <div class="input-group">
+                    <label for="sarcasm-input">Enter your text:</label>
+                    <textarea id="sarcasm-input" placeholder="Type your text here to convert to sarcastic case..."></textarea>
+                </div>
+
+                <div class="output-container">
+                    <label>Generated Sarcasm Text:</label>
+                    <div id="sarcasm-output" class="output">Your sarcastic text will appear here...</div>
+                </div>
+
+                <div class="buttons">
+                    <button id="generate-sarcasm" class="btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H0v-5zM1 10v3h3a.5.5 0 0 1 0 1H1v1h4a1.5 1.5 0 0 0 1.5-1.5v-3.5a.5.5 0 0 1 1 0v3.5A2.5 2.5 0 0 1 5 15H1a1 1 0 0 1-1-1v-4a.5.5 0 0 1 .5-.5zM15.5 3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H15V3.5zM15 4v3H9a.5.5 0 0 1 0-1h5V5h-4A1.5 1.5 0 0 0 8.5 6.5v3.5a.5.5 0 0 1-1 0v-3.5A2.5 2.5 0 0 1 10 4h5z"/>
+                        </svg>
+                        Generate Sarcasm
+                    </button>
+                    <button id="copy-sarcasm" class="btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1z"/>
+                        </svg>
+                        Copy to Clipboard
+                    </button>
+                    <button id="clear-sarcasm" class="btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1v1h4V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>
+                    Real-time Preview
+                </h3>
+                <p>See your text transform instantly as you type, with no delays or loading times.</p>
+            </div>
+            <div class="feature">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5M5 1.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5M.5 5a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"/>
+                    </svg>
+                    Customizable Intensity
+                </h3>
+                <p>Adjust the glitch effect strength with precise controls for above, below, and middle characters.</p>
+            </div>
+            <div class="feature">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                    One-click Copy
+                </h3>
+                <p>Easily copy your generated text to clipboard with a single click for instant sharing.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span id="year"></span> Zalgo & Sarcasm Text Generator. All rights reserved. | Created with HTML, CSS, and JavaScript</p>
+        </footer>
+
+        <div id="copy-feedback" class="copy-feedback">Copied to clipboard!</div>
+    </div>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Zalgo generator functionality
+        class ZalgoGenerator {
+            constructor() {
+                this.upAccents = ['̓', '̓', '̂', '̃', '̄', '̅', '̆', '̇', '̈', '̉', '̊', '̋', '̌', '̍', '̎', '̐', '̑', '̒', '̔', '̕', '̚', '̜', '̝', '̞', '̟', '̠', '̡', '̢', '̧', '̨', '̴', '̵', '̶', '̷', '̸', '̹', '̺', '̻', '̼', 'ͅ', '͆', '͇', '͈', '͉', '͊', '͋', '͌', '͍', '͎', '͓', '͔', '͕', '͖', '͙', '͚', '͐', '͑', '͒', '͗', '͘', '͙', '͛', '͜', '͝', '͞', '͟', '͠', '͢', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ', '̴', '̡', '̢', '̧', '̨', '̛', '̝', '̞', '̟', '̠', '̢', '̡', '̧', '̨', '̳', '̤', '̥', '̦', '̱', '̲', '̶', '̷', '̸', '̡', '̨', '̴', '̵', '̶', '̷', '̸', '̹', '̺', '̻', '̼', 'ͅ', '͆', '͇', '͈', '͉', '͊', '͋', '͌', '͍', '͎', '͐', '͑', '͒', '͗', '͘', '͙', '͛', '͝', '͞', '͟', '͠', '͢', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ'];
+                
+                this.downAccents = ['̖', '̗', '̘', '̙', '̜', '̝', '̞', '̟', '̠', '̡', '̢', '̤', '̥', '̦', '̩', '̪', '̫', '̬', '̭', '̮', '̯', '̰', '̱', '̲', '̳', '̹', '̺', '̻', '̼', 'ͅ', '͇', '͈', '͉', '͍', '͎', '͓', '͔', '͕', '͖', '͙', '͚', '̣', '̤', '̥', '̦', '̮', '̯', '̰', '̱', '̲', '̶', '̷', '̸', '̡', '̨', '̴', '̵', '̶', '̷', '̸', '̹', '̺', '̻', '̼', 'ͅ', '͆', '͇', '͈', '͉', '͊', '͋', '͌', '͍', '͎', '͐', '͑', '͒', '͗', '͘', '͙', '͛', '͝', '͞', '͟', '͠', '͢', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ'];
+                
+                this.midAccents = ['̍', '̎', '̄', '̅', '̆', '̇', '̈', '̊', '̋', '̌', '̈', '̽', '̾', '̿', '̀', '́', '͂', '̓', '̈́', '͆', '͒', '͗', '͛', '͝', '͞', '͟', '͠', '͡', '͢', '̸', '̷', '̶', '̴', '̵', '̡', '̨', '̛', '̝', '̞', '̟', '̠', '̢', '̡', '̧', '̨', '̳', '̤', '̥', '̦', '̱', '̲', '̶', '̷', '̸', '̡', '̨', '̴', '̵', '̶', '̷', '̸', '̹', '̺', '̻', '̼', 'ͅ', '͆', '͇', '͈', '͉', '͊', '͋', '͌', '͍', '͎', '͐', '͑', '͒', '͗', '͘', '͙', '͛', '͝', '͞', '͟', '͠', '͢', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ'];
+            }
+
+            getRandomAccent(accents) {
+                return accents[Math.floor(Math.random() * accents.length)];
+            }
+
+            addAccents(char, upCount, downCount, midCount) {
+                let result = char;
+                
+                // Add upper accents
+                for (let i = 0; i < upCount; i++) {
+                    result = this.getRandomAccent(this.upAccents) + result;
+                }
+                
+                // Add middle accents
+                for (let i = 0; i < midCount; i++) {
+                    result = result + this.getRandomAccent(this.midAccents);
+                }
+                
+                // Add lower accents
+                for (let i = 0; i < downCount; i++) {
+                    result = result + this.getRandomAccent(this.downAccents);
+                }
+                
+                return result;
+            }
+
+            generate(text, upIntensity, downIntensity, midIntensity) {
+                if (!text) return '';
+                
+                return text.split('').map(char => {
+                    // Don't add accents to whitespace
+                    if (char === ' ' || char === '\n' || char === '\t') {
+                        return char;
+                    }
+                    
+                    // Randomize intensity slightly for more natural variation
+                    const up = Math.max(0, Math.floor(upIntensity * (0.8 + Math.random() * 0.4)));
+                    const down = Math.max(0, Math.floor(downIntensity * (0.8 + Math.random() * 0.4)));
+                    const mid = Math.max(0, Math.floor(midIntensity * (0.8 + Math.random() * 0.4)));
+                    
+                    return this.addAccents(char, up, down, mid);
+                }).join('');
+            }
+        }
+
+        // Sarcasm generator functionality
+        function generateSarcasmText(text) {
+            if (!text) return '';
+            
+            return text.split('').map((char, index) => {
+                // Skip non-alphabetic characters
+                if (!/[a-zA-Z]/.test(char)) {
+                    return char;
+                }
+                
+                // Alternate between uppercase and lowercase
+                return index % 2 === 0 ? char.toLowerCase() : char.toUpperCase();
+            }).join('');
+        }
+
+        // Copy to clipboard functionality
+        function copyToClipboard(text, button) {
+            if (!text) {
+                showCopyFeedback('Nothing to copy!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showCopyFeedback('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                showCopyFeedback('Failed to copy!');
+            });
+        }
+
+        // Show copy feedback
+        function showCopyFeedback(message) {
+            const feedback = document.getElementById('copy-feedback');
+            feedback.textContent = message;
+            feedback.classList.add('show');
+            
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 2000);
+        }
+
+        // Initialize generators
+        const zalgoGenerator = new ZalgoGenerator();
+
+        // DOM elements
+        const zalgoInput = document.getElementById('zalgo-input');
+        const zalgoOutput = document.getElementById('zalgo-output');
+        const sarcasmInput = document.getElementById('sarcasm-input');
+        const sarcasmOutput = document.getElementById('sarcasm-output');
+        
+        // Zalgo intensity controls
+        const upIntensity = document.getElementById('up-intensity');
+        const downIntensity = document.getElementById('down-intensity');
+        const midIntensity = document.getElementById('mid-intensity');
+        const upValue = document.getElementById('up-value');
+        const downValue = document.getElementById('down-value');
+        const midValue = document.getElementById('mid-value');
+        
+        // Buttons
+        const generateZalgoBtn = document.getElementById('generate-zalgo');
+        const copyZalgoBtn = document.getElementById('copy-zalgo');
+        const clearZalgoBtn = document.getElementById('clear-zalgo');
+        const generateSarcasmBtn = document.getElementById('generate-sarcasm');
+        const copySarcasmBtn = document.getElementById('copy-sarcasm');
+        const clearSarcasmBtn = document.getElementById('clear-sarcasm');
+
+        // Update intensity value displays
+        function updateIntensityValues() {
+            upValue.textContent = upIntensity.value;
+            downValue.textContent = downIntensity.value;
+            midValue.textContent = midIntensity.value;
+        }
+
+        // Real-time updates for Zalgo
+        zalgoInput.addEventListener('input', () => {
+            const text = zalgoInput.value;
+            const up = parseInt(upIntensity.value);
+            const down = parseInt(downIntensity.value);
+            const mid = parseInt(midIntensity.value);
+            
+            const result = zalgoGenerator.generate(text, up, down, mid);
+            zalgoOutput.textContent = result;
+        });
+
+        // Real-time updates for Sarcasm
+        sarcasmInput.addEventListener('input', () => {
+            const text = sarcasmInput.value;
+            const result = generateSarcasmText(text);
+            sarcasmOutput.textContent = result;
+        });
+
+        // Intensity sliders
+        upIntensity.addEventListener('input', () => {
+            updateIntensityValues();
+            // Trigger input event to update output
+            zalgoInput.dispatchEvent(new Event('input'));
+        });
+
+        downIntensity.addEventListener('input', () => {
+            updateIntensityValues();
+            zalgoInput.dispatchEvent(new Event('input'));
+        });
+
+        midIntensity.addEventListener('input', () => {
+            updateIntensityValues();
+            zalgoInput.dispatchEvent(new Event('input'));
+        });
+
+        // Button actions
+        generateZalgoBtn.addEventListener('click', () => {
+            zalgoInput.dispatchEvent(new Event('input'));
+        });
+
+        copyZalgoBtn.addEventListener('click', () => {
+            copyToClipboard(zalgoOutput.textContent, copyZalgoBtn);
+        });
+
+        clearZalgoBtn.addEventListener('click', () => {
+            zalgoInput.value = '';
+            zalgoOutput.textContent = 'Your Zalgo text will appear here...';
+            zalgoInput.focus();
+        });
+
+        generateSarcasmBtn.addEventListener('click', () => {
+            sarcasmInput.dispatchEvent(new Event('input'));
+        });
+
+        copySarcasmBtn.addEventListener('click', () => {
+            copyToClipboard(sarcasmOutput.textContent, copySarcasmBtn);
+        });
+
+        clearSarcasmBtn.addEventListener('click', () => {
+            sarcasmInput.value = '';
+            sarcasmOutput.textContent = 'Your sarcastic text will appear here...';
+            sarcasmInput.focus();
+        });
+
+        // Initialize value displays
+        updateIntensityValues();
+
+        // Set default placeholder outputs
+        zalgoOutput.textContent = 'Your Zalgo text will appear here...';
+        sarcasmOutput.textContent = 'Your sarcastic text will appear here...';
+
+        // Focus first input
+        zalgoInput.focus();
+    </script>
+</body>
+</html>

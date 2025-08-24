@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free online Reverse Text Generator - Instantly reverse any text with our easy-to-use tool. Copy, paste, and reverse text in real-time with a clean, responsive interface." />
+    <meta name="keywords" content="reverse text, text reverser, string reverser, online text tool, text generator, palindrome tool, text flipper" />
+    <meta name="author" content="Text Tools" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="Reverse Text Generator - Instantly Flip Your Text" />
+    <meta property="og:description" content="Free online tool to reverse any text in real-time. Perfect for creating palindromes, coding practice, or just for fun!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yoursite.com/reverse-text-generator" />
+    <meta property="og:image" content="https://yoursite.com/images/reverse-text-preview.png" />
+    <meta property="og:site_name" content="Text Tools" />
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reverse Text Generator - Instantly Flip Your Text" />
+    <meta name="twitter:description" content="Free online tool to reverse any text in real-time. Perfect for creating palindromes, coding practice, or just for fun!" />
+    <meta name="twitter:image" content="https://yoursite.com/images/reverse-text-preview.png" />
+    
+    <title>Reverse Text Generator - Instantly Flip Your Text</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="w-full max-w-2xl">
+        <!-- Main Card Container -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-8 text-white text-center">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Reverse Text Generator</h1>
+                <p class="text-blue-100 opacity-90">Instantly reverse any text in real-time</p>
+            </div>
+            
+            <!-- Card Body -->
+            <div class="p-6 md:p-8 space-y-6">
+                <!-- Input Section -->
+                <div class="space-y-3">
+                    <label for="textInput" class="block text-sm font-medium text-gray-700">Enter your text:</label>
+                    <textarea 
+                        id="textInput" 
+                        placeholder="Type or paste your text here..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none text-gray-700"
+                        rows="4"
+                    ></textarea>
+                </div>
+                
+                <!-- Output Section -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Reversed text:</label>
+                        <div id="charCount" class="text-sm text-gray-500">0 characters</div>
+                    </div>
+                    <div id="outputContainer" class="relative">
+                        <div 
+                            id="reversedText" 
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl min-h-20 break-words text-gray-700"
+                        ></div>
+                        <button 
+                            id="copyBtn" 
+                            class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105"
+                            title="Copy to clipboard"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button 
+                        id="clearBtn" 
+                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-300 active:scale-95"
+                    >
+                        Clear
+                    </button>
+                    <button 
+                        id="copyOutputBtn" 
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95"
+                    >
+                        Copy Text
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Card Footer -->
+            <div class="bg-gray-50 px-6 py-4 text-center text-sm text-gray-500 border-t border-gray-100">
+                <p>Perfect for creating palindromes, coding practice, or just for fun!</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            <p>&copy; <span id="year">2023</span> Text Tools. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+/* Custom styles to enhance the Tailwind base */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.font-converted {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Animation for copy buttons */
+.copy-btn {
+    transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .font-converted {
+        font-size: 1rem;
+    }
+}
+
+/* Custom scrollbar for outputs (if needed) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}

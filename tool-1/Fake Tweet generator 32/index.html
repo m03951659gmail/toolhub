@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Fake Tweet Generator | Create Realistic Twitter/X Posts</title>
+    <meta name="description" content="Generate realistic fake Twitter/X tweets with custom profile pictures, names, content, and engagement metrics. Download as PNG.">
+    <meta name="keywords" content="fake tweet generator, twitter post maker, x tweet creator, social media mockup">
+    <meta name="author" content="Your Name">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Fake Tweet Generator | Create Realistic Twitter/X Posts">
+    <meta property="og:description" content="Generate realistic fake Twitter/X tweets with custom profile pictures, names, content, and engagement metrics.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/fake-tweet-generator">
+    <meta property="og:image" content="https://yourwebsite.com/images/tweet-generator-preview.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- HTML2Canvas for PNG download -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <!-- Emoji Picker -->
+    <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Fake Tweet Generator</h1>
+            <p class="text-gray-600">Create realistic Twitter/X posts and download them as PNG images</p>
+        </header>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Controls Section -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Customize Your Tweet</h2>
+                
+                <!-- Profile Picture Upload -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="avatar-upload">
+                        Profile Picture
+                    </label>
+                    <input type="file" id="avatar-upload" accept="image/*" class="block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-md file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-blue-50 file:text-blue-700
+                        hover:file:bg-blue-100">
+                </div>
+                
+                <!-- Display Name -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="display-name">
+                        Display Name
+                    </label>
+                    <input type="text" id="display-name" placeholder="Elon Musk" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <!-- Username -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                        Username (@handle)
+                    </label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">@</span>
+                        <input type="text" id="username" placeholder="elonmusk" 
+                            class="shadow appearance-none border rounded-r w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                </div>
+                
+                <!-- Verified Badge -->
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="verified" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="verified" class="ml-2 block text-sm text-gray-700 font-medium">
+                        Verified Account
+                    </label>
+                </div>
+                
+                <!-- Tweet Content -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="tweet-content">
+                        Tweet Content
+                    </label>
+                    <textarea id="tweet-content" rows="4" placeholder="What's happening?" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                    <div class="flex justify-end mt-2">
+                        <button id="add-emoji" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                            😀 Add Emoji
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Date & Time -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="tweet-date">
+                        Date & Time
+                    </label>
+                    <input type="datetime-local" id="tweet-date" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <!-- Engagement Metrics -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="replies">
+                            Replies
+                        </label>
+                        <input type="number" id="replies" value="0" min="0" 
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="retweets">
+                            Retweets
+                        </label>
+                        <input type="number" id="retweets" value="0" min="0" 
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="likes">
+                            Likes
+                        </label>
+                        <input type="number" id="likes" value="0" min="0" 
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                </div>
+                
+                <!-- Generate Button -->
+                <button id="generate-tweet" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Update Tweet Preview
+                </button>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Tweet Preview</h2>
+                
+                <!-- Tweet Preview Container -->
+                <div id="tweet-preview" class="border border-gray-200 rounded-lg p-4 bg-white">
+                    <!-- Tweet content will be generated here -->
+                    <div class="text-center py-12 text-gray-400">
+                        Your tweet preview will appear here
+                    </div>
+                </div>
+                
+                <!-- Download Button -->
+                <button id="download-tweet" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Download as PNG
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Emoji Picker Modal (hidden by default) -->
+    <div id="emoji-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Select an Emoji</h3>
+                <button id="close-emoji-modal" class="text-gray-500 hover:text-gray-700">
+                    ✕
+                </button>
+            </div>
+            <div class="grid grid-cols-8 gap-2" id="emoji-grid">
+                <!-- Emojis will be added here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

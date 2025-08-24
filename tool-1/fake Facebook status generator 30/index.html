@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Facebook status generator tool - Create funny, inspirational or random Facebook status updates in seconds">
+    <meta name="keywords" content="facebook status generator, status maker, funny status, random status, social media tool">
+    <title>Facebook Status Generator | Create Random Status Updates</title>
+    
+    <!-- Open Graph / Facebook Meta Tags for Social Sharing -->
+    <meta property="og:title" content="Facebook Status Generator">
+    <meta property="og:description" content="Create funny, inspirational or random Facebook status updates in seconds">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0be74e07-fa4e-4729-b4cd-ded8a6af8048.png" alt="Facebook Status Generator Tool Screenshot">
+    
+    <style>
+        :root {
+            --facebook-blue: #1877f2;
+            --facebook-light-blue: #e7f3ff;
+            --facebook-dark-blue: #0a58ca;
+            --text-primary: #050505;
+            --text-secondary: #65676b;
+            --divider: #ced0d4;
+            --card-bg: #ffffff;
+            --body-bg: #f0f2f5;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--divider);
+        }
+        
+        h1 {
+            color: var(--facebook-blue);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .description {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+        
+        .generator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .generator-form {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--divider);
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: white;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--facebook-blue);
+            box-shadow: 0 0 0 2px var(--facebook-light-blue);
+        }
+        
+        .btn {
+            background-color: var(--facebook-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--facebook-dark-blue);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .status-preview {
+            background: white;
+            border: 1px solid var(--divider);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            overflow-wrap: break-word;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .status-text {
+            margin-bottom: 10px;
+        }
+        
+        .status-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .actions button {
+            flex: 1;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .show-notification {
+            opacity: 1;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--divider);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .generator-container {
+                flex-direction: column;
+            }
+        }
+        
+        /* Facebook-like reactions */
+        .reactions {
+            display: flex;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .reactions span {
+            margin-right: 15px;
+        }
+        
+        .user-reaction {
+            color: var(--facebook-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Facebook Status Generator</h1>
+            <p class="description">Create random Facebook status updates for fun, inspiration, or when you're out of ideas. Customize and copy with one click!</p>
+        </header>
+        
+        <main class="generator-container">
+            <section class="generator-form">
+                <div class="form-group">
+                    <label for="tone">Select Tone:</label>
+                    <select id="tone">
+                        <option value="funny">Funny/Humorous</option>
+                        <option value="inspirational">Inspirational</option>
+                        <option value="random">Totally Random</option>
+                        <option value="sarcastic">Sarcastic</option>
+                        <option value="happy">Happy/Positive</option>
+                        <option value="vague">Vague/Deep</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="topic">Topic (optional):</label>
+                    <input type="text" id="topic" placeholder="e.g. work, weekend, food, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="length">Length:</label>
+                    <select id="length">
+                        <option value="short">Short (1 sentence)</option>
+                        <option value="medium" selected>Medium (2-3 sentences)</option>
+                        <option value="long">Long (paragraph)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="include-emoji" checked>
+                        Include Emojis
+                    </label>
+                </div>
+                
+                <button id="generate-btn" class="btn btn-block">Generate Status</button>
+                <button id="randomize-btn" class="btn btn-block">Randomize Everything</button>
+            </section>
+            
+            <section class="result">
+                <h2>Your Status Preview</h2>
+                <div class="status-preview">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/93c43eab-02de-455e-9ed2-8e95d260c331.png" alt="User profile picture avatar">
+                        </div>
+                        <div class="user-name">You</div>
+                    </div>
+                    <div class="status-text" id="status-text">Click "Generate Status" to create your Facebook post</div>
+                    <div class="reactions">
+                        <span class="user-reaction">Like</span>
+                        <span>Comment</span>
+                        <span>Share</span>
+                    </div>
+                    <div class="status-meta">Just now · Public</div>
+                </div>
+                
+                <textarea id="status-output" style="display: none;"></textarea>
+                <div class="actions">
+                    <button id="copy-btn" class="btn">Copy Status</button>
+                    <button id="tweet-btn" class="btn">Share on Twitter</button>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Facebook Status Generator Tool - Create random funny or inspirational status updates for Facebook.</p>
+            <p>This is not affiliated with Facebook. For entertainment purposes only.</p>
+        </footer>
+    </div>
+    
+    <div class="copy-notification" id="copy-notification">Status copied to clipboard!</div>
+    
+    <script>
+        // Status database
+        const statusDatabase = {
+            funny: [
+                "Just saw someone trip over absolutely nothing. I relate to you, random stranger.",
+                "My wifi is being slower than my dog when I say 'walk' but don't immediately get up.",
+                "I put my phone in airplane mode, but to my disappointment, it didn't fly away.",
+                "You know you're an adult when you get excited about a new sponge. #adulting101",
+                "I don't mean to brag, but I finished my 14-day diet in 3 hours and 42 minutes."
+            ],
+            inspirational: [
+                "Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.",
+                "Every morning we are born again. What we do today matters most.",
+                "The only limit to your impact is your imagination and commitment. Dream big and start small.",
+                "Life is not about waiting for the storm to pass, it's about learning to dance in the rain.",
+                "You are enough. You are loved. You are important. Never forget that."
+            ],
+            random: [
+                "Why do they call it a building if it's already built? Shouldn't it be called a built?",
+                "If a turtle doesn't have a shell, is it naked or homeless? Deep thoughts.",
+                "Do mute people talk in their head with an accent?",
+                "If I book a flight but I don't fly, is the flight still fully booked?",
+                "Always borrow money from a pessimist. They'll never expect it back."
+            ],
+            sarcastic: [
+                "Oh great, another day of pretending to work while actually just counting down the minutes to lunch.",
+                "I would love to go out tonight, but I already made plans with my sweatpants and Netflix.",
+                "*Me after 5 minutes of exercise* Yep, that's enough fitness for at least the next month.",
+                "POV: You asked me to wake up early... don't.",
+                "I would tell you about my day, but I don't think you have 12 hours to waste."
+            ],
+            happy: [
+                "Sunshine, good vibes, and happiness - that's what today is made of!",
+                "Life's too short to be anything but happy! Sending positive vibes to everyone today!",
+                "Just a reminder to pause... breathe... and appreciate this beautiful moment.",
+                "Woke up feeling so grateful for this amazing life and all the wonderful people in it!",
+                "Nothing beats the feeling when all your favorite things come together on the same day - great weather, good food, and best company!"
+            ],
+            vague: [
+                "And just like that... everything changed.",
+                "Sometimes the hardest decisions require the strongest wills.",
+                "There are things I wish I could say but... not here. Not today.",
+                "You'll never know unless you try.",
+                "The past is the past for a reason."
+            ]
+        };
+        
+        // Emojis
+        const emojis = ["😀", "😂", "😍", "🤔", "😎", "🥳", "🤩", "🙄", "🥲", "😋", "🤪", "🫠", "😴"];
+        
+        // DOM elements
+        const generateBtn = document.getElementById('generate-btn');
+        const randomizeBtn = document.getElementById('randomize-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const tweetBtn = document.getElementById('tweet-btn');
+        const statusText = document.getElementById('status-text');
+        const statusOutput = document.getElementById('status-output');
+        const notification = document.getElementById('copy-notification');
+        
+        // Generate status function
+        function generateStatus() {
+            const tone = document.getElementById('tone').value;
+            const topic = document.getElementById('topic').value.trim().toLowerCase();
+            const length = document.getElementById('length').value;
+            const includeEmoji = document.getElementById('include-emoji').checked;
+            
+            // Get all statuses of selected tone
+            let possibleStatuses = [...statusDatabase[tone]];
+            
+            // If topic is specified, filter statuses that include the topic
+            if (topic) {
+                possibleStatuses = possibleStatuses.filter(status => 
+                    status.toLowerCase().includes(topic)
+                );
+                
+                // If no statuses match the topic, use the unfiltered list
+                if (possibleStatuses.length === 0) {
+                    possibleStatuses = [...statusDatabase[tone]];
+                }
+            }
+            
+            // Select random status
+            let randomStatus = possibleStatuses[Math.floor(Math.random() * possibleStatuses.length)];
+            
+            // Handle length (this is simplified for demo)
+            if (length === 'short') {
+                randomStatus = randomStatus.split('.')[0] + '.';
+            } else if (length === 'long') {
+                // For long, we'll just duplicate the status to simulate a paragraph
+                randomStatus = `${randomStatus} ${randomStatus}`;
+            }
+            
+            // Add random emoji if enabled
+            if (includeEmoji) {
+                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                randomStatus += ` ${randomEmoji}`;
+            }
+            
+            // Update UI
+            statusText.textContent = randomStatus;
+            statusOutput.value = randomStatus;
+        }
+        
+        // Randomize all settings
+        function randomizeAll() {
+            const tones = Object.keys(statusDatabase);
+            const randomTone = tones[Math.floor(Math.random() * tones.length)];
+            document.getElementById('tone').value = randomTone;
+            
+            const topics = ['work', 'weekend', 'food', 'life', 'friends', 'family', 'weather', 'hobbies', 'travel'];
+            const randomTopic = Math.random() > 0.5 ? topics[Math.floor(Math.random() * topics.length)] : '';
+            document.getElementById('topic').value = randomTopic;
+            
+            const lengths = ['short', 'medium', 'long'];
+            document.getElementById('length').value = lengths[Math.floor(Math.random() * lengths.length)];
+            
+            document.getElementById('include-emoji').checked = Math.random() > 0.3;
+            
+            generateStatus();
+        }
+        
+        // Copy status to clipboard
+        function copyStatus() {
+            statusOutput.select();
+            document.execCommand('copy');
+            
+            // Show notification
+            notification.classList.add('show-notification');
+            setTimeout(() => {
+                notification.classList.remove('show-notification');
+            }, 2000);
+        }
+        
+        // Share to Twitter
+        function shareToTwitter() {
+            const text = encodeURIComponent(statusText.textContent);
+            window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+        }
+        
+        // Event listeners
+        generateBtn.addEventListener('click', generateStatus);
+        randomizeBtn.addEventListener('click', randomizeAll);
+        copyBtn.addEventListener('click', copyStatus);
+        tweetBtn.addEventListener('click', shareToTwitter);
+        
+        // Generate initial status
+        generateStatus();
+    </script>
+</body>
+</html>

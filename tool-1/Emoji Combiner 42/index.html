@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Combiner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .selection-panel {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .panel-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #5c6bc0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .emoji-option {
+            font-size: 2rem;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .emoji-option:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+        
+        .emoji-option.selected {
+            background: #bbdefb;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+        
+        .preview-area {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .preview-container {
+            width: 250px;
+            height: 250px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .emoji-display {
+            font-size: 8rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .emoji-display span {
+            position: absolute;
+        }
+        
+        .combine-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .combine-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .combine-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 100px;
+        }
+        
+        .control-group label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #5c6bc0;
+            cursor: pointer;
+        }
+        
+        .result-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .result-title {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: #5c6bc0;
+        }
+        
+        .result-emoji {
+            font-size: 6rem;
+            margin: 20px 0;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .result-emoji span {
+            position: absolute;
+        }
+        
+        .result-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .copy-btn, .download-btn {
+            background: linear-gradient(45deg, #42a5f5, #1976d2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+        }
+        
+        .copy-btn:hover, .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .preview-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .emoji-display {
+                font-size: 6rem;
+            }
+            
+            .result-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .copy-btn, .download-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ Emoji Combiner ✨</h1>
+            <p class="subtitle">Combine two emojis to create a unique fusion! Select emojis from the panels below, adjust their positions, and create your perfect combination.</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="selection-panel">
+                <h2 class="panel-title">👈 Left Emoji</h2>
+                <div class="emoji-grid" id="left-emoji-grid">
+                    <!-- Left emoji grid will be populated by JS -->
+                </div>
+                
+                <h2 class="panel-title">👉 Right Emoji</h2>
+                <div class="emoji-grid" id="right-emoji-grid">
+                    <!-- Right emoji grid will be populated by JS -->
+                </div>
+            </div>
+            
+            <div class="preview-area">
+                <div class="preview-container">
+                    <div class="emoji-display" id="preview-display">
+                        <span id="left-preview">🐵</span>
+                        <span id="right-preview">🐯</span>
+                    </div>
+                </div>
+                
+                <button class="combine-btn" id="combine-btn">Combine Emojis!</button>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="x-position">X Position</label>
+                        <input type="range" id="x-position" class="slider" min="-50" max="50" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="y-position">Y Position</label>
+                        <input type="range" id="y-position" class="slider" min="-50" max="50" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="opacity">Opacity</label>
+                        <input type="range" id="opacity" class="slider" min="0" max="100" value="70">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-container">
+            <h2 class="result-title">Your Combined Emoji</h2>
+            <div class="result-emoji" id="result-display">
+                <!-- Combined emoji will appear here -->
+            </div>
+            <div class="result-buttons">
+                <button class="copy-btn" id="copy-btn">Copy to Clipboard</button>
+                <button class="download-btn" id="download-btn">Download as PNG</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Copied to clipboard!</div>
+    
+    <!-- Include html2canvas library for PNG export -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+        // Emoji database
+        const emojis = [
+            "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", 
+            "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚", "😋", "😛",
+            "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🤩", "🥳", "😏", "😒", "😞",
+            "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭",
+            "😤", "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😱", "😨", "😰", "😥",
+            "😓", "🫣", "🤗", "🫡", "🤔", "🫢", "🤭", "🤫", "🤥", "😶", "🫠", "😐",
+            "🫤", "😑", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤",
+            "😪", "😵", "🫥", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑",
+            "🤠", "😈", "👿", "👹", "👺", "🤡", "💩", "👻", "💀", "☠️", "👽", "👾",
+            "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🐱",
+            "🐶", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷",
+            "🐸", "🐵", "🙈", "🙉", "🙊", "🐒", "🐔", "🐧", "🐦", "🐤", "🐣", "🐥",
+            "🦆", "🦅", "🦉", "🦇", "🐺", "🐗", "🐴", "🦄", "🐝", "🪱", "🐛", "🦋",
+            "🐌", "🐞", "🐜", "🪰", "🪲", "🪳", "🐢", "🐍", "🦎", "🦖", "🦕", "🐙",
+            "🦑", "🦐", "🦞", "🦀", "🐡", "🐠", "🐟", "🐬", "🐳", "🐋", "🦈", "🐊",
+            "🐅", "🐆", "🦓", "🦍", "🦧", "🦣", "🐘", "🦛", "🦏", "🐪", "🐫", "🦒",
+            "🦘", "🦬", "🐃", "🐂", "🐄", "🐎", "🐖", "🐏", "🐑", "🦙", "🐐", "🦌",
+            "🐕", "🐩", "🦮", "🐕‍🦺", "🐈", "🐈‍⬛", "🪶", "🐓", "🦃", "🦤", "🦚", "🦜",
+            "🦢", "🦩", "🕊️", "🐇", "🦝", "🦨", "🦡", "🦫", "🦦", "🦥", "🐁", "🐀",
+            "🐿️", "🦔", "🐾", "🐉", "🐲", "🌵", "🎄", "🌲", "🌳", "🌴", "🪵", "🌱",
+            "🌿", "☘️", "🍀", "🎍", "🪴", "🎋", "🍃", "🍂", "🍁", "🪺", "🪹", "🍄",
+            "🐚", "🪨", "🌾", "💐", "🌷", "🌹", "🥀", "🌺", "🌸", "🌼", "🌻", "🌞",
+            "🌝", "🌛", "🌜", "🌚", "🌕", "🌖", "🌗", "🌘", "🌑", "🌒", "🌓", "🌔",
+            "🌙", "🌎", "🌍", "🌏", "🪐", "💫", "⭐", "🌟", "✨", "⚡", "☄️", "💥",
+            "🔥", "🌪️", "🌈", "☀️", "🌤️", "⛅", "🌥️", "☁️", "🌦️", "🌧️", "⛈️", "🌩️",
+            "🌨️", "❄️", "☃️", "⛄", "🌬️", "💨", "💧", "💦", "🫧", "☔", "☂️", "🌊",
+            "🌫️", "🍏", "🍎", "🍐", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🫐", "🍈",
+            "🍒", "🍑", "🥭", "🍍", "🥥", "🥝", "🍅", "🍆", "🥑", "🥦", "🥬", "🥒",
+            "🌽", "🥕", "🫛", "🧅", "🧄", "🥔", "🍠", "🫚", "🫒", "🥐", "🥯", "🍞",
+            "🥖", "🥨", "🧀", "🥚", "🍳", "🧈", "🥞", "🧇", "🥓", "🥩", "🍗", "🍖",
+            "🦴", "🌭", "🍔", "🍟", "🍕", "🫓", "🥪", "🥙", "🧆", "🌮", "🌯", "🫔",
+            "🥗", "🥘", "🫕", "🥫", "🍝", "🍜", "🍲", "🍛", "🍣", "🍱", "🥟", "🦪",
+            "🍤", "🍙", "🍚", "🍘", "🍥", "🥠", "🥮", "🍢", "🍡", "🍧", "🍨", "🍦",
+            "🥧", "🧁", "🍰", "🎂", "🍮", "🍭", "🍬", "🍫", "🍿", "🍩", "🍪", "🌰",
+            "🥜", "🫘", "🍯", "🥛", "🍼", "🫗", "☕", "🍵", "🧃", "🥤", "🧋", "🍶",
+            "🍺", "🍻", "🥂", "🍷", "🫙", "🍸", "🍹", "🧉", "🍾", "🧊", "🥄", "🍴",
+            "🍽️", "🥣", "🥡", "🥢", "🧂", "⚽", "🏀", "🏈", "⚾", "🥎", "🎾", "🏐",
+            "🏉", "🥏", "🎱", "🪀", "🏓", "🏸", "🏒", "🏑", "🥍", "🏏", "🪃", "🥅",
+            "⛳", "🪁", "🏹", "🎣", "🤿", "🥊", "🥋", "🎽", "🛹", "🛼", "🛷", "⛸️",
+            "🥌", "🎿", "⛷️", "🏂", "🪂", "🏋️", "🤼", "🤸", "⛹️", "🤺", "🤾", "🏌️",
+            "🏇", "🧘", "🏄", "🏊", "🤽", "🚣", "🧗", "🚴", "🚵", "🎯", "🪀", "🎮",
+            "🕹️", "🎲", "🧩", "🧸", "🪅", "🪆", "🎨", "🎼", "🎹", "🎷", "🎺", "🪗",
+            "🎸", "🪕", "🎻", "🥁", "🪘", "🎵", "🎶", "🎤", "🎧", "🎚️", "🎛️", "🎙️",
+            "📱", "📲", "☎️", "📞", "📟", "📠", "🔋", "🔌", "💻", "🖥️", "🖨️", "⌨️",
+            "🖱️", "🖲️", "💽", "💾", "💿", "📀", "🧮", "🎥", "🎞️", "📽️", "🎬", "📺",
+            "📷", "📸", "📹", "📼", "🔍", "🔎", "🕯️", "💡", "🔦", "🏮", "🪔", "📔",
+            "📕", "📖", "📗", "📘", "📙", "📚", "📓", "📒", "📃", "📜", "📄", "📰",
+            "🎙️", "🎚️", "🎛️", "📢", "📣", "📯", "🔮", "🪄", "🔔", "🎼", "🎵", "🎶",
+            "🏆", "🎯", "🎮", "🎲", "🎳", "🪀", "🪁", "🔫", "🎭", "🖼️", "🎨", "🧵",
+            "🪡", "🧶", "🪢", "👓", "🕶️", "🥽", "🥼", "🦺", "👔", "👕", "👖", "🧣",
+            "🧤", "🧥", "🧦", "👗", "👘", "🥻", "🩱", "🩲", "🩳", "👙", "👚", "👛",
+            "👜", "👝", "🛍️", "🎒", "👞", "👟", "🥾", "🥿", "👠", "👡", "🩰", "👢",
+            "👑", "👒", "🎩", "🎓", "🧢", "🪖", "⛑️", "💄", "💍", "💼", "☂️", "🦯",
+            "🦽", "🦼", "🛴", "🚲", "🛵", "🏍️", "🛺", "🚨", "🚔", "🚍", "🚘", "🚖",
+            "🚡", "🚠", "🚟", "🚃", "🚋", "🚞", "🚝", "🚄", "🚅", "🚈", "🚂", "🚆",
+            "🚇", "🚊", "🚉", "✈️", "🛫", "🛬", "🛩️", "💺", "🛰️", "🚀", "🛸", "🚁",
+            "🛶", "⛵", "🚤", "🛥️", "🛳️", "⛴️", "🚢", "⚓", "🪝", "🧭", "⌛", "⏳",
+            "⌚", "⏰", "⏱️", "⏲️", "🕰️", "🌡️", "🎈", "🎉", "✨", "🎊", "🎋", "🎍",
+            "🪴", "🍀", "🍄", "🪸", "🌺", "🌹", "🌻", "🌼", "🌷", "🪷", "🌱", "🪴",
+            "🌲", "🌳", "🌴", "🌵", "🌾", "🌿", "☘️", "🍁", "🍂", "🍃", "🪵", "🪨",
+            "🏔️", "⛰️", "🌋", "🗻", "🏕️", "🏖️", "🏜️", "🏝️", "🏞️", "🏟️", "🏛️", "🏗️",
+            "🛖", "🏘️", "🏚️", "🏠", "🏡", "🏢", "🏣", "🏤", "🏥", "🏦", "🏨", "🏩",
+            "🏪", "🏫", "🏬", "🏭", "🏯", "🏰", "💒", "🗼", "🗽", "⛪", "🕌", "🛕",
+            "🕍", "⛩️", "🕋", "⚰️", "🪦", "⚱️", "💈", "🪪", "🪞", "🪟", "🛏️", "🛋️",
+            "🪑", "🚽", "🪠", "🚿", "🛁", "🪤", "🪒", "🧴", "🧷", "🧹", "🧺", "🧻",
+            "🪣", "🧼", "🫧", "🪥", "🧽", "🧯", "🛒", "🚬", "⚱️", "🗿", "🔮", "🪬",
+            "🪩", "📿", "💊", "🩹", "🩺", "🚪", "🛗", "🪞", "🪟", "🛏️", "🛋️", "🪑",
+            "🚽", "🪠", "🚿", "🛁", "🪤", "🪒", "🧴", "🧷", "🧹", "🧺", "🧻", "🪣",
+            "🧼", "🫧", "🪥", "🧽", "🧯", "🛒", "🚬", "⚱️", "🗿", "🔮", "🪬", "🪩",
+            "📿", "💊", "🩹", "🩺", "🚪", "🛗", "💌", "🕳️", "🛸", "🧿", "🔌", "🪫",
+            "📲", "📞", "📟", "📠", "🔋", "🔌", "💻", "🖥️", "🖨️", "⌨️", "🖱️", "🖲️",
+            "💽", "💾", "💿", "📀", "🧮", "🎥", "🎞️", "📽️", "🎬", "📺", "📷", "📸",
+            "📹", "📼", "🔍", "🔎", "🕯️", "💡", "🔦", "🏮", "🪔", "📔", "📕", "📖",
+            "📗", "📘", "📙", "📚", "📓", "📒", "📃", "📜", "📄", "📰", "🎙️", "🎚️",
+            "🎛️", "📢", "📣", "📯", "🔮", "🪄", "🔔", "🎼", "🎵", "🎶", "🏆", "🎯",
+            "🎮", "🎲", "🎳", "🪀", "🪁", "🔫", "🎭", "🖼️", "🎨", "🧵", "🪡", "🧶",
+            "🪢", "👓", "🕶️", "🥽", "🥼", "🦺", "👔", "👕", "👖", "🧣", "🧤", "🧥",
+            "🧦", "👗", "👘", "🥻", "🩱", "🩲", "🩳", "👙", "👚", "👛", "👜", "👝",
+            "🛍️", "🎒", "👞", "👟", "🥾", "🥿", "👠", "👡", "🩰", "👢", "👑", "👒",
+            "🎩", "🎓", "🧢", "🪖", "⛑️", "💄", "💍", "💼", "☂️", "🦯", "🦽", "🦼",
+            "🛴", "🚲", "🛵", "🏍️", "🛺", "🚨", "🚔", "🚍", "🚘", "🚖", "🚡", "🚠",
+            "🚟", "🚃", "🚋", "🚞", "🚝", "🚄", "🚅", "🚈", "🚂", "🚆", "🚇", "🚊",
+            "🚉", "✈️", "🛫", "🛬", "🛩️", "💺", "🛰️", "🚀", "🛸", "🚁", "🛶", "⛵",
+            "🚤", "🛥️", "🛳️", "⛴️", "🚢", "⚓", "🪝", "🧭", "⌛", "⏳", "⌚", "⏰",
+            "⏱️", "⏲️", "🕰️", "🌡️", "🎈", "🎉", "✨", "🎊", "🎋", "🎍", "🪴", "🍀",
+            "🍄", "🪸", "🌺", "🌹", "🌻", "🌼", "🌷", "🪷", "🌱", "🪴", "🌲", "🌳",
+            "🌴", "🌵", "🌾", "🌿", "☘️", "🍁", "🍂", "🍃", "🪵", "🪨", "🏔️", "⛰️",
+            "🌋", "🗻", "🏕️", "🏖️", "🏜️", "🏝️", "🏞️", "🏟️", "🏛️", "🏗️", "🛖", "🏘️",
+            "🏚️", "🏠", "🏡", "🏢", "🏣", "🏤", "🏥", "🏦", "🏨", "🏩", "🏪", "🏫",
+            "🏬", "🏭", "🏯", "🏰", "💒", "🗼", "🗽", "⛪", "🕌", "🛕", "🕍", "⛩️",
+            "🕋", "⚰️", "🪦", "⚱️", "💈", "🪪", "🪞", "🪟", "🛏️", "🛋️", "🪑", "🚽",
+            "🪠", "🚿", "🛁", "🪤", "🪒", "🧴", "🧷", "🧹", "🧺", "🧻", "🪣", "🧼",
+            "🫧", "🪥", "🧽", "🧯", "🛒", "🚬", "⚱️", "🗿", "🔮", "🪬", "🪩", "📿",
+            "💊", "🩹", "🩺", "🚪", "🛗", "💌", "🕳️", "🛸", "🧿"
+        ];
+
+        // DOM elements
+        const leftEmojiGrid = document.getElementById('left-emoji-grid');
+        const rightEmojiGrid = document.getElementById('right-emoji-grid');
+        const leftPreview = document.getElementById('left-preview');
+        const rightPreview = document.getElementById('right-preview');
+        const resultDisplay = document.getElementById('result-display');
+        const combineBtn = document.getElementById('combine-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const notification = document.getElementById('notification');
+        const xPositionSlider = document.getElementById('x-position');
+        const yPositionSlider = document.getElementById('y-position');
+        const opacitySlider = document.getElementById('opacity');
+        
+        // State variables
+        let selectedLeftEmoji = "🐵";
+        let selectedRightEmoji = "🐯";
+        let xPosition = 0;
+        let yPosition = 0;
+        let opacity = 70;
+        
+        // Initialize the app
+        function init() {
+            populateEmojiGrids();
+            updatePreview();
+            setupEventListeners();
+            combineEmojis(); // Show initial combined emoji
+        }
+        
+        // Populate emoji grids
+        function populateEmojiGrids() {
+            // Left grid
+            emojis.forEach(emoji => {
+                const emojiElement = document.createElement('div');
+                emojiElement.className = 'emoji-option';
+                emojiElement.textContent = emoji;
+                emojiElement.addEventListener('click', () => {
+                    selectedLeftEmoji = emoji;
+                    updatePreview();
+                    highlightSelectedEmoji(emojiElement, 'left');
+                });
+                leftEmojiGrid.appendChild(emojiElement);
+                
+                // Select first emoji by default
+                if (emoji === selectedLeftEmoji) {
+                    emojiElement.classList.add('selected');
+                }
+            });
+            
+            // Right grid
+            emojis.forEach(emoji => {
+                const emojiElement = document.createElement('div');
+                emojiElement.className = 'emoji-option';
+                emojiElement.textContent = emoji;
+                emojiElement.addEventListener('click', () => {
+                    selectedRightEmoji = emoji;
+                    updatePreview();
+                    highlightSelectedEmoji(emojiElement, 'right');
+                });
+                rightEmojiGrid.appendChild(emojiElement);
+                
+                // Select first emoji by default
+                if (emoji === selectedRightEmoji) {
+                    emojiElement.classList.add('selected');
+                }
+            });
+        }
+        
+        // Highlight the selected emoji
+        function highlightSelectedEmoji(element, gridType) {
+            const grid = gridType === 'left' ? leftEmojiGrid : rightEmojiGrid;
+            const options = grid.querySelectorAll('.emoji-option');
+            options.forEach(option => option.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        // Update preview display
+        function updatePreview() {
+            leftPreview.textContent = selectedLeftEmoji;
+            rightPreview.textContent = selectedRightEmoji;
+            
+            // Apply position and opacity
+            rightPreview.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
+            rightPreview.style.opacity = `${opacity}%`;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sliders
+            xPositionSlider.addEventListener('input', (e) => {
+                xPosition = parseInt(e.target.value);
+                updatePreview();
+            });
+            
+            yPositionSlider.addEventListener('input', (e) => {
+                yPosition = parseInt(e.target.value);
+                updatePreview();
+            });
+            
+            opacitySlider.addEventListener('input', (e) => {
+                opacity = parseInt(e.target.value);
+                updatePreview();
+            });
+            
+            // Combine button
+            combineBtn.addEventListener('click', combineEmojis);
+            
+            // Copy button
+            copyBtn.addEventListener('click', copyResult);
+            
+            // Download button
+            downloadBtn.addEventListener('click', downloadAsPNG);
+        }
+        
+        // Combine emojis and show result
+        function combineEmojis() {
+            resultDisplay.innerHTML = `
+                <span class="left-emoji">${selectedLeftEmoji}</span>
+                <span class="right-emoji" style="transform: translate(${xPosition}px, ${yPosition}px); opacity: ${opacity}%">${selectedRightEmoji}</span>
+            `;
+        }
+        
+        // Copy result to clipboard
+        function copyResult() {
+            // Create a temporary textarea to copy the combined emojis
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = selectedLeftEmoji + selectedRightEmoji;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            
+            // Show notification
+            showNotification('Copied to clipboard!');
+        }
+        
+        // Download combined emoji as PNG
+        function downloadAsPNG() {
+            // Create a temporary container for capturing
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.style.width = '250px';
+            tempContainer.style.height = '250px';
+            tempContainer.style.background = 'white';
+            tempContainer.style.borderRadius = '15px';
+            tempContainer.style.display = 'flex';
+            tempContainer.style.alignItems = 'center';
+            tempContainer.style.justifyContent = 'center';
+            tempContainer.style.fontSize = '8rem';
+            tempContainer.style.position = 'relative';
+            tempContainer.style.overflow = 'hidden';
+            
+            // Add the emojis to the temporary container
+            const leftEmoji = document.createElement('span');
+            leftEmoji.textContent = selectedLeftEmoji;
+            leftEmoji.style.position = 'absolute';
+            
+            const rightEmoji = document.createElement('span');
+            rightEmoji.textContent = selectedRightEmoji;
+            rightEmoji.style.position = 'absolute';
+            rightEmoji.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
+            rightEmoji.style.opacity = `${opacity}%`;
+            
+            tempContainer.appendChild(leftEmoji);
+            tempContainer.appendChild(rightEmoji);
+            
+            document.body.appendChild(tempContainer);
+            
+            // Use html2canvas to capture the container as PNG
+            html2canvas(tempContainer, {
+                backgroundColor: null,
+                scale: 2, // Higher resolution
+                onclone: function(clonedDoc, element) {
+                    // Ensure styles are preserved
+                    element.style.display = 'flex';
+                }
+            }).then(canvas => {
+                // Convert canvas to data URL
+                const dataUrl = canvas.toDataURL('image/png');
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'combined-emoji.png';
+                link.href = dataUrl;
+                link.click();
+                
+                // Clean up
+                document.body.removeChild(tempContainer);
+                
+                // Show notification
+                showNotification('Download started!');
+            });
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Initialize the app when the page loads
+        window.onload = init;
+    </script>
+</body>
+</html>

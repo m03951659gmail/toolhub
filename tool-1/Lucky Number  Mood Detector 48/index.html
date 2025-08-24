@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Number Generator & Mood Detector - Discover Your Lucky Number and Today's Mood!</title>
+    <meta name="description" content="Generate your lucky number instantly and find out your mood for the day with our fun, interactive tools. Easy to use, random results, and perfect for entertainment!">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff5e62;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .tool-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .tool-description {
+            color: var(--dark);
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5ee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s, opacity 0.3s;
+            margin: 10px 0;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .number-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .mood-display {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+        
+        .mood-text {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .explanation {
+            font-style: italic;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tool-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lucky Number Generator & Mood Detector</h1>
+            <p class="subtitle">Discover Your Lucky Number and Today's Mood!</p>
+        </header>
+        
+        <div class="tools-container">
+            <div class="tool-card">
+                <h2 class="tool-title">Lucky Number Generator</h2>
+                <p class="tool-description">Enter your name or birthdate to generate your lucky number instantly. Fun, quick, and interactive!</p>
+                
+                <div class="input-group">
+                    <input type="text" id="userInput" placeholder="Enter your name or birthdate">
+                </div>
+                
+                <button id="generateNumber">Generate My Lucky Number</button>
+                
+                <div class="result" id="numberResult">
+                    <p>Your lucky number will appear here</p>
+                </div>
+            </div>
+            
+            <div class="tool-card">
+                <h2 class="tool-title">Mood Detector</h2>
+                <p class="tool-description">Discover your mood for today with a single click! Random and fun mood detection.</p>
+                
+                <button id="detectMood">Detect My Mood</button>
+                
+                <div class="result" id="moodResult">
+                    <p>Your mood will be revealed here</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Note: This is just for fun and entertainment purposes. Results are randomly generated.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Lucky Number Generator functionality
+        document.getElementById('generateNumber').addEventListener('click', function() {
+            const userInput = document.getElementById('userInput').value.trim();
+            const resultElement = document.getElementById('numberResult');
+            
+            if (!userInput) {
+                resultElement.innerHTML = '<p style="color: #dc3545;">Please enter your name or birthdate first!</p>';
+                return;
+            }
+            
+            // Create a simple hash from the input to generate a "personalized" number
+            let hash = 0;
+            for (let i = 0; i < userInput.length; i++) {
+                hash = userInput.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            
+            // Generate number between 1 and 100
+            const luckyNumber = Math.abs(hash) % 100 + 1;
+            
+            // Create a fun message based on the number
+            let message = '';
+            if (luckyNumber > 80) {
+                message = 'Extraordinarily lucky day ahead!';
+            } else if (luckyNumber > 60) {
+                message = 'Very fortunate number for you!';
+            } else if (luckyNumber > 40) {
+                message = 'Good vibes and positive energy!';
+            } else if (luckyNumber > 20) {
+                message = 'A moderately lucky day.';
+            } else {
+                message = 'A unique number with special meaning.';
+            }
+            
+            resultElement.innerHTML = `
+                <p>Your personalized lucky number is:</p>
+                <div class="number-display">${luckyNumber}</div>
+                <p class="explanation">${message}</p>
+            `;
+        });
+        
+        // Mood Detector functionality
+        document.getElementById('detectMood').addEventListener('click', function() {
+            const moods = [
+                { name: 'Happy', emoji: '😊', color: '#ffc107', message: 'Spread positivity everywhere you go!' },
+                { name: 'Excited', emoji: '😃', color: '#fd7e14', message: 'Adventure awaits around every corner!' },
+                { name: 'Calm', emoji: '😌', color: '#20c997', message: 'Peace and serenity fill your day.' },
+                { name: 'Playful', emoji: '😜', color: '#6f42c1', message: 'Time for some fun and laughter!' },
+                { name: 'Thoughtful', emoji: '🤔', color: '#17a2b8', message: 'Deep insights are coming your way.' },
+                { name: 'Energetic', emoji: '💪', color: '#dc3545', message: 'Tackle challenges with enthusiasm!' },
+                { name: 'Relaxed', emoji: '😎', color: '#28a745', message: 'Take it easy and enjoy the moment.' },
+                { name: 'Creative', emoji: '🎨', color: '#e83e8c', message: 'Ideas will flow effortlessly today.' },
+                { name: 'Optimistic', emoji: '🌈', color: '#6a11cb', message: 'Good things are coming your way!' },
+                { name: 'Adventurous', emoji: '🧗', color: '#2575fc', message: 'Embrace new experiences today!' }
+            ];
+            
+            const randomMood = moods[Math.floor(Math.random() * moods.length)];
+            const resultElement = document.getElementById('moodResult');
+            
+            resultElement.innerHTML = `
+                <p>Your mood today is:</p>
+                <div class="mood-display" style="color: ${randomMood.color};">${randomMood.emoji} ${randomMood.name}</div>
+                <p class="mood-text">${randomMood.message}</p>
+            `;
+        });
+    </script>
+</body>
+</html>

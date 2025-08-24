@@ -1,0 +1,105 @@
+/* Custom styles to enhance the Twitter/X look */
+#tweet-preview {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Twitter-like tweet styling */
+.tweet {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgb(239, 243, 244);
+}
+
+.tweet-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.tweet-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+}
+
+.tweet-user {
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+    font-weight: bold;
+    color: rgb(15, 20, 25);
+}
+
+.tweet-username {
+    color: rgb(83, 100, 113);
+    margin-left: 4px;
+}
+
+.tweet-verified {
+    color: rgb(29, 155, 240);
+    margin-left: 2px;
+    width: 18px;
+    height: 18px;
+}
+
+.tweet-content {
+    font-size: 15px;
+    line-height: 20px;
+    color: rgb(15, 20, 25);
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+}
+
+.tweet-date {
+    color: rgb(83, 100, 113);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.tweet-stats {
+    display: flex;
+    color: rgb(83, 100, 113);
+    font-size: 14px;
+    border-top: 1px solid rgb(239, 243, 244);
+    padding-top: 12px;
+}
+
+.tweet-stat {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.tweet-stat svg {
+    margin-right: 4px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .tweet-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .tweet-content {
+        font-size: 14px;
+    }
+}
+
+/* Emoji picker styles */
+.emoji-option {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.emoji-option:hover {
+    background-color: #f0f0f0;
+}

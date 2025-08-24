@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fun Friendship Calculator - Check compatibility between friends with this playful tool">
+    <meta name="keywords" content="friendship calculator, friendship test, fun tools, friendship percentage">
+    <title>Friendship Calculator | Fun Tool to Measure Bond Between Friends</title>
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffbe0b;
+            --dark: #333333;
+            --light: #f8f9fa;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: none;
+        }
+
+        button.secondary:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .friendship-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .friendship-percentage {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 20px 0;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: #f1f1f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 10px;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+
+        .symbols {
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            opacity: 0.8;
+            border-radius: 50%;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .friendship-percentage {
+                font-size: 3rem;
+            }
+            .input-group {
+                flex-direction: column;
+            }
+            .input-field {
+                width: 100%;
+            }
+        }
+
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Friendship Calculator</h1>
+        <p>Find out how strong your friendship is!</p>
+        
+        <div class="input-group">
+            <div class="input-field">
+                <label for="name1">Your Name</label>
+                <input type="text" id="name1" placeholder="Enter first name" aria-label="Enter your name">
+            </div>
+            <div class="input-field">
+                <label for="name2">Friend's Name</label>
+                <input type="text" id="name2" placeholder="Enter friend's name" aria-label="Enter friend's name">
+            </div>
+        </div>
+        
+        <button id="calculate-btn">Calculate Friendship</button>
+        
+        <div class="result-container" id="result-container">
+            <div class="friendship-card">
+                <div class="symbols" id="symbols" role="img" aria-label="Friendship status symbols"></div>
+                <div class="friendship-percentage" id="percentage">0%</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="message" id="message"></div>
+            </div>
+            <button class="secondary" id="reset-btn">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultContainer = document.getElementById('result-container');
+            const percentageDisplay = document.getElementById('percentage');
+            const progressBar = document.getElementById('progress-bar');
+            const messageDisplay = document.getElementById('message');
+            const symbolsDisplay = document.getElementById('symbols');
+            const name1Input = document.getElementById('name1');
+            const name2Input = document.getElementById('name2');
+            
+            calculateBtn.addEventListener('click', calculateFriendship);
+            resetBtn.addEventListener('click', resetCalculator);
+            
+            function calculateFriendship() {
+                const name1 = name1Input.value.trim();
+                const name2 = name2Input.value.trim();
+                
+                if (!name1 || !name2) {
+                    alert('Please enter both names!');
+                    return;
+                }
+                
+                // Generate a "random" but deterministic percentage based on names
+                let hash = 0;
+                const combined = (name1 + name2).toLowerCase();
+                
+                for (let i = 0; i < combined.length; i++) {
+                    hash = (hash << 5) - hash + combined.charCodeAt(i);
+                    hash |= 0; // Convert to 32bit integer
+                }
+                
+                // Ensure percentage is between 40-100 for fun results
+                const percentage = Math.abs(hash) % 61 + 40;
+                
+                displayResult(percentage, name1, name2);
+            }
+            
+            function displayResult(percentage, name1, name2) {
+                // Show the result container
+                resultContainer.style.display = 'block';
+                
+                // Reset the display
+                percentageDisplay.textContent = '0%';
+                progressBar.style.width = '0';
+                
+                // Set the final values after a small delay
+                setTimeout(() => {
+                    percentageDisplay.textContent = `${percentage}%`;
+                    progressBar.style.width = `${percentage}%`;
+                    
+                    // Set appropriate message based on percentage
+                    let message = '';
+                    let symbols = '';
+                    
+                    if (percentage >= 90) {
+                        message = `Wow! ${name1} and ${name2} are like two peas in a pod! Your friendship is unbreakable!`;
+                        symbols = '❤️ 👯‍♀️ 💯';
+                        createConfetti();
+                    } else if (percentage >= 75) {
+                        message = `Great! ${name1} and ${name2} have an amazing connection! Keep nurturing this special bond.`;
+                        symbols = '😊 👍 🎉';
+                    } else if (percentage >= 60) {
+                        message = `Good! ${name1} and ${name2} have a solid friendship with potential to grow even stronger!`;
+                        symbols = '🙌 ✨ 👏';
+                    } else {
+                        message = `${name1} and ${name2} have some friendship chemistry! Try spending more time together to strengthen your bond.`;
+                        symbols = '🤝 💭 🌱';
+                    }
+                    
+                    messageDisplay.textContent = message;
+                    symbolsDisplay.textContent = symbols;
+                }, 100);
+            }
+            
+            function resetCalculator() {
+                resultContainer.style.display = 'none';
+                name1Input.value = '';
+                name2Input.value = '';
+                name1Input.focus();
+            }
+            
+            function createConfetti() {
+                const container = document.querySelector('.container');
+                const colors = ['#ff6b6b', '#4ecdc4', '#ffbe0b', '#ae52d4', '#5f6caf'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = `${Math.random() * 8 + 4}px`;
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.animationDelay = `${Math.random() * 2}s`;
+                    container.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
