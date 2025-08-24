@@ -5,432 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToolKit - All-in-One Tools</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4cc9f0;
-            --card-bg: #ffffff;
-            --sidebar-bg: #2b2d42;
-            --text-color: #333;
-            --text-light: #f8f9fa;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-        
-        .dark-mode {
-            --light-color: #121212;
-            --dark-color: #f8f9fa;
-            --card-bg: #1e1e1e;
-            --sidebar-bg: #1a1a2e;
-            --text-color: #f0f0f0;
-            --text-light: #f0f0f0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        body {
-            background-color: var(--light-color);
-            color: var(--text-color);
-            transition: var(--transition);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            color: var(--text-light);
-            height: 100vh;
-            position: fixed;
-            padding: 20px 0;
-            transition: var(--transition);
-            z-index: 100;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .logo i {
-            font-size: 28px;
-            color: var(--accent-color);
-            margin-right: 12px;
-        }
-        
-        .logo h1 {
-            font-size: 22px;
-            font-weight: 700;
-        }
-        
-        .nav-links {
-            margin-top: 30px;
-        }
-        
-        .nav-links li {
-            list-style: none;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .nav-links li:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .nav-links li.active {
-            background: var(--primary-color);
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .nav-links li i {
-            font-size: 20px;
-            margin-right: 15px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .nav-links li span {
-            font-size: 16px;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 260px;
-            padding: 30px;
-            transition: var(--transition);
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .header h2 {
-            font-size: 28px;
-            color: var(--primary-color);
-        }
-        
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .search-container {
-            position: relative;
-            width: 300px;
-        }
-        
-        .search-container input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border-radius: 50px;
-            border: none;
-            background: var(--card-bg);
-            box-shadow: var(--shadow);
-            color: var(--text-color);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .search-container input:focus {
-            outline: 2px solid var(--primary-color);
-        }
-        
-        .search-container i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary-color);
-            font-size: 18px;
-        }
-        
-        .theme-toggle {
-            background: var(--card-bg);
-            border: none;
-            width: 50px;
-            height: 25px;
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            padding: 0 3px;
-        }
-        
-        .theme-toggle .toggle-circle {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            transition: var(--transition);
-            left: 3px;
-        }
-        
-        .dark-mode .theme-toggle .toggle-circle {
-            transform: translateX(24px);
-        }
-        
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-        }
-        
-        .welcome-banner h3 {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-        
-        .welcome-banner p {
-            font-size: 16px;
-            max-width: 700px;
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: white;
-            color: var(--primary-color);
-            padding: 12px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        
-        .tool-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            opacity: 1;
-            transform: scale(1);
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .tool-card.hidden {
-            display: none;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .tool-icon {
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-            font-size: 60px;
-            color: white;
-        }
-        
-        .tool-content {
-            padding: 25px;
-        }
-        
-        .tool-content h3 {
-            margin-bottom: 12px;
-            font-size: 20px;
-        }
-        
-        .tool-content p {
-            color: var(--text-color);
-            opacity: 0.8;
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        
-        .tool-link {
-            display: inline-flex;
-            align-items: center;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        
-        .tool-link:hover {
-            color: var(--secondary-color);
-        }
-        
-        .tool-link i {
-            margin-left: 8px;
-            transition: var(--transition);
-        }
-        
-        .tool-link:hover i {
-            transform: translateX(4px);
-        }
-        
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-        
-        .no-results i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            padding: 20px;
-            color: var(--text-color);
-            opacity: 0.7;
-            font-size: 14px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-            }
-            
-            .logo h1, .nav-links li span {
-                display: none;
-            }
-            
-            .logo {
-                justify-content: center;
-                padding: 20px 0;
-            }
-            
-            .logo i {
-                margin-right: 0;
-            }
-            
-            .nav-links li {
-                justify-content: center;
-            }
-            
-            .nav-links li i {
-                margin-right: 0;
-                font-size: 24px;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-            
-            .search-container {
-                width: 200px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                height: auto;
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            body {
-                flex-direction: column;
-            }
-            
-            .nav-links {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                margin-top: 15px;
-            }
-            
-            .nav-links li {
-                padding: 12px 15px;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .header-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .search-container {
-                flex-grow: 1;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-container {
-                width: 100%;
-            }
-        }
+      
     </style>
 </head>
 <body>
@@ -821,6 +398,258 @@
     </div>
 </div>
            
+
+<!-- Fake Facebook Status Generator 30 -->
+<div class="tool-card" data-name="fake facebook status generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fab fa-facebook"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Fake Facebook Status Generator</h3>
+        <p>Create funny and realistic-looking fake Facebook statuses.</p>
+        <a href="tool-30/fake Facebook status generator 30/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Fake Instagram Post Generator 31 -->
+<div class="tool-card" data-name="fake instagram post generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fab fa-instagram"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Fake Instagram Post Generator</h3>
+        <p>Design hilarious fake Instagram posts with custom text and images.</p>
+        <a href="tool-31/fake instagram post generator 31/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Fake Tweet Generator 32 -->
+<div class="tool-card" data-name="fake tweet generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fab fa-twitter"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Fake Tweet Generator</h3>
+        <p>Create fake tweets that look just like the real thing.</p>
+        <a href="tool-32/Fake Tweet generator 32/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Reverse Text Generator 33 -->
+<div class="tool-card" data-name="reverse text generator" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-exchange-alt"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Reverse Text Generator</h3>
+        <p>Reverse your text instantly for fun or hidden messages.</p>
+        <a href="tool-33/Reverse Text generator 33/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Upside Down Text Generator 34 -->
+<div class="tool-card" data-name="upside down text generator" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-arrows-alt-v"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Upside Down Text Generator</h3>
+        <p>Flip your text upside down for cool and funny effects.</p>
+        <a href="tool-34/Upside down Text generator 34/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Funny Font Style Converter 35 -->
+<div class="tool-card" data-name="funny font style converter" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-font"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Funny Font Style Converter</h3>
+        <p>Convert your text into fun and unique font styles.</p>
+        <a href="tool-35/Funny Font Style Converter 35/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Text Glitch Effect Generator 36 -->
+<div class="tool-card" data-name="text glitch effect generator" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-bolt"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text Glitch Effect Generator</h3>
+        <p>Add glitch effects to your text for a digital look.</p>
+        <a href="tool-36/Text Glitch Effect generator 36/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Typewriter Animation Text 37 -->
+<div class="tool-card" data-name="typewriter animation text" data-category="text">
+    <div class="tool-icon">
+        <i class="fas fa-keyboard"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Typewriter Animation Text</h3>
+        <p>Create animated typewriter-style text effects.</p>
+        <a href="tool-37/Typewriter Animation Text 37/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Morse Code Translator 38 -->
+<div class="tool-card" data-name="morse code translator" data-category="conversion">
+    <div class="tool-icon">
+        <i class="fas fa-signal"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Morse Code Translator</h3>
+        <p>Convert text to Morse code and decode Morse back to text.</p>
+        <a href="tool-38/Morse Code translator 38/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Emoji Text Translator 39 -->
+<div class="tool-card" data-name="emoji text translator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-smile"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Emoji Text Translator</h3>
+        <p>Turn your words into emoji-based sentences.</p>
+        <a href="tool-39/Emoji Text translator 39/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Pig Latin Translator 40 -->
+<div class="tool-card" data-name="pig latin translator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-language"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Pig Latin Translator</h3>
+        <p>Translate normal text into Pig Latin for fun conversations.</p>
+        <a href="tool-40/Pig Latin And translator 40/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Text to Emoji Art Generator 41 -->
+<div class="tool-card" data-name="text to emoji art generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-grin-stars"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Text to Emoji Art Generator</h3>
+        <p>Create creative emoji art from your text automatically.</p>
+        <a href="tool-41/Text to Emoji Art generator 41/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Emoji Combiner 42 -->
+<div class="tool-card" data-name="emoji combiner" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-laugh"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Emoji Combiner</h3>
+        <p>Mix and combine emojis to create new fun designs.</p>
+        <a href="tool-42/Emoji Combiner 42/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Random Funny Quote Generator 43 -->
+<div class="tool-card" data-name="random funny quote generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-quote-right"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Random Funny Quote Generator</h3>
+        <p>Get hilarious random quotes every time you click.</p>
+        <a href="tool-43/Random Funny Quote Generator 43/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Invisible Ink Text Generator 44 -->
+<div class="tool-card" data-name="invisible ink text generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-eye-slash"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Invisible Ink Text Generator</h3>
+        <p>Generate invisible ink styled text for fun tricks.</p>
+        <a href="tool-44/Invisible Ink Text Generator 44/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Zalgo Sarcasm Text Generator 45 -->
+<div class="tool-card" data-name="zalgo sarcasm text generator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-skull"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Zalgo / Sarcasm Text Generator</h3>
+        <p>Make creepy Zalgo or sarcastic-style distorted text.</p>
+        <a href="tool-45/Zalgo Sarcasm Text Generator 45/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Friendship Calculator 46 -->
+<div class="tool-card" data-name="friendship calculator" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-handshake"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Friendship Calculator</h3>
+        <p>Calculate fun friendship compatibility scores.</p>
+        <a href="tool-46/Friendship Calculator 46/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Funny Nickname & Crush Name Combiner 47 -->
+<div class="tool-card" data-name="funny nickname combiner" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-user-friends"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Funny Nickname & Crush Name Combiner</h3>
+        <p>Mix two names to generate a funny nickname or crush name.</p>
+        <a href="tool-47/Funny Nickname  Crush Name Combiner 47/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Lucky Number & Mood Detector 48 -->
+<div class="tool-card" data-name="lucky number mood detector" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-magic"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Lucky Number & Mood Detector</h3>
+        <p>Find your lucky number and detect your mood with fun results.</p>
+        <a href="tool-48/Lucky Number  Mood Detector 48/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- Random Food Picker 49 -->
+<div class="tool-card" data-name="random food picker" data-category="fun">
+    <div class="tool-icon">
+        <i class="fas fa-utensils"></i>
+    </div>
+    <div class="tool-content">
+        <h3>Random Food Picker</h3>
+        <p>Can't decide what to eat? Let this tool choose for you!</p>
+        <a href="tool-49/random food picker 49/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+
+<!-- EXIF Data Viewer 50 -->
+<div class="tool-card" data-name="exif data viewer" data-category="image">
+    <div class="tool-icon">
+        <i class="fas fa-file-image"></i>
+    </div>
+    <div class="tool-content">
+        <h3>EXIF Data Viewer</h3>
+        <p>View detailed metadata (EXIF) from your uploaded images.</p>
+        <a href="tool-50/EXIF data viewer 50/index.html" class="tool-link">Open Tool <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
            
             <!-- এখানে শেষ -->
         </div>
